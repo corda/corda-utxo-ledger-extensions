@@ -19,7 +19,7 @@ cordapp {
 }
 
 allprojects {
-    group 'net.corda.v5.utxo.ledger.extensions'
+    group 'net.r3.corda.ledger.utxo'
     version '1.0-SNAPSHOT'
 
     apply plugin: 'net.corda.plugins.cordapp-cpb2'
