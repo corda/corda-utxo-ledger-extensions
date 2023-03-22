@@ -27,37 +27,44 @@ public abstract class IdentifiableContract extends DelegatedContract<Identifiabl
         final List<StateAndRef<IdentifiableState>> inputs = transaction.getInputStateAndRefs(IdentifiableState.class);
         final List<IdentifiableState> outputs = transaction.getOutputStates(IdentifiableState.class);
 
-        final List<StateRef> stateRefs = outputs
+        final List<StateRef> outputIds = getNonNullOutputIdentifiers(outputs);
+
+        final Map<StateRef, List<StateAndRef<IdentifiableState>>> mappedOutputIdsToInputs =
+                mapOutputIdentifiersToInputs(outputIds, inputs);
+
+        Check.all(mappedOutputIdsToInputs.values(), it -> it.size() == 1, CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY);
+    }
+
+    @NotNull
+    private List<StateRef> getNonNullOutputIdentifiers(@NotNull final List<IdentifiableState> outputs) {
+        return outputs
                 .stream()
                 .map(IdentifiableState::getId)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
 
-        /*
-         * Obtains a map of all the non-null output IDs, to a list of [StateAndRef] of [IdentifiableState] where:
-         * 1. The ID is the [StateRef] of the input (an n == 1 length state chain is evolving in this transaction).
-         * 2. The ID is the ID of the input (an n > 1 length state chain is evolving in this transaction).
-         */
-        final Map<StateRef, List<StateAndRef<IdentifiableState>>> mappedOutputIdsToInputs = new HashMap<>();
+    @NotNull
+    private Map<StateRef, List<StateAndRef<IdentifiableState>>> mapOutputIdentifiersToInputs(
+            @NotNull final List<StateRef> outputIdentifiers,
+            @NotNull final List<StateAndRef<IdentifiableState>> inputs) {
+        final Map<StateRef, List<StateAndRef<IdentifiableState>>> result = new HashMap<>();
 
-        for (final StateRef stateRef : stateRefs) {
+        for (final StateRef outputIdentifier : outputIdentifiers) {
+            final List<StateAndRef<IdentifiableState>> inputsMatchingOutputIdentifier = new ArrayList<>();
 
-            final List<StateAndRef<IdentifiableState>> inputsMatchingStateRef = new ArrayList<>();
+            if (!result.containsKey(outputIdentifier)) {
+                result.put(outputIdentifier, inputsMatchingOutputIdentifier);
+            }
 
             // TODO : O(n^2) time complexity! :(
             for (final StateAndRef<IdentifiableState> input : inputs) {
-                if (input.getRef() == stateRef || input.getState().getContractState().getId() == stateRef) {
-                    inputsMatchingStateRef.add(input);
+                if (input.getRef().equals(outputIdentifier) || input.getState().getContractState().getId().equals(outputIdentifier)) {
+                    result.get(outputIdentifier).add(input);
                 }
             }
-
-            mappedOutputIdsToInputs.put(stateRef, inputsMatchingStateRef);
         }
 
-        /*
-         * Each entry in the map must contain only one output to prevent splitting or merging identifiable states.
-         */
-
-        assert mappedOutputIdsToInputs.values().stream().allMatch(it -> it.size() == 1) : CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY;
+        return result;
     }
 }

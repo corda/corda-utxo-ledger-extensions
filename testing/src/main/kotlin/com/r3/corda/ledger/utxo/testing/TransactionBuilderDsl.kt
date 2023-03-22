@@ -52,7 +52,12 @@ class TransactionBuilderDsl(private val notary: Party) {
     }
 
     @TransactionBuilderDslMarker
-    fun addInputState(state: ContractState, ref: StateRef, notary: Party, encumbrance: String?): UtxoTransactionBuilder {
+    fun addInputState(
+        state: ContractState,
+        ref: StateRef,
+        notary: Party,
+        encumbrance: String?
+    ): UtxoTransactionBuilder {
         return builder.addInputState(state, ref, notary, encumbrance)
     }
 
@@ -67,8 +72,8 @@ class TransactionBuilderDsl(private val notary: Party) {
     }
 
     @TransactionBuilderDslMarker
-    fun addOutputState(state: ContractState, ref: StateRef, notary: Party, encumbrance: String?): UtxoTransactionBuilder {
-        return builder.addOutputState(state, ref, notary, encumbrance)
+    fun addOutputState(state: ContractState, encumbrance: String?): UtxoTransactionBuilder {
+        return builder.addOutputState(state, encumbrance)
     }
 
     @TransactionBuilderDslMarker
@@ -82,7 +87,12 @@ class TransactionBuilderDsl(private val notary: Party) {
     }
 
     @TransactionBuilderDslMarker
-    fun addReferenceState(state: ContractState, ref: StateRef, notary: Party, encumbrance: String?): UtxoTransactionBuilder {
+    fun addReferenceState(
+        state: ContractState,
+        ref: StateRef,
+        notary: Party,
+        encumbrance: String?
+    ): UtxoTransactionBuilder {
         return builder.addReferenceState(state, ref, notary, encumbrance)
     }
 

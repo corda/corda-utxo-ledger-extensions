@@ -107,16 +107,15 @@ public final class UtxoTransactionBuilder {
     @NotNull
     public UtxoTransactionBuilder addOutputState(
             @NotNull final ContractState state,
-            @NotNull final StateRef ref,
-            @NotNull final Party notary,
             @Nullable final String encumbrance) {
+        StateRef ref = getNextOutputStateRef();
         TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notary, encumbrance);
         return addOutputState(transactionBuilderState);
     }
 
     @NotNull
     public UtxoTransactionBuilder addOutputState(@NotNull final ContractState state) {
-        return addOutputState(state, getNextOutputStateRef(), notary, null);
+        return addOutputState(state, null);
     }
 
     @NotNull
