@@ -31,7 +31,7 @@ public abstract class FungibleContractDeleteCommand extends FungibleContractComm
         final List<FungibleState> outputs = transaction.getOutputStates(FungibleState.class);
 
         Check.isNotEmpty(inputs, CONTRACT_RULE_INPUTS);
-        Check.isGreaterThan(FungibleState.sum(inputs), FungibleState.sum(outputs), CONTRACT_RULE_SUM);
+        Check.isGreaterThan(FungibleUtils.sum(inputs), FungibleUtils.sum(outputs), CONTRACT_RULE_SUM);
 
         onVerify(transaction);
     }
@@ -42,6 +42,7 @@ public abstract class FungibleContractDeleteCommand extends FungibleContractComm
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 }

@@ -46,7 +46,7 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
         Check.isNotEmpty(inputs, CONTRACT_RULE_INPUTS);
         Check.isNotEmpty(outputs, CONTRACT_RULE_OUTPUTS);
         Check.all(outputs, it -> it.getQuantity().getUnscaledValue().compareTo(BigInteger.ZERO) > 0, CONTRACT_RULE_POSITIVE_QUANTITIES);
-        Check.isEqual(FungibleState.sum(inputs), FungibleState.sum(outputs), CONTRACT_RULE_SUM);
+        Check.isEqual(FungibleUtils.sum(inputs), FungibleUtils.sum(outputs), CONTRACT_RULE_SUM);
 
         for (final FungibleState input : inputs) {
 
@@ -64,7 +64,7 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
                     .filter(it -> it.getClass().equals(input.getClass()) && it.getIdentifierHash().equals(input.getIdentifierHash()))
                     .collect(Collectors.toList());
 
-            Check.isEqual(FungibleState.sum(inputsByHash), FungibleState.sum(outputsByHash), MessageFormat.format(CONTRACT_RULE_GROUP_SUM, type.getName(), hash));
+            Check.isEqual(FungibleUtils.sum(inputsByHash), FungibleUtils.sum(outputsByHash), MessageFormat.format(CONTRACT_RULE_GROUP_SUM, type.getName(), hash));
         }
 
         onVerify(transaction);
@@ -76,6 +76,7 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 }

@@ -57,9 +57,11 @@ public abstract class IdentifiableContract extends DelegatedContract<Identifiabl
                 result.put(outputIdentifier, inputsMatchingOutputIdentifier);
             }
 
-            // TODO : O(n^2) time complexity! :(
             for (final StateAndRef<IdentifiableState> input : inputs) {
-                if (input.getRef().equals(outputIdentifier) || input.getState().getContractState().getId().equals(outputIdentifier)) {
+                final StateRef inputRef = input.getRef();
+                final StateRef inputIdentifier = input.getState().getContractState().getId();
+
+                if (outputIdentifier.equals(inputRef) || outputIdentifier.equals(inputIdentifier)) {
                     result.get(outputIdentifier).add(input);
                 }
             }

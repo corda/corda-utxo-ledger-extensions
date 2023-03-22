@@ -17,7 +17,6 @@ public abstract class ChainableContractDeleteCommand extends ChainableContractCo
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        // TODO : Base rules for deleting chainable states...
         onVerify(transaction);
     }
 
@@ -27,6 +26,7 @@ public abstract class ChainableContractDeleteCommand extends ChainableContractCo
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 }

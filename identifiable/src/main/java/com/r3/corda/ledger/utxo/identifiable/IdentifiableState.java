@@ -11,9 +11,9 @@ import org.jetbrains.annotations.*;
 public interface IdentifiableState extends VisibleState {
 
     /**
-     * Gets the unique ID of the current {@link IdentifiableState}.
+     * Gets the unique ID of the current {@link IdentifiableState}, or null if it's the first state.
      *
-     * @return Returns the unique ID of the current {@link IdentifiableState}.
+     * @return Returns the unique ID of the current {@link IdentifiableState}, or null if it's the first state.
      */
     @Nullable
     StateRef getId();
