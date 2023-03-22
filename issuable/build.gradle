@@ -1,0 +1,22 @@
+cordapp {
+    targetPlatformVersion = platformVersion.toInteger()
+    minimumPlatformVersion = platformVersion.toInteger()
+
+    contract {
+        name "R3 UTXO Issuable Contract"
+        versionId cordappVersionId.toInteger()
+        vendor cordappVendorName
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.cordapp
+        }
+    }
+}
+
+dependencies {
+    cordapp project(':common')
+}

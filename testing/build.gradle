@@ -1,0 +1,10 @@
+cordapp {
+    targetPlatformVersion = platformVersion.toInteger()
+    minimumPlatformVersion = platformVersion.toInteger()
+
+    contract {
+        name "THIS SHOULD NOT BE HERE!"
+        versionId cordappVersionId.toInteger()
+        vendor cordappVendorName
+    }
+}

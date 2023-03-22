@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.plugin.jpa'
+    id 'net.corda.plugins.cordapp-cpb2'
+    id 'net.corda.cordapp.cordapp-configuration'
+}
+
+cordapp {
+    targetPlatformVersion = platformVersion.toInteger()
+    minimumPlatformVersion = platformVersion.toInteger()
+
+    contract {
+        name "THIS SHOULD NOT BE HERE. IT'S NOT A CORDAPP!!!!!!!!!!!"
+        versionId cordappVersionId.toInteger()
+        vendor cordappVendorName
+    }
+}
+
+allprojects {
+    group 'net.corda.v5.utxo.ledger.extensions'
+    version '1.0-SNAPSHOT'
+
+    apply plugin: 'net.corda.plugins.cordapp-cpb2'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'maven-publish'
+
+    // Declare the set of Java compiler options we need to build a CorDapp.
+    tasks.withType(JavaCompile) {
+        // -parameters - Needed for reflection and serialization to work correctly.
+        options.compilerArgs += [
+                "-parameters"
+        ]
+    }
+
+    repositories {
+        // All dependencies are held in Maven Central
+        mavenCentral()
+        maven { url = artifactoryContextUrl }
+    }
+
+    dependencies {
+        cordaProvided 'org.jetbrains.kotlin:kotlin-osgi-bundle'
+        cordaProvided 'org.jetbrains:annotations:24.0.1'
+        cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
+        cordaProvided 'net.corda:corda-base'
+        cordaProvided 'net.corda:corda-ledger-utxo'
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId "Corda UTXO Ledger Extensions"
+            groupId project.group
+            artifact jar
+        }
+    }
+}
