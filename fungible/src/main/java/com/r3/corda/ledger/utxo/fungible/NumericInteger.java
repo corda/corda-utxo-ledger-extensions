@@ -86,7 +86,7 @@ public final class NumericInteger implements Numeric<BigInteger> {
     @NotNull
     @Override
     public NumericInteger subtract(@NotNull final Numeric<BigInteger> other) {
-        return new NumericInteger(getValue().add(other.getValue()));
+        return new NumericInteger(getValue().subtract(other.getValue()));
     }
 
     /**

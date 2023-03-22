@@ -91,7 +91,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
     @Override
     public NumericDecimal subtract(@NotNull final Numeric<BigDecimal> other) {
         if (getValue().scale() != other.getValue().scale()) {
-            throw new IllegalArgumentException("Cannot add values with different scales.");
+            throw new IllegalArgumentException("Cannot subtract values with different scales.");
         }
 
         return new NumericDecimal(getValue().subtract(other.getValue()));
@@ -115,7 +115,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      * @return Returns true if the specified object is equal to the current object; otherwise, false.
      */
     public boolean equals(@NotNull final NumericDecimal other) {
-        return getValue().equals(other.getValue());
+        return compareTo(other) == 0;
     }
 
     /**

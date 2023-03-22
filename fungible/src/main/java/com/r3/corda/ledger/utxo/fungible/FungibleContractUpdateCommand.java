@@ -1,10 +1,12 @@
 package com.r3.corda.ledger.utxo.fungible;
 
 import com.r3.corda.ledger.utxo.common.*;
+import net.corda.v5.crypto.*;
 import net.corda.v5.ledger.utxo.transaction.*;
 import org.jetbrains.annotations.*;
 
 import java.math.*;
+import java.text.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -24,10 +26,10 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
             "On fungible state(s) updating, the quantity of every created fungible state must be greater than zero.";
 
     final static String CONTRACT_RULE_SUM =
-            "On fungible state(s) updating, the sum of the absolute values of the consumed states must be equal to the sum of the absolute values of the created states.";
+            "On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states.";
 
     final static String CONTRACT_RULE_GROUP_SUM =
-            "On fungible state(s) updating, the sum of the absolute values of the consumed states must be equal to the sum of the absolute values of the created states, where the states are grouped by the following hash: %s.";
+            "On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states, where the states are grouped by class {0} and identifier hash {1}";
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -47,9 +49,13 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
         Check.isEqual(FungibleState.sum(inputs), FungibleState.sum(outputs), CONTRACT_RULE_SUM);
 
         for (final FungibleState input : inputs) {
+
+            final Class<?> type = input.getClass();
+            final SecureHash hash = input.getIdentifierHash();
+
             final List<FungibleState> inputsByHash = inputs
                     .stream()
-                    .filter(it -> it.getClass().equals(input.getClass()) && it.getIdentifierHash().equals(input.getIdentifierHash()))
+                    .filter(it -> it.getClass().equals(type) && it.getIdentifierHash().equals(hash))
                     .collect(Collectors.toList());
 
 
@@ -58,7 +64,7 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
                     .filter(it -> it.getClass().equals(input.getClass()) && it.getIdentifierHash().equals(input.getIdentifierHash()))
                     .collect(Collectors.toList());
 
-            Check.isEqual(FungibleState.sum(inputsByHash), FungibleState.sum(outputsByHash), CONTRACT_RULE_GROUP_SUM);
+            Check.isEqual(FungibleState.sum(inputsByHash), FungibleState.sum(outputsByHash), MessageFormat.format(CONTRACT_RULE_GROUP_SUM, type.getName(), hash));
         }
 
         onVerify(transaction);

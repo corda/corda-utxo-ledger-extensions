@@ -12,9 +12,11 @@ import java.util.*;
  */
 public abstract class FungibleContractDeleteCommand extends FungibleContractCommand {
 
-    final static String CONTRACT_RULE_INPUTS = "On fungible state(s) deleting, at least one fungible state input must be consumed.";
+    final static String CONTRACT_RULE_INPUTS =
+            "On fungible state(s) deleting, at least one fungible state input must be consumed.";
 
-    final static String CONTRACT_RULE_SUM = "On fungible state(s) deleting, the sum of the absolute values of the consumed states must be greater than the sum of the absolute values of the created states.";
+    final static String CONTRACT_RULE_SUM =
+            "On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.";
 
     /**
      * Verifies the specified transaction associated with the current contract.
