@@ -7,8 +7,14 @@ import org.jetbrains.annotations.*;
 import java.util.*;
 
 /**
- * Represents the base class for implementing {@link FungibleContract} create commands.
- * This should be implemented by commands intended to delete existing ledger instances of {@link FungibleState}.
+ * Represents the base class for implementing {@link FungibleContract} commands that are intended to delete (consume) existing ledger
+ * instances of {@link FungibleState}.
+ * <p>
+ * This command will ensure that:
+ * <ul>
+ *     <li>On fungible state(s) deleting, at least one fungible state input must be consumed.</li>
+ *     <li>On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.</li>
+ * </ul>
  */
 public abstract class FungibleContractDeleteCommand extends FungibleContractCommand {
 

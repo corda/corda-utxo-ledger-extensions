@@ -11,13 +11,22 @@ import java.util.*;
 import java.util.stream.*;
 
 /**
- * Represents the base class for implementing {@link FungibleContract} update commands.
- * This should be implemented by commands intended to update existing ledger instances of {@link FungibleState}.
+ * Represents the base class for implementing {@link FungibleContract} commands that are intended to update existing ledger instances of
+ * {@link FungibleState}.
+ * <p>
+ * This command will ensure that:
+ * <ul>
+ *     <li>On fungible state(s) updating, at least one fungible state must be consumed.</li>
+ *     <li>On fungible state(s) updating, at least one fungible state must be created.</li>
+ *     <li>On fungible state(s) updating, the quantity of every created fungible state must be greater than zero.</li>
+ *     <li>On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states.</li>
+ *     <li>On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states, where the states are grouped by class and identifier hash.</li>
+ * </ul>
  */
 public abstract class FungibleContractUpdateCommand extends FungibleContractCommand {
 
     final static String CONTRACT_RULE_INPUTS =
-            "On fungible state(s) updating, at least one fungible state input must be consumed.";
+            "On fungible state(s) updating, at least one fungible state must be consumed.";
 
     final static String CONTRACT_RULE_OUTPUTS =
             "On fungible state(s) updating, at least one fungible state must be created.";

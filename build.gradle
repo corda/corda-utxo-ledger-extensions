@@ -20,14 +20,14 @@ cordapp {
 
 allprojects {
     group 'net.r3.corda.ledger.utxo'
-    version '1.0-SNAPSHOT'
+    version '0.9-SNAPSHOT'
 
     apply plugin: 'net.corda.plugins.cordapp-cpb2'
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'maven-publish'
 
     // Declare the set of Java compiler options we need to build a CorDapp.
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         // -parameters - Needed for reflection and serialization to work correctly.
         options.compilerArgs += [
                 "-parameters"
@@ -50,15 +50,5 @@ allprojects {
 
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifactId "Corda UTXO Ledger Extensions"
-            groupId project.group
-            artifact jar
-        }
     }
 }

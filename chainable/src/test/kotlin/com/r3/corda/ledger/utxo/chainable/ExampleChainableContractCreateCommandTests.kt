@@ -1,6 +1,5 @@
 package com.r3.corda.ledger.utxo.chainable
 
-import com.r3.corda.ledger.utxo.common.StaticPointer
 import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
 import com.r3.corda.ledger.utxo.testing.randomStateRef
@@ -39,8 +38,8 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
 
         // Assert
         assertEquals(
-            "At least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand' must be included in the transaction.\n" +
-                    "The permitted commands include [Create, Update, Delete]", exception.message
+            "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand' must be included in the transaction.\n" +
+                    "The permitted commands include [Create, Update, Delete].", exception.message
         )
     }
 

@@ -1,15 +1,19 @@
 package com.r3.corda.ledger.utxo.common;
 
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.Command;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * Provides functionality for contract verification checks.
  */
+@SuppressWarnings("unused")
 public final class Check {
 
     /**

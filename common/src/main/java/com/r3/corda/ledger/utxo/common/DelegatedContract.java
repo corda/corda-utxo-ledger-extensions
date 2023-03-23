@@ -1,14 +1,17 @@
 package com.r3.corda.ledger.utxo.common;
 
 import net.corda.v5.ledger.utxo.Contract;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.*;
-import java.security.*;
-import java.util.*;
-import java.util.stream.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.security.PublicKey;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents the base class for implementing delegated contracts.
@@ -18,6 +21,12 @@ import java.util.stream.*;
  * @param <T> The underlying {@link VerifiableCommand} type that the contract is responsible for verifying.
  */
 public abstract class DelegatedContract<T extends VerifiableCommand> implements Contract {
+
+    static String CONTRACT_RULE_EMPTY_PERMITTED_COMMAND_TYPES =
+            "On ''{0}'' contract executing, at least one permitted command type must be specified.";
+
+    static String CONTRACT_RULE_EXECUTE_PERMITTED_COMMANDS =
+            "On ''{0}'' contract executing, at least one command of type ''{1}'' must be included in the transaction.\nThe permitted commands include [{2}].";
 
     /**
      * Gets the permitted {@link VerifiableCommand} types that the current {@link DelegatedContract} is able to verify.
@@ -49,22 +58,28 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
         onVerify(transaction);
 
-        boolean atLeastOneCommandFoundToExecute = false;
+        final List<Class<? extends T>> permittedCommandTypes = getPermittedCommandTypes();
+
+        Check.isNotEmpty(permittedCommandTypes, MessageFormat.format(
+                CONTRACT_RULE_EMPTY_PERMITTED_COMMAND_TYPES,
+                getClass().getTypeName()
+        ));
+
+        boolean hasExecutedAtLeastOnePermittedCommand = false;
 
         for (final VerifiableCommand command : transaction.getCommands(VerifiableCommand.class)) {
-            if (getPermittedCommandTypes().contains(command.getClass())) {
-                atLeastOneCommandFoundToExecute = true;
+            if (permittedCommandTypes.contains(command.getClass())) {
+                hasExecutedAtLeastOnePermittedCommand = true;
                 command.verify(transaction);
             }
         }
 
-
-        Check.isTrue(atLeastOneCommandFoundToExecute, "At least one command of type '"
-                + getGenericTypeParameterName(getClass())
-                + "' must be included in the transaction.\n"
-                + "The permitted commands include ["
-                + getPermittedCommandTypes().stream().map(Class::getSimpleName).collect(Collectors.joining(", "))
-                + "]");
+        Check.isTrue(hasExecutedAtLeastOnePermittedCommand, MessageFormat.format(
+                CONTRACT_RULE_EXECUTE_PERMITTED_COMMANDS,
+                getClass().getTypeName(),
+                getGenericTypeParameterName(getClass()),
+                getPermittedCommandTypes().stream().map(Class::getSimpleName).collect(Collectors.joining(", "))
+        ));
     }
 
     /**
@@ -76,6 +91,12 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 
+    /**
+     * Obtains the generic parameter type of type {@link T} by recursively looking up the type hierarchy.
+     *
+     * @param type The {@link Class} to begin looking for the generic parameter type of type {@link T}.
+     * @return Returns the generic parameter type of type {@link T} by recursively looking up the type hierarchy.
+     */
     private String getGenericTypeParameterName(Class<?> type) {
         Type superClass = type.getGenericSuperclass();
 

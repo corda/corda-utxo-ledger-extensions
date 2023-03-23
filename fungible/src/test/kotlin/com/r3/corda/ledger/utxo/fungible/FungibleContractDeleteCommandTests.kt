@@ -37,8 +37,8 @@ class FungibleContractDeleteCommandTests : ContractTest() {
 
         // Assert
         assertEquals(
-            "At least one command of type 'com.r3.corda.ledger.utxo.fungible.FungibleContractCommand' must be included in the transaction.\n" +
-                    "The permitted commands include [Create, Update, Delete]", exception.message
+            "On 'com.r3.corda.ledger.utxo.fungible.ExampleFungibleContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.fungible.FungibleContractCommand' must be included in the transaction.\n" +
+                    "The permitted commands include [Create, Update, Delete].", exception.message
         )
     }
 
