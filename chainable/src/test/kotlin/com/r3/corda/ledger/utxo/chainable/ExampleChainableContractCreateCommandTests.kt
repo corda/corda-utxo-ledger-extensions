@@ -1,0 +1,92 @@
+package com.r3.corda.ledger.utxo.chainable
+
+import com.r3.corda.ledger.utxo.testing.ContractTest
+import com.r3.corda.ledger.utxo.testing.buildTransaction
+import com.r3.corda.ledger.utxo.testing.randomStateRef
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
+
+class ExampleChainableContractCreateCommandTests : ContractTest() {
+
+    private val state = ExampleChainableState(ALICE_KEY, BOB_KEY, null)
+    private val contract = ExampleChainableContract()
+
+    @Test
+    fun `On chainable state(s) creating, the transaction should verify successfully`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addOutputState(state)
+            addCommand(ExampleChainableContract.Create())
+        }
+
+        // Act
+        contract.verify(transaction)
+    }
+
+    @Test
+    fun `On chainable state(s) creating, the transaction should include the Create command`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addOutputState(state)
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(
+            "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand' must be included in the transaction.\n" +
+                    "The permitted commands include [Create, Update, Delete].", exception.message
+        )
+    }
+
+    @Test
+    fun `On chainable state(s) creating, zero chainable states must be consumed`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addInputState(state)
+            addCommand(ExampleChainableContract.Create())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(ChainableContractCreateCommand.CONTRACT_RULE_INPUTS, exception.message)
+    }
+
+    @Test
+    fun `On chainable state(s) creating, at least one chainable state must be created`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addCommand(ExampleChainableContract.Create())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(ChainableContractCreateCommand.CONTRACT_RULE_OUTPUTS, exception.message)
+    }
+
+    @Test
+    fun `On chainable state(s) creating, the previous state pointer of every created chainable state must be null`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addOutputState(state.next(randomStateRef()))
+            addCommand(ExampleChainableContract.Create())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(ChainableContractCreateCommand.CONTRACT_RULE_POINTERS, exception.message)
+    }
+}
