@@ -1,7 +1,6 @@
 package com.r3.corda.ledger.utxo.fungible
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.math.BigInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -71,8 +70,8 @@ class NumericIntegerTests {
     fun `NumericInteger_compareTo should return a value of 1 when the left-hand value is greater than the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger.TEN
-        val right = NumericInteger.ONE
+        val left = NumericInteger(BigInteger.TEN)
+        val right = NumericInteger(BigInteger.ONE)
 
         // Act
         val actual = left.compareTo(right)
@@ -85,8 +84,8 @@ class NumericIntegerTests {
     fun `NumericInteger_compareTo should return a value of -1 when the left-hand value is less than the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger.ONE
-        val right = NumericInteger.TEN
+        val left = NumericInteger(BigInteger.ONE)
+        val right = NumericInteger(BigInteger.TEN)
 
         // Act
         val actual = left.compareTo(right)
@@ -99,8 +98,8 @@ class NumericIntegerTests {
     fun `NumericInteger_compareTo should return a value of 0 when the left-hand value is equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger.TEN
-        val right = NumericInteger.TEN
+        val left = NumericInteger(BigInteger.TEN)
+        val right = NumericInteger(BigInteger.TEN)
 
         // Act
         val actual = left.compareTo(right)
@@ -113,8 +112,8 @@ class NumericIntegerTests {
     fun `NumericInteger_equals should return true if the left-hand value is equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger.TEN
-        val right = NumericInteger.TEN
+        val left = NumericInteger(BigInteger.TEN)
+        val right = NumericInteger(BigInteger.TEN)
 
         // Act
         val actual = left.equals(right)
@@ -127,8 +126,8 @@ class NumericIntegerTests {
     fun `NumericInteger_equals should return false if the left-hand value is not equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger.TEN
-        val right = NumericInteger.ONE
+        val left = NumericInteger(BigInteger.TEN)
+        val right = NumericInteger(BigInteger.ONE)
 
         // Act
         val actual = left.equals(right)

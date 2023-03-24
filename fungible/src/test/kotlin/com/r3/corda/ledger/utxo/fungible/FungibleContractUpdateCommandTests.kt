@@ -5,13 +5,14 @@ import com.r3.corda.ledger.utxo.testing.buildTransaction
 import net.corda.v5.crypto.SecureHash
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 import java.text.MessageFormat
 import kotlin.test.assertEquals
 
 class FungibleContractUpdateCommandTests : ContractTest() {
 
-    private val stateA = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
-    private val stateB = ExampleFungibleStateB(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
+    private val stateA = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
+    private val stateB = ExampleFungibleStateB(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
     val hash = SecureHash.parse("SHA256:000000000000000000000000000000000000000000000000000000000000000B")
     private val contract = ExampleFungibleContract()
 
@@ -87,7 +88,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val transaction = buildTransaction(NOTARY_PARTY) {
             addInputState(stateA)
             addOutputState(stateA)
-            addOutputState(stateA.copy(quantity = NumericDecimal.ZERO))
+            addOutputState(stateA.copy(quantity = NumericDecimal(BigDecimal.ZERO)))
             addCommand(ExampleFungibleContract.Update())
         }
 
@@ -103,7 +104,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(stateA.copy(quantity = NumericDecimal.ONE))
+            addInputState(stateA.copy(quantity = NumericDecimal(BigDecimal.ONE)))
             addOutputState(stateA)
             addCommand(ExampleFungibleContract.Update())
         }
@@ -121,7 +122,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
             addInputState(stateA)
-            addOutputState(stateA.copy(quantity = NumericDecimal.ONE))
+            addOutputState(stateA.copy(quantity = NumericDecimal(BigDecimal.ONE)))
             addCommand(ExampleFungibleContract.Update())
         }
 

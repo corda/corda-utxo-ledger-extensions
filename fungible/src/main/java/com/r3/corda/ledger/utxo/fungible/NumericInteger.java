@@ -11,24 +11,6 @@ import java.util.*;
 public final class NumericInteger implements Numeric<BigInteger> {
 
     /**
-     * Gets a {@link NumericDecimal} representing the value zero (0).
-     */
-    @NotNull
-    public static final NumericInteger ZERO = new NumericInteger(BigInteger.ZERO);
-
-    /**
-     * Gets a {@link NumericInteger} representing the value one (1).
-     */
-    @NotNull
-    public static final NumericInteger ONE = new NumericInteger(BigInteger.ONE);
-
-    /**
-     * Gets a {@link NumericInteger} representing the value ten (10).
-     */
-    @NotNull
-    public static final NumericInteger TEN = new NumericInteger(BigInteger.TEN);
-
-    /**
      * The underlying {@link BigInteger} value.
      */
     @NotNull

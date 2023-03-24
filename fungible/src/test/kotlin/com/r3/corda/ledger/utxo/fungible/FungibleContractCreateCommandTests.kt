@@ -4,11 +4,12 @@ import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 import kotlin.test.assertEquals
 
 class FungibleContractCreateCommandTests : ContractTest() {
 
-    private val state = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
+    private val state = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
     private val contract = ExampleFungibleContract()
 
     @Test
@@ -63,7 +64,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addOutputState(state.copy(quantity = NumericDecimal.ZERO))
+            addOutputState(state.copy(quantity = NumericDecimal(BigDecimal.ZERO)))
             addCommand(ExampleFungibleContract.Create())
         }
 

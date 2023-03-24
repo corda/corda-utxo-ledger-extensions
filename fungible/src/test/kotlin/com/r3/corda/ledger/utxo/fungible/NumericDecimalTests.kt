@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.fungible
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -99,8 +100,8 @@ class NumericDecimalTests {
     fun `NumericDecimal_compareTo should return a value of 1 when the left-hand value is greater than the right-hand value`() {
 
         // Arrange
-        val left = NumericDecimal.TEN
-        val right = NumericDecimal.ONE
+        val left = NumericDecimal(BigDecimal.TEN)
+        val right = NumericDecimal(BigDecimal.ONE)
 
         // Act
         val actual = left.compareTo(right)
@@ -113,8 +114,8 @@ class NumericDecimalTests {
     fun `NumericDecimal_compareTo should return a value of -1 when the left-hand value is less than the right-hand value`() {
 
         // Arrange
-        val left = NumericDecimal.ONE
-        val right = NumericDecimal.TEN
+        val left = NumericDecimal(BigDecimal.ONE)
+        val right = NumericDecimal(BigDecimal.TEN)
 
         // Act
         val actual = left.compareTo(right)
@@ -127,8 +128,8 @@ class NumericDecimalTests {
     fun `NumericDecimal_compareTo should return a value of 0 when the left-hand value is equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericDecimal.TEN
-        val right = NumericDecimal.TEN
+        val left = NumericDecimal(BigDecimal.TEN)
+        val right = NumericDecimal(BigDecimal.TEN)
 
         // Act
         val actual = left.compareTo(right)
@@ -141,8 +142,8 @@ class NumericDecimalTests {
     fun `NumericDecimal_equals should return true if the left-hand value is equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericDecimal.TEN
-        val right = NumericDecimal.TEN
+        val left = NumericDecimal(BigDecimal.TEN)
+        val right = NumericDecimal(BigDecimal.TEN)
 
         // Act
         val actual = left.equals(right)
@@ -155,8 +156,8 @@ class NumericDecimalTests {
     fun `NumericDecimal_equals should return false if the left-hand value is not equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericDecimal.TEN
-        val right = NumericDecimal.ONE
+        val left = NumericDecimal(BigDecimal.TEN)
+        val right = NumericDecimal(BigDecimal.ONE)
 
         // Act
         val actual = left.equals(right)
