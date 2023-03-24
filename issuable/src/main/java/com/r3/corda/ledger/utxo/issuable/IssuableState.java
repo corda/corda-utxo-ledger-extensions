@@ -1,9 +1,9 @@
 package com.r3.corda.ledger.utxo.issuable;
 
-import net.corda.v5.ledger.utxo.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.ContractState;
+import org.jetbrains.annotations.NotNull;
 
-import java.security.*;
+import java.security.PublicKey;
 
 /**
  * Defines a mechanism for implementing issuable states.

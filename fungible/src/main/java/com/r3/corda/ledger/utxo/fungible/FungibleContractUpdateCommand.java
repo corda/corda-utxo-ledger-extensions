@@ -1,14 +1,14 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import com.r3.corda.ledger.utxo.common.*;
-import net.corda.v5.crypto.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import com.r3.corda.ledger.utxo.base.Check;
+import net.corda.v5.crypto.SecureHash;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.math.*;
-import java.text.*;
-import java.util.*;
-import java.util.stream.*;
+import java.math.BigInteger;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents the base class for implementing {@link FungibleContract} commands that are intended to update existing ledger instances of

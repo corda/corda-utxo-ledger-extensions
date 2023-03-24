@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import com.r3.corda.ledger.utxo.common.VerifiableCommand;
+import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
  * Represents the base class for implementing {@link FungibleContract} commands.

@@ -1,8 +1,9 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import net.corda.v5.crypto.*;
-import net.corda.v5.ledger.utxo.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.crypto.SecureHash;
+import net.corda.v5.ledger.utxo.BelongsToContract;
+import net.corda.v5.ledger.utxo.ContractState;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Defines a mechanism for implementing fungible states.

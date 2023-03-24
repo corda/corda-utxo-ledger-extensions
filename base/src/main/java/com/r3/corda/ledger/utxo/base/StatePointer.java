@@ -1,11 +1,14 @@
-package com.r3.corda.ledger.utxo.common;
+package com.r3.corda.ledger.utxo.base;
 
-import net.corda.v5.base.annotations.*;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.base.annotations.CordaSerializable;
+import net.corda.v5.base.annotations.Suspendable;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.UtxoLedgerService;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Defines a mechanism for implementing pointers to other states on the ledger.
@@ -30,6 +33,7 @@ public interface StatePointer<T extends ContractState> {
      * @return Returns a {@link List} of {@link StateAndRef} of type {@link T} resolved by this pointer.
      */
     @NotNull
+    @Suspendable
     List<StateAndRef<T>> resolve(@NotNull UtxoLedgerService service);
 
     /**

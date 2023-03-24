@@ -1,7 +1,7 @@
 package com.r3.corda.ledger.utxo.issuable;
 
-import net.corda.v5.base.types.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.base.types.MemberX500Name;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Defines a mechanism for implementing well-known issuable states.

@@ -1,8 +1,8 @@
-package com.r3.corda.ledger.utxo.common;
+package com.r3.corda.ledger.utxo.base;
 
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.Command;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Defines a mechanism for delegating verification logic to contract commands.

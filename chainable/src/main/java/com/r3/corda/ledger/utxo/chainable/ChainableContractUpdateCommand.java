@@ -1,11 +1,15 @@
 package com.r3.corda.ledger.utxo.chainable;
 
-import com.r3.corda.ledger.utxo.common.*;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import com.r3.corda.ledger.utxo.base.Check;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents the base class for implementing {@link ChainableContract} update commands.
@@ -47,10 +51,9 @@ public abstract class ChainableContractUpdateCommand extends ChainableContractCo
 
             final List<ChainableState> matchingOutputs = new ArrayList<>();
 
-            // TODO : O(n^2) time complexity! :(
             for (final ChainableState output : outputs) {
 
-                if (output.getPreviousStatePointer().isPointingTo(input)) {
+                if (Objects.requireNonNull(output.getPreviousStatePointer()).isPointingTo(input)) {
                     matchingOutputs.add(output);
                 }
             }
@@ -69,6 +72,7 @@ public abstract class ChainableContractUpdateCommand extends ChainableContractCo
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 }

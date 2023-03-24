@@ -1,10 +1,10 @@
-package com.r3.corda.ledger.utxo.common;
+package com.r3.corda.ledger.utxo.base;
 
-import net.corda.v5.ledger.utxo.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.ContractState;
+import org.jetbrains.annotations.NotNull;
 
-import java.security.*;
-import java.util.*;
+import java.security.PublicKey;
+import java.util.Set;
 
 /**
  * Defines a mechanism to delegate visibility checking rules to contract states.

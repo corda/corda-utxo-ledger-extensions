@@ -1,13 +1,19 @@
 package com.r3.corda.ledger.utxo.identifiable;
 
-import com.r3.corda.ledger.utxo.common.*;
-import kotlin.*;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import com.r3.corda.ledger.utxo.base.StatePointer;
+import com.r3.corda.ledger.utxo.base.StatePosition;
+import kotlin.NotImplementedError;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.StateRef;
+import net.corda.v5.ledger.utxo.UtxoLedgerService;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.text.*;
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents an identifiable pointer, which points to a specific {@link StateRef},

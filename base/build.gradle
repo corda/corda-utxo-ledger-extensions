@@ -3,7 +3,7 @@ cordapp {
     minimumPlatformVersion = platformVersion.toInteger()
 
     contract {
-        name "R3 UTXO Common Contract"
+        name "R3 UTXO Base Contract"
         versionId cordappVersionId.toInteger()
         vendor cordappVendorName
     }

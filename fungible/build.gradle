@@ -18,7 +18,7 @@ publishing {
 }
 
 dependencies {
-    cordapp project(':common')
+    cordapp project(':base')
 
     testImplementation project(':testing')
     testImplementation "org.slf4j:slf4j-simple:2.0.0"

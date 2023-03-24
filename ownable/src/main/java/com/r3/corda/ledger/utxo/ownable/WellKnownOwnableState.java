@@ -1,8 +1,8 @@
 package com.r3.corda.ledger.utxo.ownable;
 
-import net.corda.v5.base.types.*;
-import net.corda.v5.ledger.utxo.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.base.types.MemberX500Name;
+import net.corda.v5.ledger.utxo.ContractState;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Defines a mechanism for implementing well-known ownable states.

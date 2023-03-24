@@ -1,9 +1,11 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.math.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * Represents a {@link Numeric} wrapped {@link BigDecimal}.

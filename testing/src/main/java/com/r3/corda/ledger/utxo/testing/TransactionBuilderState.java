@@ -1,7 +1,11 @@
 package com.r3.corda.ledger.utxo.testing;
 
 import net.corda.v5.ledger.common.Party;
-import net.corda.v5.ledger.utxo.*;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.EncumbranceGroup;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.StateRef;
+import net.corda.v5.ledger.utxo.TransactionState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

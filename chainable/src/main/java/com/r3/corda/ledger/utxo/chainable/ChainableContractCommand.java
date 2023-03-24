@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.chainable;
 
-import com.r3.corda.ledger.utxo.common.*;
+import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
  * Represents the base class for implementing {@link ChainableContract} commands.

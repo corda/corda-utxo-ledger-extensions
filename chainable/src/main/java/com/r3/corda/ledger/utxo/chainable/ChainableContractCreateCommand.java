@@ -1,10 +1,10 @@
 package com.r3.corda.ledger.utxo.chainable;
 
-import com.r3.corda.ledger.utxo.common.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import com.r3.corda.ledger.utxo.base.Check;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Represents the base class for implementing {@link ChainableContract} create commands.
@@ -46,6 +46,7 @@ public abstract class ChainableContractCreateCommand extends ChainableContractCo
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 }
