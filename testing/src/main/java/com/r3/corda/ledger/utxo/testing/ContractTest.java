@@ -1,9 +1,9 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.base.types.*;
-import net.corda.v5.ledger.common.*;
+import net.corda.v5.base.types.MemberX500Name;
+import net.corda.v5.ledger.common.Party;
 
-import java.security.*;
+import java.security.PublicKey;
 
 public abstract class ContractTest {
 
@@ -24,7 +24,7 @@ public abstract class ContractTest {
     protected final static PublicKey BANK_A_KEY = ContractTestUtils.createRandomPublicKey();
     protected final static PublicKey BANK_B_KEY = ContractTestUtils.createRandomPublicKey();
     protected final static PublicKey NOTARY_KEY = ContractTestUtils.createRandomPublicKey();
-    
+
     protected final static Party ALICE_PARTY = new Party(ALICE_NAME, ALICE_KEY);
     protected final static Party BOB_PARTY = new Party(BOB_NAME, BOB_KEY);
     protected final static Party CHARLIE_PARTY = new Party(CHARLIE_NAME, CHARLIE_KEY);
