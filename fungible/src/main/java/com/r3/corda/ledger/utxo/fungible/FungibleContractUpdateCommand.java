@@ -20,25 +20,20 @@ import java.util.stream.Collectors;
  *     <li>On fungible state(s) updating, at least one fungible state must be created.</li>
  *     <li>On fungible state(s) updating, the quantity of every created fungible state must be greater than zero.</li>
  *     <li>On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states.</li>
- *     <li>On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states, where the states are grouped by class and identifier hash.</li>
+ *     <li>On fungible state(s) updating, the sum of the consumed states that are fungible with each other must be equal to the sum of the created states that are fungible with each other.</li>
  * </ul>
  */
 public abstract class FungibleContractUpdateCommand extends FungibleContractCommand {
 
-    final static String CONTRACT_RULE_INPUTS =
-            "On fungible state(s) updating, at least one fungible state must be consumed.";
+    final static String CONTRACT_RULE_INPUTS = "On fungible state(s) updating, at least one fungible state must be consumed.";
 
-    final static String CONTRACT_RULE_OUTPUTS =
-            "On fungible state(s) updating, at least one fungible state must be created.";
+    final static String CONTRACT_RULE_OUTPUTS = "On fungible state(s) updating, at least one fungible state must be created.";
 
-    final static String CONTRACT_RULE_POSITIVE_QUANTITIES =
-            "On fungible state(s) updating, the quantity of every created fungible state must be greater than zero.";
+    final static String CONTRACT_RULE_POSITIVE_QUANTITIES = "On fungible state(s) updating, the quantity of every created fungible state must be greater than zero.";
 
-    final static String CONTRACT_RULE_SUM =
-            "On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states.";
+    final static String CONTRACT_RULE_SUM = "On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states.";
 
-    final static String CONTRACT_RULE_GROUP_SUM =
-            "On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states, where the states are grouped by class {0} and identifier hash {1}";
+    final static String CONTRACT_RULE_GROUP_SUM = "On fungible state(s) updating, the sum of the consumed states that are fungible with each other must be equal to the sum of the created states that are fungible with each other.";
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -47,7 +42,7 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
      * @throws RuntimeException if the specified transaction fails verification.
      */
     @Override
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
         final List<FungibleState> inputs = transaction.getInputStates(FungibleState.class);
         final List<FungibleState> outputs = transaction.getOutputStates(FungibleState.class);
@@ -59,21 +54,23 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
 
         for (final FungibleState input : inputs) {
 
-            final Class<?> type = input.getClass();
-            final SecureHash hash = input.getIdentifierHash();
-
-            final List<FungibleState> inputsByHash = inputs
+            // 1. We need to obtain all the inputs that are fungible with the current input.
+            final List<FungibleState> fungibleInputs = inputs
                     .stream()
-                    .filter(it -> it.getClass().equals(type) && it.getIdentifierHash().equals(hash))
+                    .filter(it -> input.isFungibleWith(it))
                     .collect(Collectors.toList());
 
-
-            final List<FungibleState> outputsByHash = outputs
+            // 2. We need to obtain all the outputs that are fungible with the current input.
+            final List<FungibleState> fungibleOutputs = outputs
                     .stream()
-                    .filter(it -> it.getClass().equals(input.getClass()) && it.getIdentifierHash().equals(input.getIdentifierHash()))
+                    .filter(it -> input.isFungibleWith(it))
                     .collect(Collectors.toList());
 
-            Check.isEqual(FungibleUtils.sum(inputsByHash), FungibleUtils.sum(outputsByHash), MessageFormat.format(CONTRACT_RULE_GROUP_SUM, type.getName(), hash));
+            // 3. Generate the sum of all fungible inputs and outputs.
+            final BigInteger inputSum = FungibleUtils.sum(fungibleInputs);
+            final BigInteger outputSum = FungibleUtils.sum(fungibleOutputs);
+
+            Check.isEqual(inputSum, outputSum, CONTRACT_RULE_GROUP_SUM);
         }
 
         onVerify(transaction);

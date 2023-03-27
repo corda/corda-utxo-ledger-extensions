@@ -1,6 +1,5 @@
 package com.r3.corda.ledger.utxo.fungible
 
-import net.corda.v5.crypto.SecureHash
 import net.corda.v5.ledger.utxo.BelongsToContract
 import java.security.PublicKey
 
@@ -8,8 +7,7 @@ import java.security.PublicKey
 data class ExampleFungibleStateB(
     val alice: PublicKey,
     val bob: PublicKey,
-    private val quantity: NumericDecimal,
-    private val identifierHash: SecureHash = SecureHash.parse("SHA256:000000000000000000000000000000000000000000000000000000000000000A")
+    private val quantity: NumericDecimal
 ) : FungibleState<NumericDecimal> {
 
     override fun getParticipants(): List<PublicKey> {
@@ -20,7 +18,7 @@ data class ExampleFungibleStateB(
         return quantity
     }
 
-    override fun getIdentifierHash(): SecureHash {
-        return identifierHash
+    override fun isFungibleWith(other: FungibleState<NumericDecimal>): Boolean {
+        return javaClass == other.javaClass
     }
 }
