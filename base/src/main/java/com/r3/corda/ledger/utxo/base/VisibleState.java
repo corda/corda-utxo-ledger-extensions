@@ -2,10 +2,8 @@ package com.r3.corda.ledger.utxo.base;
 
 import net.corda.v5.base.annotations.Suspendable;
 import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.VisibilityChecker;
 import org.jetbrains.annotations.NotNull;
-
-import java.security.PublicKey;
-import java.util.Set;
 
 /**
  * Defines a mechanism to delegate visibility checking rules to contract states.
