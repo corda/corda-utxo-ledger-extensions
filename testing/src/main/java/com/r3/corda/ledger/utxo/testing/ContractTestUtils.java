@@ -1,5 +1,6 @@
 package com.r3.corda.ledger.utxo.testing;
 
+import net.corda.v5.base.types.ByteArrays;
 import net.corda.v5.crypto.SecureHash;
 import net.corda.v5.ledger.utxo.StateRef;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +26,27 @@ public final class ContractTestUtils {
             builder.append(hex);
         }
 
-        final String hex = builder.substring(0, length);
-        final String algorithm = "SHA256";
-        final String value = MessageFormat.format("{0}:{1}", algorithm, hex);
+        final byte[] hex = ByteArrays.parseAsHex(builder.substring(0, length));
 
-        return SecureHash.parse(value);
+        return new SecureHash() {
+            @NotNull
+            @Override
+            public String getAlgorithm() {
+                return "SHA256";
+            }
+
+            @NotNull
+            @Override
+            public byte[] getBytes() {
+                return hex;
+            }
+
+            @NotNull
+            @Override
+            public String toHexString() {
+                return ByteArrays.toHexString(hex);
+            }
+        };
     }
 
     @NotNull
