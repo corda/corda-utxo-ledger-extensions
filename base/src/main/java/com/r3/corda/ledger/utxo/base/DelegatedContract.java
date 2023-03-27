@@ -1,4 +1,4 @@
-package com.r3.corda.ledger.utxo.common;
+package com.r3.corda.ledger.utxo.base;
 
 import net.corda.v5.ledger.utxo.Contract;
 import net.corda.v5.ledger.utxo.ContractState;
@@ -88,6 +88,7 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {
     }
 

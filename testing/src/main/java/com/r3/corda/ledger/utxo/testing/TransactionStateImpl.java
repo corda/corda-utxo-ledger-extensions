@@ -1,9 +1,12 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.ledger.common.*;
+import net.corda.v5.ledger.common.Party;
 import net.corda.v5.ledger.utxo.Contract;
-import net.corda.v5.ledger.utxo.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.EncumbranceGroup;
+import net.corda.v5.ledger.utxo.TransactionState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class TransactionStateImpl<T extends ContractState> implements TransactionState<T> {
 

@@ -1,15 +1,25 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.crypto.*;
-import net.corda.v5.ledger.common.*;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.crypto.SecureHash;
+import net.corda.v5.ledger.common.Party;
+import net.corda.v5.ledger.utxo.Attachment;
+import net.corda.v5.ledger.utxo.Command;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.StateRef;
+import net.corda.v5.ledger.utxo.TimeWindow;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.security.*;
-import java.time.*;
-import java.util.*;
-import java.util.stream.*;
+import java.security.PublicKey;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public final class UtxoTransactionBuilder {
 
@@ -45,7 +55,7 @@ public final class UtxoTransactionBuilder {
     public UtxoTransactionBuilder(@NotNull final Party notary) {
         this.notary = notary;
         this.transactionId = ContractTestUtils.createRandomSecureHash();
-        setTimeWindowBetween(Instant.MIN, Instant.MAX);
+        this.timeWindow = new TimeWindowBetweenImpl(Instant.MIN, Instant.MAX);
     }
 
     @NotNull

@@ -1,7 +1,7 @@
 package com.r3.corda.ledger.utxo.identifiable;
 
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the base class for implementing {@link IdentifiableContract} update commands.

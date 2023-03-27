@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import com.r3.corda.ledger.utxo.common.Check;
+import com.r3.corda.ledger.utxo.base.Check;
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 

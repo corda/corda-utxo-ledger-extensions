@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.chainable
 
-import com.r3.corda.ledger.utxo.common.StaticPointer
+import com.r3.corda.ledger.utxo.base.StaticPointer
 import net.corda.v5.ledger.utxo.BelongsToContract
 import net.corda.v5.ledger.utxo.StateRef
 import java.security.PublicKey

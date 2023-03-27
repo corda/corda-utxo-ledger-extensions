@@ -1,12 +1,18 @@
 package com.r3.corda.ledger.utxo.identifiable;
 
-import com.r3.corda.ledger.utxo.common.*;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import com.r3.corda.ledger.utxo.base.Check;
+import com.r3.corda.ledger.utxo.base.DelegatedContract;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.StateRef;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Represents the contract that governs {@link IdentifiableState} instances.

@@ -1,11 +1,12 @@
-package com.r3.corda.ledger.utxo.common;
+package com.r3.corda.ledger.utxo.base;
 
-import net.corda.v5.base.annotations.*;
-import net.corda.v5.ledger.utxo.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.base.annotations.CordaSerializable;
+import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.StateAndRef;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Specifies the position of a state within a {@link UtxoLedgerTransaction}.

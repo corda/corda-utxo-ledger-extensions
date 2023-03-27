@@ -1,9 +1,10 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import net.corda.v5.base.annotations.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.base.annotations.CordaSerializable;
+import net.corda.v5.base.annotations.DoNotImplement;
+import org.jetbrains.annotations.NotNull;
 
-import java.math.*;
+import java.math.BigInteger;
 
 /**
  * Defines a wrapper for {@link Number} types.

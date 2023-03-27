@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.identifiable;
 
-import com.r3.corda.ledger.utxo.common.*;
+import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
  * Represents the base class for implementing {@link IdentifiableContract} commands.

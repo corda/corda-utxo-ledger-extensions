@@ -1,10 +1,10 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import com.r3.corda.ledger.utxo.common.*;
-import net.corda.v5.ledger.utxo.transaction.*;
-import org.jetbrains.annotations.*;
+import com.r3.corda.ledger.utxo.base.Check;
+import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Represents the base class for implementing {@link FungibleContract} commands that are intended to delete (consume) existing ledger

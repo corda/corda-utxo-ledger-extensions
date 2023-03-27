@@ -1,12 +1,15 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.crypto.*;
-import net.corda.v5.ledger.utxo.*;
-import org.jetbrains.annotations.*;
+import net.corda.v5.crypto.SecureHash;
+import net.corda.v5.ledger.utxo.StateRef;
+import org.jetbrains.annotations.NotNull;
 
-import java.security.*;
-import java.text.*;
-import java.util.*;
+import java.security.PublicKey;
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
+import java.util.Random;
 
 public final class ContractTestUtils {
 

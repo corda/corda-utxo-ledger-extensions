@@ -1,9 +1,9 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
-import java.math.*;
-import java.util.*;
+import java.math.BigInteger;
+import java.util.List;
 
 /**
  * Represents fungible utilities.

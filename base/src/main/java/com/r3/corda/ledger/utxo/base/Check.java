@@ -1,4 +1,4 @@
-package com.r3.corda.ledger.utxo.common;
+package com.r3.corda.ledger.utxo.base;
 
 import net.corda.v5.ledger.utxo.Command;
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
