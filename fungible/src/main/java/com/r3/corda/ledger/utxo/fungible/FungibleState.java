@@ -22,10 +22,11 @@ public interface FungibleState<T extends Numeric<?>> extends ContractState {
     T getQuantity();
 
     /**
-     * Gets the unique identifier {@link SecureHash} of the current {@link FungibleState}.
+     * Determines whether the current {@link FungibleState} is fungible with the specified other {@link FungibleState}.
+     * The default implementation only considers {@link FungibleState} instances of the same type to be fungible.
      *
-     * @return Returns the unique identifier {@link SecureHash} of the current {@link FungibleState}.
+     * @param other The other {@link FungibleState} to determine is fungible with the current {@link FungibleState}.
+     * @return Returns true if the current {@link FungibleState} is fungible with the specified other {@link FungibleState}; otherwise, false.
      */
-    @NotNull
-    SecureHash getIdentifierHash();
+    boolean isFungibleWith(@NotNull FungibleState<T> other);
 }

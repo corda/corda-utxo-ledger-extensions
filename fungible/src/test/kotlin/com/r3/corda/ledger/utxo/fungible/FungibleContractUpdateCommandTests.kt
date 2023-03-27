@@ -2,18 +2,15 @@ package com.r3.corda.ledger.utxo.fungible
 
 import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
-import net.corda.v5.crypto.SecureHash
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
-import java.text.MessageFormat
 import kotlin.test.assertEquals
 
 class FungibleContractUpdateCommandTests : ContractTest() {
 
     private val stateA = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
     private val stateB = ExampleFungibleStateB(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
-    val hash = SecureHash.parse("SHA256:000000000000000000000000000000000000000000000000000000000000000B")
     private val contract = ExampleFungibleContract()
 
     @Test
@@ -134,53 +131,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     }
 
     @Test
-    fun `On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states (hash changed)`() {
-
-        // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(stateA)
-            addOutputState(stateA.copy(identifierHash = hash))
-            addCommand(ExampleFungibleContract.Update())
-        }
-
-        val expected = MessageFormat.format(
-            FungibleContractUpdateCommand.CONTRACT_RULE_GROUP_SUM,
-            stateA.javaClass.name,
-            stateA.identifierHash
-        )
-
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
-        // Assert
-        assertEquals(expected, exception.message)
-    }
-
-    @Test
-    fun `On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states (class changed)`() {
-
-        // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(stateA)
-            addOutputState(stateB.copy(identifierHash = stateA.identifierHash))
-            addCommand(ExampleFungibleContract.Update())
-        }
-
-        val expected = MessageFormat.format(
-            FungibleContractUpdateCommand.CONTRACT_RULE_GROUP_SUM,
-            stateA.javaClass.name,
-            stateA.identifierHash
-        )
-
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
-        // Assert
-        assertEquals(expected, exception.message)
-    }
-
-    @Test
-    fun `On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states (class and hash changed)`() {
+    fun `On fungible state(s) updating, the sum of the consumed states that are fungible with each other must be equal to the sum of the created states that are fungible with each other`() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
@@ -189,16 +140,10 @@ class FungibleContractUpdateCommandTests : ContractTest() {
             addCommand(ExampleFungibleContract.Update())
         }
 
-        val expected = MessageFormat.format(
-            FungibleContractUpdateCommand.CONTRACT_RULE_GROUP_SUM,
-            stateA.javaClass.name,
-            stateA.identifierHash
-        )
-
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(expected, exception.message)
+        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_GROUP_SUM, exception.message)
     }
 }
