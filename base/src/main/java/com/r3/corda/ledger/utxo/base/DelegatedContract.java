@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.base;
 
 import net.corda.v5.ledger.utxo.Contract;
 import net.corda.v5.ledger.utxo.ContractState;
+import net.corda.v5.ledger.utxo.VisibilityChecker;
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,8 +45,8 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
      * or if the state implements {@link VisibleState}, then visibility checking can be delegated to the state itself.
      */
     @Override
-    public boolean isRelevant(@NotNull final ContractState state, @NotNull final Set<PublicKey> myKeys) {
-        return Contract.super.isRelevant(state, myKeys) || state instanceof VisibleState && ((VisibleState) state).isVisible(myKeys);
+    public boolean isVisible(@NotNull final ContractState state, @NotNull VisibilityChecker checker) {
+        return Contract.super.isVisible(state, checker) || state instanceof VisibleState && ((VisibleState) state).isVisible(checker);
     }
 
     /**

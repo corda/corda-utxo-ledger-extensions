@@ -35,9 +35,60 @@ allprojects {
     }
 
     repositories {
-        // All dependencies are held in Maven Central
-        mavenCentral()
-        maven { url = artifactoryContextUrl }
+        mavenLocal()
+
+        maven {
+            url = "$artifactoryContextUrl/corda-os-maven"
+            authentication {
+                basic(BasicAuthentication)
+            }
+            credentials {
+                username = findProperty('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
+                password = findProperty('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
+            }
+        }
+
+        def cordaUseCache = System.getenv("CORDA_USE_CACHE")
+        if (cordaUseCache != null) {
+            maven {
+                url = "$artifactoryContextUrl/$cordaUseCache"
+                name = "R3 Maven remote repositories"
+                authentication {
+                    basic(BasicAuthentication)
+                }
+                credentials {
+                    username = findProperty('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
+                    password = findProperty('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
+                }
+            }
+        } else {
+            mavenCentral()
+
+            exclusiveContent {
+                forRepository {
+                    maven {
+                        url 'https://repository.mulesoft.org/nexus/content/repositories/public'
+                    }
+                }
+                filter {
+                    includeGroup 'org.mule.distributions'
+                    includeGroup 'antlr'
+                }
+            }
+
+            // NOTE: this needs to be removed once Micrometer contains OSGi metadata
+            //   https://github.com/micrometer-metrics/micrometer/pull/3457
+            exclusiveContent {
+                forRepository {
+                    maven {
+                        url "$artifactoryContextUrl/corda-dependencies-dev"
+                    }
+                }
+                filter {
+                    includeGroup 'io.micrometer'
+                }
+            }
+        }
     }
 
     dependencies {
