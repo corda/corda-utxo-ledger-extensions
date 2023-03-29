@@ -1,11 +1,3 @@
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            from components.cordapp
-//        }
-//    }
-//}
-
 plugins {
     id 'net.corda.plugins.cordapp-cpk2'
 }
@@ -18,6 +10,14 @@ cordapp {
         name "R3 UTXO Ledger Extensions Base Contract"
         versionId cordappVersionId.toInteger()
         vendor cordappVendorName
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.cordapp
+        }
     }
 }
 
