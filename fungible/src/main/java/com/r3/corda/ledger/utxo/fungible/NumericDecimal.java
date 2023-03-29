@@ -57,7 +57,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      */
     @NotNull
     @Override
-    public NumericDecimal add(@NotNull final Numeric<BigDecimal> other) {
+    public NumericDecimal plus(@NotNull final Numeric<BigDecimal> other) {
         if (getValue().scale() != other.getValue().scale()) {
             throw new IllegalArgumentException("Cannot add values with different scales.");
         }
@@ -73,7 +73,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      */
     @NotNull
     @Override
-    public NumericDecimal subtract(@NotNull final Numeric<BigDecimal> other) {
+    public NumericDecimal minus(@NotNull final Numeric<BigDecimal> other) {
         if (getValue().scale() != other.getValue().scale()) {
             throw new IllegalArgumentException("Cannot subtract values with different scales.");
         }

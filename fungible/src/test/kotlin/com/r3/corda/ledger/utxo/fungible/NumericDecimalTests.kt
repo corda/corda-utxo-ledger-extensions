@@ -39,7 +39,7 @@ class NumericDecimalTests {
     }
 
     @Test
-    fun `NumericDecimal_add should return the expected result`() {
+    fun `NumericDecimal_plus should return the expected result`() {
 
         // Arrange
         val left = NumericDecimal(123.45.toBigDecimal())
@@ -47,7 +47,22 @@ class NumericDecimalTests {
         val expected = NumericDecimal(802.44.toBigDecimal())
 
         // Act
-        val actual = left.add(right)
+        val actual = left.plus(right)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `NumericDecimal_plus should return the expected result (kotlin)`() {
+
+        // Arrange
+        val left = NumericDecimal(123.45.toBigDecimal())
+        val right = NumericDecimal(678.99.toBigDecimal())
+        val expected = NumericDecimal(802.44.toBigDecimal())
+
+        // Act
+        val actual = left + right
 
         // Assert
         assertEquals(expected, actual)
@@ -61,14 +76,14 @@ class NumericDecimalTests {
         val right = NumericDecimal(78.9.toBigDecimal())
 
         // Act
-        val exception = assertThrows<IllegalArgumentException> { left.add(right) }
+        val exception = assertThrows<IllegalArgumentException> { left.plus(right) }
 
         // Assert
         assertEquals("Cannot add values with different scales.", exception.message)
     }
 
     @Test
-    fun `NumericDecimal_subtract should return the expected result`() {
+    fun `NumericDecimal_minus should return the expected result`() {
 
         // Arrange
         val left = NumericDecimal(678.99.toBigDecimal())
@@ -76,7 +91,22 @@ class NumericDecimalTests {
         val expected = NumericDecimal(555.54.toBigDecimal())
 
         // Act
-        val actual = left.subtract(right)
+        val actual = left.minus(right)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `NumericDecimal_minus should return the expected result (kotlin)`() {
+
+        // Arrange
+        val left = NumericDecimal(678.99.toBigDecimal())
+        val right = NumericDecimal(123.45.toBigDecimal())
+        val expected = NumericDecimal(555.54.toBigDecimal())
+
+        // Act
+        val actual = left - right
 
         // Assert
         assertEquals(expected, actual)
@@ -90,7 +120,7 @@ class NumericDecimalTests {
         val right = NumericDecimal(78.9.toBigDecimal())
 
         // Act
-        val exception = assertThrows<IllegalArgumentException> { left.subtract(right) }
+        val exception = assertThrows<IllegalArgumentException> { left.minus(right) }
 
         // Assert
         assertEquals("Cannot subtract values with different scales.", exception.message)

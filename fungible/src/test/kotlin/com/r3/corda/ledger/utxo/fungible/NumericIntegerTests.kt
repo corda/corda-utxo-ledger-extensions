@@ -45,7 +45,7 @@ class NumericIntegerTests {
         val expected = NumericInteger(BigInteger.valueOf(111110))
 
         // Act
-        val actual = left.add(right)
+        val actual = left.plus(right)
 
         // Assert
         assertEquals(expected, actual)
@@ -60,7 +60,7 @@ class NumericIntegerTests {
         val expected = NumericInteger(BigInteger.valueOf(86420))
 
         // Act
-        val actual = left.subtract(right)
+        val actual = left.minus(right)
 
         // Assert
         assertEquals(expected, actual)
