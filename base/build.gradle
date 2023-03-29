@@ -1,23 +1,33 @@
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            from components.cordapp
+//        }
+//    }
+//}
+
+plugins {
+    id 'net.corda.plugins.cordapp-cpk2'
+}
+
 cordapp {
     targetPlatformVersion = platformVersion.toInteger()
     minimumPlatformVersion = platformVersion.toInteger()
 
     contract {
-        name "R3 UTXO Base Contract"
+        name "R3 UTXO Ledger Extensions Base Contract"
         versionId cordappVersionId.toInteger()
         vendor cordappVendorName
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.cordapp
-        }
-    }
-}
-
 dependencies {
+    cordaProvided 'org.jetbrains.kotlin:kotlin-osgi-bundle'
+    cordaProvided 'org.jetbrains:annotations:24.0.1'
+    cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
+    cordaProvided 'net.corda:corda-base'
+    cordaProvided 'net.corda:corda-ledger-utxo'
+
     testImplementation project(':testing')
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
