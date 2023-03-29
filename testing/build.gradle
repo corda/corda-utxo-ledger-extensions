@@ -1,10 +1,6 @@
-cordapp {
-    targetPlatformVersion = platformVersion.toInteger()
-    minimumPlatformVersion = platformVersion.toInteger()
-
-    contract {
-        name "THIS SHOULD NOT BE HERE!"
-        versionId cordappVersionId.toInteger()
-        vendor cordappVendorName
-    }
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-osgi-bundle'
+    implementation 'org.jetbrains:annotations:24.0.1'
+    implementation platform("net.corda:corda-api:$cordaApiVersion")
+    implementation 'net.corda:corda-ledger-utxo'
 }

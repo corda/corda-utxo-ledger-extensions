@@ -1,9 +1,13 @@
+plugins {
+    id 'net.corda.plugins.cordapp-cpk2'
+}
+
 cordapp {
     targetPlatformVersion = platformVersion.toInteger()
     minimumPlatformVersion = platformVersion.toInteger()
 
     contract {
-        name "R3 UTXO Issuable Contract"
+        name "R3 UTXO Ledger Extensions Issuable Contract"
         versionId cordappVersionId.toInteger()
         vendor cordappVendorName
     }

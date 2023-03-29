@@ -2,27 +2,12 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm'
-    id 'org.jetbrains.kotlin.plugin.jpa'
-    id 'net.corda.plugins.cordapp-cpb2'
-    id 'net.corda.cordapp.cordapp-configuration'
-}
-
-cordapp {
-    targetPlatformVersion = platformVersion.toInteger()
-    minimumPlatformVersion = platformVersion.toInteger()
-
-    contract {
-        name "THIS SHOULD NOT BE HERE. IT'S NOT A CORDAPP!!!!!!!!!!!"
-        versionId cordappVersionId.toInteger()
-        vendor cordappVendorName
-    }
 }
 
 allprojects {
-    group 'net.r3.corda.ledger.utxo'
-    version '0.9-SNAPSHOT'
+    group 'com.r3.corda.ledger.utxo'
+    version '0.9.0-SNAPSHOT'
 
-    apply plugin: 'net.corda.plugins.cordapp-cpb2'
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'maven-publish'
 
@@ -89,14 +74,6 @@ allprojects {
                 }
             }
         }
-    }
-
-    dependencies {
-        cordaProvided 'org.jetbrains.kotlin:kotlin-osgi-bundle'
-        cordaProvided 'org.jetbrains:annotations:24.0.1'
-        cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
-        cordaProvided 'net.corda:corda-base'
-        cordaProvided 'net.corda:corda-ledger-utxo'
     }
 
     tasks.withType(Test).configureEach {
