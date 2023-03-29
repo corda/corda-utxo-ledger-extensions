@@ -38,7 +38,7 @@ public interface Numeric<T extends Number> extends Comparable<Numeric<T>> {
      * @return Returns the sum of specified value, added to the current value.
      */
     @NotNull
-    Numeric<T> add(@NotNull Numeric<T> other);
+    Numeric<T> plus(@NotNull Numeric<T> other);
 
     /**
      * Computes the difference of the specified value, subtracted from the current value.
@@ -47,5 +47,5 @@ public interface Numeric<T extends Number> extends Comparable<Numeric<T>> {
      * @return Returns the difference of the specified value, subtracted from the current value.
      */
     @NotNull
-    Numeric<T> subtract(@NotNull Numeric<T> other);
+    Numeric<T> minus(@NotNull Numeric<T> other);
 }

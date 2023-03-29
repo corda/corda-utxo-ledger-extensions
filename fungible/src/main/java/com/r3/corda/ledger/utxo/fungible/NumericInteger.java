@@ -55,7 +55,7 @@ public final class NumericInteger implements Numeric<BigInteger> {
      */
     @NotNull
     @Override
-    public NumericInteger add(@NotNull final Numeric<BigInteger> other) {
+    public NumericInteger plus(@NotNull final Numeric<BigInteger> other) {
         return new NumericInteger(getValue().add(other.getValue()));
     }
 
@@ -67,7 +67,7 @@ public final class NumericInteger implements Numeric<BigInteger> {
      */
     @NotNull
     @Override
-    public NumericInteger subtract(@NotNull final Numeric<BigInteger> other) {
+    public NumericInteger minus(@NotNull final Numeric<BigInteger> other) {
         return new NumericInteger(getValue().subtract(other.getValue()));
     }
 
