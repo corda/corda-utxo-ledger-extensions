@@ -1,9 +1,9 @@
 @Library('corda-shared-build-pipeline-steps@5.0.1') _
 
 cordaPipelineKubernetesAgent(
-    publishRepoPrefix: '',
+    publishRepoPrefix: 'corda-os-maven',
     slimBuild: true,
-    runUnitTests: false,
+    runUnitTests: true,
     dedicatedJobForSnykDelta: false,
     gitHubComments: false
     )
