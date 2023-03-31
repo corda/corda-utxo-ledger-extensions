@@ -17,6 +17,7 @@ public abstract class IdentifiableContractCreateCommand extends IdentifiableCont
      */
     @Override
     public final void verify(@NotNull UtxoLedgerTransaction transaction) {
+        IdentifiableConstraints.verifyCreate(transaction);
         onVerify(transaction);
     }
 

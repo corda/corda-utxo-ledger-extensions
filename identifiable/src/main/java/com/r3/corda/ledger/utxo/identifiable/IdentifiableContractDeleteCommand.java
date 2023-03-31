@@ -17,6 +17,7 @@ public abstract class IdentifiableContractDeleteCommand extends IdentifiableCont
      */
     @Override
     public final void verify(@NotNull UtxoLedgerTransaction transaction) {
+        IdentifiableConstraints.verifyDelete(transaction);
         onVerify(transaction);
     }
 
