@@ -60,7 +60,7 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_INPUTS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_INPUTS, exception.message)
     }
 
     @Test
@@ -76,7 +76,7 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_OUTPUTS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_OUTPUTS, exception.message)
     }
 
     @Test
@@ -93,7 +93,7 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_POINTERS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_POINTERS, exception.message)
     }
 
     @Test
@@ -111,7 +111,7 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_EXCLUSIVE_POINTERS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
     }
 
     @Test
@@ -130,7 +130,7 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_EXCLUSIVE_POINTERS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
     }
 
     @Test
@@ -150,7 +150,7 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_EXCLUSIVE_POINTERS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
     }
 
     @Test
@@ -169,6 +169,6 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(ChainableContractUpdateCommand.CONTRACT_RULE_EXCLUSIVE_POINTERS, exception.message)
+        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
     }
 }
