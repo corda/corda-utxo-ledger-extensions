@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents verification constraints for creating, updating and deleting {@link ChainableState} ledger states.
+ * Represents verification constraints for creating, updating and deleting {@link ChainableState} instances.
  */
 public final class ChainableConstraints {
 
@@ -45,6 +45,13 @@ public final class ChainableConstraints {
 
     /**
      * Verifies the {@link ChainableContract} create constraints.
+     * <p>
+     * This should be implemented by commands intended to create new ledger instances of {@link ChainableState} and will verify the following constraints:
+     * <ol>
+     *     <li>On chainable state(s) creating, zero chainable states must be consumed.</li>
+     *     <li>On chainable state(s) creating, at least one chainable state must be created.</li>
+     *     <li>On chainable state(s) creating, the previous state pointer of every created chainable state must be null.</li>
+     * </ol>
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
@@ -61,6 +68,14 @@ public final class ChainableConstraints {
 
     /**
      * Verifies the {@link ChainableContract} update constraints.
+     * <p>
+     * This should be implemented by commands intended to update existing ledger instances of {@link ChainableState} and will verify the following constraints:
+     * <ol>
+     *  <li>On chainable state(s) updating, at least one chainable state must be consumed.</li>
+     *  <li>On chainable state(s) updating, at least one chainable state must be created.</li>
+     *  <li>On chainable state(s) updating, the previous state pointer of every created chainable state must not be null.</li>
+     *  <li>On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively.</li>
+     * </ol>
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
@@ -95,6 +110,7 @@ public final class ChainableConstraints {
 
     /**
      * Verifies the {@link ChainableContract} delete constraints.
+     * This should be implemented by commands intended to delete existing ledger instances of {@link ChainableState} and will verify the following constraints:
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.

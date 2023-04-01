@@ -5,7 +5,13 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the base class for implementing {@link ChainableContract} update commands.
- * This should be implemented by commands intended to update existing ledger instances of {@link ChainableState}.
+ * This should be implemented by commands intended to update existing ledger instances of {@link ChainableState} and will verify the following constraints:
+ * <ol>
+ *  <li>On chainable state(s) updating, at least one chainable state must be consumed.</li>
+ *  <li>On chainable state(s) updating, at least one chainable state must be created.</li>
+ *  <li>On chainable state(s) updating, the previous state pointer of every created chainable state must not be null.</li>
+ *  <li>On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively.</li>
+ * </ol>
  */
 public abstract class ChainableContractUpdateCommand extends ChainableContractCommand {
 

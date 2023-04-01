@@ -55,7 +55,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractDeleteCommand.CONTRACT_RULE_INPUTS, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_DELETE_INPUTS, exception.message)
     }
 
     @Test
@@ -72,7 +72,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractDeleteCommand.CONTRACT_RULE_SUM, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_DELETE_SUM, exception.message)
     }
 
     @Test
@@ -90,6 +90,6 @@ class FungibleContractDeleteCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractDeleteCommand.CONTRACT_RULE_SUM, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_DELETE_SUM, exception.message)
     }
 }
