@@ -56,7 +56,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractCreateCommand.CONTRACT_RULE_INPUTS, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_CREATE_INPUTS, exception.message)
     }
 
     @Test
@@ -72,6 +72,6 @@ class FungibleContractCreateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractCreateCommand.CONTRACT_RULE_POSITIVE_QUANTITIES, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_CREATE_POSITIVE_QUANTITIES, exception.message)
     }
 }

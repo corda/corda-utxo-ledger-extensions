@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the base class for implementing {@link ChainableContract} create commands.
- * This should be implemented by commands intended to delete existing ledger instances of {@link ChainableState}.
+ * This should be implemented by commands intended to delete existing ledger instances of {@link ChainableState} and will verify the following constraints:
  */
 public abstract class ChainableContractDeleteCommand extends ChainableContractCommand {
 

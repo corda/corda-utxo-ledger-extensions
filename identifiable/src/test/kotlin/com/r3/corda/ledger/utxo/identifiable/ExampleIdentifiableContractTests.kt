@@ -59,7 +59,7 @@ class ExampleIdentifiableContractTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(IdentifiableContract.CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY, exception.message)
+        assertEquals(IdentifiableConstraints.CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY, exception.message)
     }
 
     @Test
@@ -77,6 +77,6 @@ class ExampleIdentifiableContractTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(IdentifiableContract.CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY, exception.message)
+        assertEquals(IdentifiableConstraints.CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY, exception.message)
     }
 }

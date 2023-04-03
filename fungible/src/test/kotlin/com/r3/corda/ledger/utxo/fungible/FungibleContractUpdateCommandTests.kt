@@ -59,7 +59,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_INPUTS, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_UPDATE_INPUTS, exception.message)
     }
 
     @Test
@@ -75,7 +75,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_OUTPUTS, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_UPDATE_OUTPUTS, exception.message)
     }
 
     @Test
@@ -93,7 +93,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_POSITIVE_QUANTITIES, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_UPDATE_POSITIVE_QUANTITIES, exception.message)
     }
 
     @Test
@@ -110,7 +110,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_SUM, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_UPDATE_SUM, exception.message)
     }
 
     @Test
@@ -127,7 +127,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_SUM, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_UPDATE_SUM, exception.message)
     }
 
     @Test
@@ -144,6 +144,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleContractUpdateCommand.CONTRACT_RULE_GROUP_SUM, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_UPDATE_GROUP_SUM, exception.message)
     }
 }
