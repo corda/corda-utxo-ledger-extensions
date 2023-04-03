@@ -29,6 +29,11 @@ allprojects {
         ]
     }
 
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
     repositories {
         mavenLocal()
 
