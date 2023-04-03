@@ -28,6 +28,16 @@ pluginManagement {
                     password = settings.ext.find('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
                 }
             }
+            maven {
+                url "$artifactoryContextUrl/engineering-tools-maven"
+                credentials {
+                    username = settings.ext.find('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
+                    password = settings.ext.find('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
+                }
+                content {
+                    includeGroupByRegex 'com\\.r3\\.internal(\\..*)?'
+                }
+            }
             gradlePluginPortal {
                 content {
                     excludeGroupByRegex 'net\\.corda\\.cordapp(\\..*)?'
@@ -45,6 +55,8 @@ pluginManagement {
         id 'org.jetbrains.kotlin.jvm' version kotlinVersion
         id 'org.jetbrains.kotlin.plugin.jpa' version kotlinVersion
         id 'org.jetbrains.kotlin.plugin.allopen' version kotlinVersion
+        id 'com.r3.internal.gradle.plugins.r3Publish' version internalPublishVersion
+        id 'com.r3.internal.gradle.plugins.r3ArtifactoryPublish' version internalPublishVersion
     }
 }
 
