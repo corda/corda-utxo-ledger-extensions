@@ -29,9 +29,10 @@ allprojects {
         ]
     }
 
-    java {
-        withSourcesJar()
-        withJavadocJar()
+    pluginManager.withPlugin('java') {
+        java {
+            withJavadocJar()
+        }
     }
 
     repositories {
