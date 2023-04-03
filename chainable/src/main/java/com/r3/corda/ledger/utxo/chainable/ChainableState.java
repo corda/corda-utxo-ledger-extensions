@@ -3,8 +3,6 @@ package com.r3.corda.ledger.utxo.chainable;
 import com.r3.corda.ledger.utxo.base.StaticPointer;
 import net.corda.v5.ledger.utxo.BelongsToContract;
 import net.corda.v5.ledger.utxo.ContractState;
-import net.corda.v5.ledger.utxo.StateRef;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -24,13 +22,4 @@ public interface ChainableState<T extends ChainableState<T>> extends ContractSta
      */
     @Nullable
     StaticPointer<T> getPreviousStatePointer();
-
-    /**
-     * Creates the next {@link ChainableState} in the chain.
-     *
-     * @param ref The {@link StateRef} of the previous {@link ChainableState} in the chain.
-     * @return Returns the next {@link ChainableState} in the chain.
-     */
-    @NotNull
-    T next(@NotNull StateRef ref);
 }

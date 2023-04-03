@@ -13,6 +13,21 @@ import java.util.Objects;
 public final class NumericDecimal implements Numeric<BigDecimal> {
 
     /**
+     * Gets a {@link NumericDecimal} representing the value zero (0).
+     */
+    public static final NumericDecimal ZERO = new NumericDecimal(BigDecimal.ZERO);
+
+    /**
+     * Gets a {@link NumericDecimal} representing the value one (1).
+     */
+    public static final NumericDecimal ONE = new NumericDecimal(BigDecimal.ONE);
+
+    /**
+     * Gets a {@link NumericDecimal} representing the value ten (10).
+     */
+    public static final NumericDecimal TEN = new NumericDecimal(BigDecimal.TEN);
+
+    /**
      * The underlying {@link BigDecimal} value.
      */
     @NotNull
