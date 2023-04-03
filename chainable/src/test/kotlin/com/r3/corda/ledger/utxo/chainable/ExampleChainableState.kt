@@ -20,7 +20,7 @@ data class ExampleChainableState(
         return previousStatePointer
     }
 
-    override fun next(ref: StateRef): ExampleChainableState {
+    fun next(ref: StateRef): ExampleChainableState {
         return copy(previousStatePointer = StaticPointer(ref, ExampleChainableState::class.java))
     }
 }
