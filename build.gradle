@@ -32,6 +32,7 @@ allprojects {
     pluginManager.withPlugin('java') {
         java {
             withJavadocJar()
+            withSourcesJar()
         }
     }
 
