@@ -11,7 +11,7 @@ allprojects {
         version = System.getenv("RELEASE_VERSION")
     } else {
         def versionSuffix = '-SNAPSHOT'
-        if(project.hasProperty('overridePublishVersionSuffix')) {
+        if (project.hasProperty('overridePublishVersionSuffix')) {
             versionSuffix = project.property('overridePublishVersionSuffix')
         } else if (System.getenv('VERSION_SUFFIX')) {
             versionSuffix = System.getenv('VERSION_SUFFIX')
