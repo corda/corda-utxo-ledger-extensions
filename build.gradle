@@ -2,12 +2,22 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm'
+    id 'com.r3.internal.gradle.plugins.r3Publish'
 }
 
 allprojects {
     group 'com.r3.corda.ledger.utxo'
-    version '0.9.0-SNAPSHOT'
-
+    if (System.getenv("RELEASE_VERSION")?.trim()) {
+        version = System.getenv("RELEASE_VERSION")
+    } else {
+        def versionSuffix = '-SNAPSHOT'
+        if (project.hasProperty('overridePublishVersionSuffix')) {
+            versionSuffix = project.property('overridePublishVersionSuffix')
+        } else if (System.getenv('VERSION_SUFFIX')) {
+            versionSuffix = System.getenv('VERSION_SUFFIX')
+        }
+        version = "$cordautxoVersion$versionSuffix"
+    }
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'maven-publish'
 
