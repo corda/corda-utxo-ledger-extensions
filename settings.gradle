@@ -16,6 +16,19 @@ pluginManagement {
             }
         } else {
             maven {
+                url "${artifactoryContextUrl}/corda-os-maven"
+                content {
+                    includeGroupByRegex 'net\\.corda\\.cordapp(\\..*)?'
+                }
+                authentication {
+                    basic(BasicAuthentication)
+                }
+                credentials {
+                    username = settings.ext.find('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
+                    password = settings.ext.find('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
+                }
+            }
+            maven {
                 url "$artifactoryContextUrl/engineering-tools-maven"
                 credentials {
                     username = System.getenv('CORDA_ARTIFACTORY_USERNAME')
