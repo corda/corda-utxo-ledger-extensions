@@ -1,5 +1,6 @@
 plugins {
     id 'net.corda.plugins.cordapp-cpk2'
+    id 'com.r3.internal.gradle.plugins.r3Publish'
 }
 
 cordapp {
