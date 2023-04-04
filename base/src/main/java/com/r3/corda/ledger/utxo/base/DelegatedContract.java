@@ -1,5 +1,6 @@
 package com.r3.corda.ledger.utxo.base;
 
+import net.corda.v5.base.annotations.Suspendable;
 import net.corda.v5.ledger.utxo.Contract;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.VisibilityChecker;
@@ -8,10 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.security.PublicKey;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,13 +37,13 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
     protected abstract List<Class<? extends T>> getPermittedCommandTypes();
 
     /**
-     * TODO : Update to isVisible!
      * Determines whether a given state is relevant to a node, given the node's public keys.
      * <p>
      * The default implementation determines that a state is visible to its participants,
      * or if the state implements {@link VisibleState}, then visibility checking can be delegated to the state itself.
      */
     @Override
+    @Suspendable
     public boolean isVisible(@NotNull final ContractState state, @NotNull VisibilityChecker checker) {
         return Contract.super.isVisible(state, checker) || state instanceof VisibleState && ((VisibleState) state).isVisible(checker);
     }
