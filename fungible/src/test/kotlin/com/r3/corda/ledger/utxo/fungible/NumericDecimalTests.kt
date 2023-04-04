@@ -10,6 +10,39 @@ import kotlin.test.assertTrue
 class NumericDecimalTests {
 
     @Test
+    fun `NumericDecimal initialization with a scale equal to the initial value should create the expected value`() {
+
+        // Arrange / Act
+        val value = NumericDecimal(123.450.toBigDecimal(), 3)
+
+        // Assert
+        assertEquals("123.450", value.toString())
+    }
+
+    @Test
+    fun `NumericDecimal initialization with a scale larger than the initial value should create the expected value`() {
+
+        // Arrange / Act
+        val value = NumericDecimal(123.450.toBigDecimal(), 6)
+
+        // Assert
+        assertEquals("123.450000", value.toString())
+    }
+
+    @Test
+    fun `NumericDecimal initialization with a scale smaller than the initial value should throw an exception`() {
+
+        // Arrange
+        val value = 123.456.toBigDecimal()
+
+        // Act
+        val exception = assertThrows<ArithmeticException> { NumericDecimal(value, 2) }
+
+        // Assert
+        assertEquals("Rounding necessary", exception.message)
+    }
+
+    @Test
     fun `NumericDecimal_getValue should return the expected result`() {
 
         // Arrange

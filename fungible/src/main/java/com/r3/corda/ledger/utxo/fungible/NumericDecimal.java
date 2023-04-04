@@ -39,10 +39,10 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      *
      * @param value The underlying {@link BigDecimal} value.
      * @param scale The scale of the underlying {@link BigDecimal} value.
-     *              The default {@link RoundingMode} when setting the scale is {@link RoundingMode#HALF_EVEN} (banker's rounding).
+     *              The default {@link RoundingMode} when setting the scale is {@link RoundingMode#UNNECESSARY}.
      */
     public NumericDecimal(@NotNull final BigDecimal value, final int scale) {
-        this(value, scale, RoundingMode.HALF_EVEN);
+        this(value, scale, RoundingMode.UNNECESSARY);
     }
 
     /**
@@ -82,13 +82,13 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      * Sets the scale of the underlying {@link BigDecimal} value.
      *
      * @param scale The scale of the underlying {@link BigDecimal} value.
-     *              The default {@link RoundingMode} when setting the scale is {@link RoundingMode#HALF_EVEN} (banker's rounding).
+     *              The default {@link RoundingMode} when setting the scale is {@link RoundingMode#UNNECESSARY}.
      * @return Returns a new {@link NumericDecimal} with the specified scale.
      */
     @NotNull
     @SuppressWarnings("unused")
     public NumericDecimal setScale(final int scale) {
-        return new NumericDecimal(getValue(), scale);
+        return setScale(scale, RoundingMode.UNNECESSARY);
     }
 
     /**
