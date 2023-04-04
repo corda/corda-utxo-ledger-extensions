@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 /**
@@ -15,17 +16,17 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
     /**
      * Gets a {@link NumericDecimal} representing the value zero (0).
      */
-    public static final NumericDecimal ZERO = new NumericDecimal(BigDecimal.ZERO);
+    public static final NumericDecimal ZERO = new NumericDecimal(BigDecimal.ZERO, 0);
 
     /**
      * Gets a {@link NumericDecimal} representing the value one (1).
      */
-    public static final NumericDecimal ONE = new NumericDecimal(BigDecimal.ONE);
+    public static final NumericDecimal ONE = new NumericDecimal(BigDecimal.ONE, 0);
 
     /**
      * Gets a {@link NumericDecimal} representing the value ten (10).
      */
-    public static final NumericDecimal TEN = new NumericDecimal(BigDecimal.TEN);
+    public static final NumericDecimal TEN = new NumericDecimal(BigDecimal.TEN, 0);
 
     /**
      * The underlying {@link BigDecimal} value.
@@ -37,9 +38,22 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      * Initializes a new instance of the {@link NumericDecimal} class.
      *
      * @param value The underlying {@link BigDecimal} value.
+     * @param scale The scale of the underlying {@link BigDecimal} value.
+     *              The default {@link RoundingMode} when setting the scale is {@link RoundingMode#HALF_EVEN} (banker's rounding).
      */
-    public NumericDecimal(@NotNull final BigDecimal value) {
-        this.value = value;
+    public NumericDecimal(@NotNull final BigDecimal value, final int scale) {
+        this(value, scale, RoundingMode.HALF_EVEN);
+    }
+
+    /**
+     * Initializes a new instance of the {@link NumericDecimal} class.
+     *
+     * @param value The underlying {@link BigDecimal} value.
+     * @param scale The scale of the underlying {@link BigDecimal} value.
+     * @param mode  The {@link RoundingMode} to use when setting the scale of the underlying {@link BigDecimal} value.
+     */
+    public NumericDecimal(@NotNull final BigDecimal value, final int scale, final RoundingMode mode) {
+        this.value = value.setScale(scale, mode);
     }
 
     /**
@@ -65,6 +79,32 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
     }
 
     /**
+     * Sets the scale of the underlying {@link BigDecimal} value.
+     *
+     * @param scale The scale of the underlying {@link BigDecimal} value.
+     *              The default {@link RoundingMode} when setting the scale is {@link RoundingMode#HALF_EVEN} (banker's rounding).
+     * @return Returns a new {@link NumericDecimal} with the specified scale.
+     */
+    @NotNull
+    @SuppressWarnings("unused")
+    public NumericDecimal setScale(final int scale) {
+        return new NumericDecimal(getValue(), scale);
+    }
+
+    /**
+     * Sets the scale of the underlying {@link BigDecimal} value.
+     *
+     * @param scale The scale of the underlying {@link BigDecimal} value.
+     * @param mode  The {@link RoundingMode} to use when setting the scale of the underlying {@link BigDecimal} value.
+     * @return Returns a new {@link NumericDecimal} with the specified scale.
+     */
+    @NotNull
+    @SuppressWarnings("unused")
+    public NumericDecimal setScale(final int scale, RoundingMode mode) {
+        return new NumericDecimal(getValue(), scale, mode);
+    }
+
+    /**
      * Computes the sum of specified value, added to the current value.
      *
      * @param other The other value to add to the current value.
@@ -77,7 +117,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
             throw new IllegalArgumentException("Cannot add values with different scales.");
         }
 
-        return new NumericDecimal(getValue().add(other.getValue()));
+        return new NumericDecimal(getValue().add(other.getValue()), getValue().scale());
     }
 
     /**
@@ -93,7 +133,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
             throw new IllegalArgumentException("Cannot subtract values with different scales.");
         }
 
-        return new NumericDecimal(getValue().subtract(other.getValue()));
+        return new NumericDecimal(getValue().subtract(other.getValue()), getValue().scale());
     }
 
     /**

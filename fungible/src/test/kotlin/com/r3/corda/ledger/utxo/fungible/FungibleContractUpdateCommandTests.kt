@@ -4,13 +4,12 @@ import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.math.BigDecimal
 import kotlin.test.assertEquals
 
 class FungibleContractUpdateCommandTests : ContractTest() {
 
-    private val stateA = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
-    private val stateB = ExampleFungibleStateB(ALICE_KEY, BOB_KEY, NumericDecimal(BigDecimal.TEN))
+    private val stateA = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
+    private val stateB = ExampleFungibleStateB(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
     private val contract = ExampleFungibleContract()
 
     @Test
@@ -85,7 +84,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         val transaction = buildTransaction(NOTARY_PARTY) {
             addInputState(stateA)
             addOutputState(stateA)
-            addOutputState(stateA.copy(quantity = NumericDecimal(BigDecimal.ZERO)))
+            addOutputState(stateA.copy(quantity = NumericDecimal.ZERO))
             addCommand(ExampleFungibleContract.Update())
         }
 
@@ -101,7 +100,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(stateA.copy(quantity = NumericDecimal(BigDecimal.ONE)))
+            addInputState(stateA.copy(quantity = NumericDecimal.ONE))
             addOutputState(stateA)
             addCommand(ExampleFungibleContract.Update())
         }
@@ -119,7 +118,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
             addInputState(stateA)
-            addOutputState(stateA.copy(quantity = NumericDecimal(BigDecimal.ONE)))
+            addOutputState(stateA.copy(quantity = NumericDecimal.ONE))
             addCommand(ExampleFungibleContract.Update())
         }
 
