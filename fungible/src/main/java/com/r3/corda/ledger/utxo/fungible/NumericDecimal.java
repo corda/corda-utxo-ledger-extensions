@@ -88,7 +88,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
     @NotNull
     @SuppressWarnings("unused")
     public NumericDecimal setScale(final int scale) {
-        return setScale(scale, RoundingMode.UNNECESSARY);
+        return setScale(scale, RoundingMode.UNNECESSARY );
     }
 
     /**
