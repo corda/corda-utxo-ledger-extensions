@@ -14,14 +14,6 @@ cordapp {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.cordapp
-        }
-    }
-}
-
 dependencies {
     cordaProvided 'org.jetbrains.kotlin:kotlin-osgi-bundle'
     cordaProvided 'org.jetbrains:annotations:24.0.1'

@@ -14,14 +14,6 @@ cordapp {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.cordapp
-        }
-    }
-}
-
 dependencies {
     cordapp project(':base')
 }
