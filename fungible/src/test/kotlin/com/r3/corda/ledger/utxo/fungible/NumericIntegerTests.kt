@@ -70,8 +70,8 @@ class NumericIntegerTests {
     fun `NumericInteger_compareTo should return a value of 1 when the left-hand value is greater than the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger(BigInteger.TEN)
-        val right = NumericInteger(BigInteger.ONE)
+        val left = NumericInteger.TEN
+        val right = NumericInteger.ONE
 
         // Act
         val actual = left.compareTo(right)
@@ -84,8 +84,8 @@ class NumericIntegerTests {
     fun `NumericInteger_compareTo should return a value of -1 when the left-hand value is less than the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger(BigInteger.ONE)
-        val right = NumericInteger(BigInteger.TEN)
+        val left = NumericInteger.ONE
+        val right = NumericInteger.TEN
 
         // Act
         val actual = left.compareTo(right)
@@ -98,8 +98,8 @@ class NumericIntegerTests {
     fun `NumericInteger_compareTo should return a value of 0 when the left-hand value is equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger(BigInteger.TEN)
-        val right = NumericInteger(BigInteger.TEN)
+        val left = NumericInteger.TEN
+        val right = NumericInteger.TEN
 
         // Act
         val actual = left.compareTo(right)
@@ -112,8 +112,8 @@ class NumericIntegerTests {
     fun `NumericInteger_equals should return true if the left-hand value is equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger(BigInteger.TEN)
-        val right = NumericInteger(BigInteger.TEN)
+        val left = NumericInteger.TEN
+        val right = NumericInteger.TEN
 
         // Act
         val actual = left.equals(right)
@@ -126,8 +126,8 @@ class NumericIntegerTests {
     fun `NumericInteger_equals should return false if the left-hand value is not equal to the right-hand value`() {
 
         // Arrange
-        val left = NumericInteger(BigInteger.TEN)
-        val right = NumericInteger(BigInteger.ONE)
+        val left = NumericInteger.TEN
+        val right = NumericInteger.ZERO
 
         // Act
         val actual = left.equals(right)
