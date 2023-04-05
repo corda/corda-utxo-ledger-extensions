@@ -8,7 +8,9 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * This should be implemented by commands intended to update existing ledger instances of {@link IdentifiableState} and will verify the following constraints:
  * <ol>
- *     <li>On identifiable state(s) updating, each identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+ *     <li>On identifiable state(s) updating, at least one identifiable state must be consumed.</li>
+ *     <li>On identifiable state(s) updating, at least one identifiable state must be created.</li>
+ *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
  * </ol>
  */
 public abstract class IdentifiableContractUpdateCommand extends IdentifiableContractCommand {

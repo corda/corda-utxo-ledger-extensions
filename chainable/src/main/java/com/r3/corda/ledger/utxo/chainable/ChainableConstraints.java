@@ -37,6 +37,12 @@ public final class ChainableConstraints {
     final static String CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS =
             "On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively.";
 
+    final static String CONTRACT_RULE_DELETE_INPUTS =
+            "On chainable state(s) deleting, at least one chainable state must be consumed.";
+
+    final static String CONTRACT_RULE_DELETE_OUTPUTS =
+            "On chainable state(s) deleting, zero chainable states must be created.";
+
     private final static int OUTPUTS_PER_INPUT = 1;
 
     /**
@@ -82,7 +88,7 @@ public final class ChainableConstraints {
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
-    @SuppressWarnings({"rawtypes"})
+    @SuppressWarnings("rawtypes")
     public static void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction) {
         final List<StateAndRef<ChainableState>> inputs = transaction.getInputStateAndRefs(ChainableState.class);
         final List<ChainableState> outputs = transaction.getOutputStates(ChainableState.class);
@@ -100,12 +106,21 @@ public final class ChainableConstraints {
     /**
      * Verifies the {@link ChainableContract} delete constraints.
      * This should be implemented by commands intended to delete existing ledger instances of {@link ChainableState} and will verify the following constraints:
+     * <ol>
+     *     <li>On chainable state(s) deleting, at least one chainable state must be consumed.</li>
+     *     <li>On chainable state(s) deleting, zero chainable states must be created.</li>
+     * </ol>
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
+    @SuppressWarnings("rawtypes")
     public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {
-        // TODO : CORE-12120 - Review and implement missing contract rules.
+        final List<ChainableState> inputs = transaction.getInputStates(ChainableState.class);
+        final List<ChainableState> outputs = transaction.getOutputStates(ChainableState.class);
+
+        Check.isNotEmpty(inputs, CONTRACT_RULE_DELETE_INPUTS);
+        Check.isEmpty(outputs, CONTRACT_RULE_DELETE_OUTPUTS);
     }
 
     /**

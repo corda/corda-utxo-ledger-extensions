@@ -59,6 +59,21 @@ class FungibleContractCreateCommandTests : ContractTest() {
     }
 
     @Test
+    fun `On fungible state(s) creating, at least one fungible state must be created`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addCommand(ExampleFungibleContract.Create())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(FungibleConstraints.CONTRACT_RULE_CREATE_OUTPUTS, exception.message)
+    }
+
+    @Test
     fun `On fungible state(s) creating, the quantity of every created fungible state must be greater than zero`() {
 
         // Arrange

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents the base class for implementing {@link IdentifiableContract} create commands.
  * This should be implemented by commands intended to delete existing ledger instances of {@link IdentifiableState} and will verify the following constraints:
  * <ol>
- *     <li>On identifiable state(s) updating, each identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+ *     <li>On identifiable state(s) deleting, at least one identifiable state must be consumed.</li>
  * </ol>
  */
 public abstract class IdentifiableContractDeleteCommand extends IdentifiableContractCommand {

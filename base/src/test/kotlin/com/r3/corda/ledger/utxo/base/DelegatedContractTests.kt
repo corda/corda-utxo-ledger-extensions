@@ -97,7 +97,6 @@ class DelegatedContractTests : ContractTest() {
         }
     }
 
-
     private class MyDelegatedContract(
         private val isVisible: Boolean,
         private val onVerifyCallback: () -> Unit = {},
