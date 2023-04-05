@@ -21,6 +21,7 @@ import java.util.Objects;
  *
  * @param <T> The underlying {@link ContractState} type that the current pointer is pointing to.
  */
+@SuppressWarnings("unused")
 public final class IdentifiablePointer<T extends IdentifiableState> implements StatePointer<T> {
 
     /**
@@ -145,7 +146,7 @@ public final class IdentifiablePointer<T extends IdentifiableState> implements S
      */
     @Override
     public String toString() {
-        return MessageFormat.format("IdentifiablePointer { value = {0}, type = {1} }", getValue(), getType());
+        return MessageFormat.format("IdentifiablePointer(value = {0}, type = {1})", getValue(), getType());
     }
 }
 

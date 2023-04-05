@@ -140,6 +140,6 @@ public final class StaticPointer<T extends ContractState> implements StatePointe
      */
     @Override
     public String toString() {
-        return MessageFormat.format("StaticPointer { value = {0}, type = {1} }", getValue(), getType());
+        return MessageFormat.format("StaticPointer(value = {0}, type = {1})", getValue(), getType());
     }
 }
