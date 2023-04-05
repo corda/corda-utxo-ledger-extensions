@@ -20,8 +20,20 @@ import java.util.stream.Stream;
  */
 public final class IdentifiableConstraints {
 
-    final static String CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY =
+    final static String CONTRACT_RULE_CREATE_OUTPUTS =
+            "On identifiable state(s) creating, at least one identifiable state must be created.";
+
+    final static String CONTRACT_RULE_UPDATE_INPUTS =
+            "On identifiable state(s) updating, at least one identifiable state must be consumed.";
+
+    final static String CONTRACT_RULE_UPDATE_OUTPUTS =
+            "On identifiable state(s) updating, at least one identifiable state must be created.";
+
+    final static String CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY =
             "On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.";
+
+    final static String CONTRACT_RULE_DELETE_INPUTS =
+            "On identifiable state(s) deleting, at least one identifiable state must be consumed.";
 
     private final static int MAX_OUTPUTS_PER_INPUT = 1;
 
@@ -36,14 +48,16 @@ public final class IdentifiableConstraints {
      * <p>
      * This should be implemented by commands intended to create new ledger instances of {@link IdentifiableState} and will verify the following constraints:
      * <ol>
-     *     <li>On identifiable state(s) updating, each identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+     *     <li>On identifiable state(s) creating, at least one identifiable state must be created.</li>
      * </ol>
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
     public static void verifyCreate(@NotNull final UtxoLedgerTransaction transaction) {
-        verify(transaction);
+        final List<IdentifiableState> outputs = transaction.getOutputStates(IdentifiableState.class);
+
+        Check.isNotEmpty(outputs, CONTRACT_RULE_CREATE_OUTPUTS);
     }
 
     /**
@@ -51,45 +65,43 @@ public final class IdentifiableConstraints {
      * <p>
      * This should be implemented by commands intended to update existing ledger instances of {@link IdentifiableState} and will verify the following constraints:
      * <ol>
-     *     <li>On identifiable state(s) updating, each identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+     *     <li>On identifiable state(s) updating, at least one identifiable state must be consumed.</li>
+     *     <li>On identifiable state(s) updating, at least one identifiable state must be created.</li>
+     *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
      * </ol>
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
     public static void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction) {
-        verify(transaction);
+        final List<StateAndRef<IdentifiableState>> inputs = transaction.getInputStateAndRefs(IdentifiableState.class);
+        final List<IdentifiableState> outputs = transaction.getOutputStates(IdentifiableState.class);
+
+        Check.isNotEmpty(inputs, CONTRACT_RULE_UPDATE_INPUTS);
+        Check.isNotEmpty(outputs, CONTRACT_RULE_UPDATE_OUTPUTS);
+
+        final List<StateRef> inputIds = getInputIdentifiers(inputs);
+        final List<StateRef> outputIds = getNonNullOutputIdentifiers(outputs);
+        final Map<StateRef, List<StateRef>> mappedInputsToOutputs = mapInputsToOutputs(inputIds, outputIds);
+
+        Check.all(mappedInputsToOutputs.values(), it -> it.size() <= MAX_OUTPUTS_PER_INPUT, CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY);
     }
 
     /**
      * Verifies the {@link IdentifiableState} delete constraints.
-     *
-     * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
-     */
-    public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {
-        verify(transaction);
-    }
-
-    /**
-     * Verifies the {@link IdentifiableContract} delete constraints.
+     * <p>
      * This should be implemented by commands intended to delete existing ledger instances of {@link IdentifiableState} and will verify the following constraints:
      * <ol>
-     *     <li>On identifiable state(s) updating, each identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+     *     <li>On identifiable state(s) deleting, at least one identifiable state must be consumed.</li>
      * </ol>
      *
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
-    private static void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        final List<StateAndRef<IdentifiableState>> inputs = transaction.getInputStateAndRefs(IdentifiableState.class);
-        final List<IdentifiableState> outputs = transaction.getOutputStates(IdentifiableState.class);
+    public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {
+        final List<IdentifiableState> inputs = transaction.getInputStates(IdentifiableState.class);
 
-        final List<StateRef> inputIds = getInputIdentifiers(inputs);
-        final List<StateRef> outputIds = getOutputIdentifiers(outputs);
-        final Map<StateRef, List<StateRef>> mappedInputsToOutputs = mapInputsToOutputs(inputIds, outputIds);
-
-        Check.all(mappedInputsToOutputs.values(), it -> it.size() <= MAX_OUTPUTS_PER_INPUT, CONTRACT_RULE_IDENTIFIER_EXCLUSIVITY);
+        Check.isNotEmpty(inputs, CONTRACT_RULE_DELETE_INPUTS);
     }
 
     /**
@@ -99,7 +111,7 @@ public final class IdentifiableConstraints {
      * @return Returns a {@link List} of {@link StateRef} of non-null {@link IdentifiableState} identifiers.
      */
     @NotNull
-    private static List<StateRef> getOutputIdentifiers(@NotNull final List<IdentifiableState> outputs) {
+    private static List<StateRef> getNonNullOutputIdentifiers(@NotNull final List<IdentifiableState> outputs) {
         return outputs
                 .stream()
                 .map(IdentifiableState::getId)
