@@ -17,6 +17,7 @@ public abstract class ChainableContractDeleteCommand extends ChainableContractCo
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
+        ChainableConstraints.verifyDelete(transaction);
         onVerify(transaction);
     }
 
