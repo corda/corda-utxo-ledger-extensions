@@ -22,7 +22,7 @@ public abstract class ChainableContractUpdateCommand extends ChainableContractCo
      * @throws RuntimeException if the specified transaction fails verification.
      */
     @Override
-    public void verify(@NotNull final UtxoLedgerTransaction transaction) {
+    public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
         ChainableConstraints.verifyUpdate(transaction);
         onVerify(transaction);
     }
