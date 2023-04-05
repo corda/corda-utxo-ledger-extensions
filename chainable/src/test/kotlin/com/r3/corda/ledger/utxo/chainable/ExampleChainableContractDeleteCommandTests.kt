@@ -56,21 +56,4 @@ class ExampleChainableContractDeleteCommandTests : ContractTest() {
         // Assert
         assertEquals(ChainableConstraints.CONTRACT_RULE_DELETE_INPUTS, exception.message)
     }
-
-    @Test
-    fun `On chainable state(s) deleting, zero chainable states must be created`() {
-
-        // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
-            addOutputState(state)
-            addCommand(ExampleChainableContract.Delete())
-        }
-
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
-        // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_DELETE_OUTPUTS, exception.message)
-    }
 }

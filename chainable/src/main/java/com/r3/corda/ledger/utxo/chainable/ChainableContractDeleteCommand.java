@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
  * This should be implemented by commands intended to delete existing ledger instances of {@link ChainableState} and will verify the following constraints:
  * <ol>
  *     <li>On chainable state(s) deleting, at least one chainable state must be consumed.</li>
- *     <li>On chainable state(s) deleting, zero chainable states must be created.</li>
  * </ol>
  */
 public abstract class ChainableContractDeleteCommand extends ChainableContractCommand {

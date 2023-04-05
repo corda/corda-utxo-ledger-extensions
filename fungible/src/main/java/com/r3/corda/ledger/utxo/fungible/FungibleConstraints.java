@@ -13,9 +13,6 @@ import java.util.stream.Collectors;
  */
 public final class FungibleConstraints {
 
-    final static String CONTRACT_RULE_CREATE_INPUTS =
-            "On fungible state(s) creating, zero fungible states must be consumed.";
-
     final static String CONTRACT_RULE_CREATE_OUTPUTS =
             "On fungible state(s) creating, at least one fungible state must be created.";
 
@@ -54,7 +51,6 @@ public final class FungibleConstraints {
      * <p>
      * This should be implemented by commands intended to create new ledger instances of {@link FungibleState} and will verify the following constraints:
      * <ol>
-     *     <li>On fungible state(s) creating, zero fungible states must be consumed.</li>
      *     <li>On fungible state(s) creating, at least one fungible state must be created.</li>
      *     <li>On fungible state(s) creating, the quantity of every created fungible state must be greater than zero.</li>
      * </ol>
@@ -64,10 +60,8 @@ public final class FungibleConstraints {
      */
     @SuppressWarnings("rawtypes")
     public static void verifyCreate(@NotNull final UtxoLedgerTransaction transaction) {
-        final List<FungibleState> inputs = transaction.getInputStates(FungibleState.class);
         final List<FungibleState> outputs = transaction.getOutputStates(FungibleState.class);
 
-        Check.isEmpty(inputs, CONTRACT_RULE_CREATE_INPUTS);
         Check.isNotEmpty(outputs, CONTRACT_RULE_CREATE_OUTPUTS);
         Check.all(outputs, it -> it.getQuantity().getUnscaledValue().compareTo(BigInteger.ZERO) > 0, CONTRACT_RULE_CREATE_POSITIVE_QUANTITIES);
     }
