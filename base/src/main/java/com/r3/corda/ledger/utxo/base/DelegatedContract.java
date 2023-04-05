@@ -1,6 +1,7 @@
 package com.r3.corda.ledger.utxo.base;
 
 import net.corda.v5.base.annotations.Suspendable;
+import net.corda.v5.ledger.utxo.Command;
 import net.corda.v5.ledger.utxo.Contract;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.VisibilityChecker;
@@ -68,7 +69,8 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
         boolean hasExecutedAtLeastOnePermittedCommand = false;
 
         for (final VerifiableCommand command : transaction.getCommands(VerifiableCommand.class)) {
-            if (permittedCommandTypes.contains(command.getClass())) {
+            final Class<? extends Command> commandClass = command.getClass();
+            if (permittedCommandTypes.stream().anyMatch(it -> it.isAssignableFrom(commandClass))) {
                 hasExecutedAtLeastOnePermittedCommand = true;
                 command.verify(transaction);
             }
