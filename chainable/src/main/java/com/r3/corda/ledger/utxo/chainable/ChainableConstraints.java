@@ -1,6 +1,7 @@
 package com.r3.corda.ledger.utxo.chainable;
 
 import com.r3.corda.ledger.utxo.base.Check;
+import com.r3.corda.ledger.utxo.base.StaticPointer;
 import net.corda.v5.ledger.utxo.StateAndRef;
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Represents verification constraints for creating, updating and deleting {@link ChainableState} instances.
@@ -36,6 +36,8 @@ public final class ChainableConstraints {
 
     final static String CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS =
             "On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively.";
+
+    private final static int OUTPUTS_PER_INPUT = 1;
 
     /**
      * Prevents instances of {@link ChainableConstraints} from being created.
@@ -80,7 +82,7 @@ public final class ChainableConstraints {
      * @param transaction The transaction to verify.
      * @throws RuntimeException if the specified transaction fails verification.
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     public static void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction) {
         final List<StateAndRef<ChainableState>> inputs = transaction.getInputStateAndRefs(ChainableState.class);
         final List<ChainableState> outputs = transaction.getOutputStates(ChainableState.class);
@@ -89,23 +91,10 @@ public final class ChainableConstraints {
         Check.isNotEmpty(outputs, CONTRACT_RULE_UPDATE_OUTPUTS);
         Check.all(outputs, it -> it.getPreviousStatePointer() != null, CONTRACT_RULE_UPDATE_POINTERS);
 
-        final Map<StateAndRef<ChainableState>, List<ChainableState>> mappedInputsToOutputs = new HashMap<>();
+        final Map<StaticPointer<ChainableState>, List<StaticPointer<ChainableState>>> mappedInputsToOutputs =
+                mapInputsToOutputs(inputs, outputs);
 
-        for (final StateAndRef<ChainableState> input : inputs) {
-
-            final List<ChainableState> matchingOutputs = new ArrayList<>();
-
-            for (final ChainableState output : outputs) {
-
-                if (Objects.requireNonNull(output.getPreviousStatePointer()).isPointingTo(input)) {
-                    matchingOutputs.add(output);
-                }
-            }
-
-            mappedInputsToOutputs.put(input, matchingOutputs);
-        }
-
-        Check.all(mappedInputsToOutputs.values(), it -> it.size() == 1, CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS);
+        Check.all(mappedInputsToOutputs.values(), it -> it.size() == OUTPUTS_PER_INPUT, CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS);
     }
 
     /**
@@ -117,5 +106,39 @@ public final class ChainableConstraints {
      */
     public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {
         // TODO : CORE-12120 - Review and implement missing contract rules.
+    }
+
+    /**
+     * Gets a {@link Map} of synthetic input {@link StaticPointer} of type {@link ChainableState} to output states with a matching {@link StaticPointer}.
+     * The input pointers are considered synthetic because they are generated from the inputs themselves; i.e. they are not real pointers.
+     *
+     * @param inputs  The inputs from which to construct synthetic pointers.
+     * @param outputs The outputs to map to each synthetic pointer.
+     * @return Returns a {@link Map} of synthetic input {@link StaticPointer} of type {@link ChainableState} to output states with a matching {@link StaticPointer}.
+     */
+    @NotNull
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static Map<StaticPointer<ChainableState>, List<StaticPointer<ChainableState>>> mapInputsToOutputs(
+            @NotNull final List<StateAndRef<ChainableState>> inputs,
+            @NotNull final List<ChainableState> outputs) {
+        final Map<StaticPointer<ChainableState>, List<StaticPointer<ChainableState>>> result = new HashMap<>();
+
+        for (StateAndRef<ChainableState> input : inputs) {
+            final StaticPointer<ChainableState> inputPointer = (StaticPointer<ChainableState>) new StaticPointer<>(
+                    input.getRef(),
+                    input.getState().getContractState().getClass()
+            );
+
+            result.put(inputPointer, new ArrayList<>());
+        }
+
+        for (ChainableState output : outputs) {
+            final StaticPointer<ChainableState> outputPointer = output.getPreviousStatePointer();
+            if (result.containsKey(outputPointer)) {
+                result.get(outputPointer).add(outputPointer);
+            }
+        }
+
+        return result;
     }
 }
