@@ -1,0 +1,9 @@
+@Library('corda-shared-build-pipeline-steps@5.0.1') _
+
+endToEndPipeline(
+    multiCluster: false,
+    // placeholder for now, this should be replaced with the real task once E2E Tests have been implemented
+    gradleTestTargetsToExecute: ['help'], 
+    usePackagedCordaHelmChart: true,
+    helmVersion: '^0.1.0-beta'
+)
