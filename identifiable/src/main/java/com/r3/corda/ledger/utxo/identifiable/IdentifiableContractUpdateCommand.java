@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
  * </ol>
  */
-public abstract class IdentifiableContractUpdateCommand extends IdentifiableContractCommand {
+public abstract class IdentifiableContractUpdateCommand<T extends IdentifiableState> extends IdentifiableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -23,7 +23,7 @@ public abstract class IdentifiableContractUpdateCommand extends IdentifiableCont
      */
     @Override
     public final void verify(@NotNull UtxoLedgerTransaction transaction) {
-        IdentifiableConstraints.verifyUpdate(transaction);
+        IdentifiableConstraints.verifyUpdate(transaction, getContractStateType());
         onVerify(transaction);
     }
 

@@ -1,5 +1,6 @@
 package com.r3.corda.ledger.utxo.fungible;
 
+import com.r3.corda.ledger.utxo.base.TypeUtils;
 import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
@@ -14,7 +15,16 @@ import com.r3.corda.ledger.utxo.base.VerifiableCommand;
  *     <li>{@link FungibleContractDeleteCommand} when deleting (consuming) {@link FungibleState} instances.</li>
  * </ul>
  */
-public abstract class FungibleContractCommand implements VerifiableCommand {
+public abstract class FungibleContractCommand<T extends FungibleState<?>> implements VerifiableCommand {
+
+    /**
+     * Gets the {@link FungibleState} type associated with the current command.
+     *
+     * @return Returns the {@link FungibleState} type associated with the current command.
+     */
+    protected Class<T> getContractStateType() {
+        return TypeUtils.getGenericArgumentType(getClass());
+    }
 
     /**
      * Initializes a new instance of the {@link FungibleContractCommand} class.

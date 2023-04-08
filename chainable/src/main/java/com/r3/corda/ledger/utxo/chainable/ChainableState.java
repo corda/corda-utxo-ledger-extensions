@@ -1,7 +1,6 @@
 package com.r3.corda.ledger.utxo.chainable;
 
 import com.r3.corda.ledger.utxo.base.StaticPointer;
-import net.corda.v5.ledger.utxo.BelongsToContract;
 import net.corda.v5.ledger.utxo.ContractState;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> The underlying type of the {@link ChainableState}.
  */
-@BelongsToContract(ChainableContract.class)
 public interface ChainableState<T extends ChainableState<T>> extends ContractState {
 
     /**

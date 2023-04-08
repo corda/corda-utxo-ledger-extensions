@@ -4,8 +4,8 @@ import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents the base class for implementing {@link ChainableContract} update commands.
- * This should be implemented by commands intended to update existing ledger instances of {@link ChainableState} and will verify the following constraints:
+ * Represents the base class for implementing {@link ChainableContract} update commands. This should be implemented by commands intended
+ * to update existing ledger instances of {@link ChainableState} and will verify the following constraints:
  * <ol>
  *  <li>On chainable state(s) updating, at least one chainable state must be consumed.</li>
  *  <li>On chainable state(s) updating, at least one chainable state must be created.</li>
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *  <li>On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively.</li>
  * </ol>
  */
-public abstract class ChainableContractUpdateCommand extends ChainableContractCommand {
+public abstract class ChainableContractUpdateCommand<T extends ChainableState<?>> extends ChainableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -23,7 +23,7 @@ public abstract class ChainableContractUpdateCommand extends ChainableContractCo
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        ChainableConstraints.verifyUpdate(transaction);
+        ChainableConstraints.verifyUpdate(transaction, getContractStateType());
         onVerify(transaction);
     }
 

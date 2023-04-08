@@ -1,7 +1,5 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import net.corda.v5.crypto.SecureHash;
-import net.corda.v5.ledger.utxo.BelongsToContract;
 import net.corda.v5.ledger.utxo.ContractState;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> The underlying {@link Numeric} type represented by the fungible state.
  */
-@BelongsToContract(FungibleContract.class)
 public interface FungibleState<T extends Numeric<?>> extends ContractState {
 
     /**

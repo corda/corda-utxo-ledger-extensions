@@ -5,10 +5,10 @@ import java.security.PublicKey
 
 @BelongsToContract(ExampleFungibleContract::class)
 data class ExampleFungibleStateA(
-    val alice: PublicKey,
-    val bob: PublicKey,
+    override val alice: PublicKey,
+    override val bob: PublicKey,
     private val quantity: NumericDecimal
-) : FungibleState<NumericDecimal> {
+) : ExampleFungibleState {
 
     override fun getParticipants(): List<PublicKey> {
         return listOf(alice, bob)

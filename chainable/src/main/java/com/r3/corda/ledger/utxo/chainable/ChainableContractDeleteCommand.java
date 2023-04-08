@@ -4,13 +4,13 @@ import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents the base class for implementing {@link ChainableContract} create commands.
- * This should be implemented by commands intended to delete existing ledger instances of {@link ChainableState} and will verify the following constraints:
+ * Represents the base class for implementing {@link ChainableContract} create commands. This should be implemented by commands intended
+ * to delete existing ledger instances of {@link ChainableState} and will verify the following constraints:
  * <ol>
  *     <li>On chainable state(s) deleting, at least one chainable state must be consumed.</li>
  * </ol>
  */
-public abstract class ChainableContractDeleteCommand extends ChainableContractCommand {
+public abstract class ChainableContractDeleteCommand<T extends ChainableState<?>> extends ChainableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -20,7 +20,7 @@ public abstract class ChainableContractDeleteCommand extends ChainableContractCo
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        ChainableConstraints.verifyDelete(transaction);
+        ChainableConstraints.verifyDelete(transaction, getContractStateType());
         onVerify(transaction);
     }
 

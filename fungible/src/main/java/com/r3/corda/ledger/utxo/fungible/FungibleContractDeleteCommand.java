@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the sum of the created states that are fungible with each other.</li>
  * </ul>
  */
-public abstract class FungibleContractDeleteCommand extends FungibleContractCommand {
+public abstract class FungibleContractDeleteCommand<T extends FungibleState<?>> extends FungibleContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -24,7 +24,7 @@ public abstract class FungibleContractDeleteCommand extends FungibleContractComm
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        FungibleConstraints.verifyDelete(transaction);
+        FungibleConstraints.verifyDelete(transaction, getContractStateType());
         onVerify(transaction);
     }
 
