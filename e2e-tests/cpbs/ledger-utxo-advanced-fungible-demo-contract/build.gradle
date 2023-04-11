@@ -1,0 +1,23 @@
+plugins {
+    id 'net.corda.plugins.cordapp-cpk2'
+}
+
+cordapp {
+    targetPlatformVersion platformVersion as Integer
+    minimumPlatformVersion platformVersion as Integer
+    contract {
+        name "Advanced UTXO Ledger Demo Fungible Contract"
+        versionId 1
+        vendor "R3"
+    }
+}
+
+dependencies {
+    cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
+    cordaProvided 'net.corda:corda-ledger-utxo'
+
+//    cordapp "$cordaUtxoLedgerGroupId:base:$cordaUtxoLedgerVersion"
+    cordapp project(":fungible")
+    cordapp project(":issuable")
+    cordapp project(":ownable")
+}

@@ -2,8 +2,7 @@
 
 endToEndPipeline(
     multiCluster: false,
-    // placeholder for now, this should be replaced with the real test task once E2E Tests have been implemented
-    gradleTestTargetsToExecute: ['help'], 
+    gradleTestTargetsToExecute: ['e2eTests'],
     usePackagedCordaHelmChart: true,
     helmVersion: '^0.1.0-beta',
     dynamicCordaApiVersion: false

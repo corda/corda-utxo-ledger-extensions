@@ -1,0 +1,20 @@
+plugins {
+    id 'net.corda.plugins.cordapp-cpk2'
+}
+
+cordapp {
+    targetPlatformVersion platformVersion as Integer
+    minimumPlatformVersion platformVersion as Integer
+    contract {
+        name "Advanced UTXO Ledger Demo Identifiable Workflow"
+        versionId 1
+        vendor "R3"
+    }
+}
+
+dependencies {
+    cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
+    cordaProvided 'net.corda:corda-ledger-utxo'
+
+    cordapp project(":identifiable")
+}
