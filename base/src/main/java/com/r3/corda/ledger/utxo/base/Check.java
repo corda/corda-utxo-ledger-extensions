@@ -96,6 +96,7 @@ public final class Check {
      * @param left    The left-hand value to test.
      * @param right   The right-hand value to test.
      * @param message The message which will be thrown in the event that the left-hand value is not greater than the right-hand value.
+     * @param <T>     The underlying {@link Comparable} type to be compared.
      * @throws IllegalStateException if the left-hand value is not greater than the right-hand value.
      */
     public static <T extends Comparable<T>> void isGreaterThan(@NotNull final T left, @NotNull final T right, @NotNull final String message) {
@@ -108,6 +109,7 @@ public final class Check {
      * @param left    The left-hand value to test.
      * @param right   The right-hand value to test.
      * @param message The message which will be thrown in the event that the left-hand value is not greater than or equal to the right-hand value.
+     * @param <T>     The underlying {@link Comparable} type to be compared.
      * @throws IllegalStateException if the left-hand value is not greater than or equal to the right-hand value.
      */
     public static <T extends Comparable<T>> void isGreaterThanOrEqual(@NotNull final T left, @NotNull final T right, @NotNull final String message) {
@@ -120,6 +122,7 @@ public final class Check {
      * @param left    The left-hand value to test.
      * @param right   The right-hand value to test.
      * @param message The message which will be thrown in the event that the left-hand value is not less than the right-hand value.
+     * @param <T>     The underlying {@link Comparable} type to be compared.
      * @throws IllegalStateException if the left-hand value is not less than the right-hand value.
      */
     public static <T extends Comparable<T>> void isLessThan(@NotNull final T left, @NotNull final T right, @NotNull final String message) {
@@ -132,6 +135,7 @@ public final class Check {
      * @param left    The left-hand value to test.
      * @param right   The right-hand value to test.
      * @param message The message which will be thrown in the event that the left-hand value is not less than or equal to the right-hand value.
+     * @param <T>     The underlying {@link Comparable} type to be compared.
      * @throws IllegalStateException if the left-hand value is not less than or equal to the right-hand value.
      */
     public static <T extends Comparable<T>> void isLessThanOrEqual(@NotNull final T left, @NotNull final T right, @NotNull final String message) {

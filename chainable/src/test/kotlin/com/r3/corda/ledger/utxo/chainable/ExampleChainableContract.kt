@@ -9,5 +9,4 @@ class ExampleChainableContract : ChainableContract() {
     class Create : ChainableContractCreateCommand()
     class Update : ChainableContractUpdateCommand()
     class Delete : ChainableContractDeleteCommand()
-    class DisallowedCommand : ChainableContractCreateCommand()
 }

@@ -44,22 +44,6 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
     }
 
     @Test
-    fun `On chainable state(s) creating, zero chainable states must be consumed`() {
-
-        // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
-            addCommand(ExampleChainableContract.Create())
-        }
-
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
-        // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_CREATE_INPUTS, exception.message)
-    }
-
-    @Test
     fun `On chainable state(s) creating, at least one chainable state must be created`() {
 
         // Arrange

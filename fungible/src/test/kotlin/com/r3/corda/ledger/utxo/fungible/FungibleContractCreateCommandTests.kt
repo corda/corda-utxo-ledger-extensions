@@ -43,11 +43,10 @@ class FungibleContractCreateCommandTests : ContractTest() {
     }
 
     @Test
-    fun `On fungible state(s) creating, zero fungible state inputs must be consumed`() {
+    fun `On fungible state(s) creating, at least one fungible state must be created`() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
             addCommand(ExampleFungibleContract.Create())
         }
 
@@ -55,7 +54,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(FungibleConstraints.CONTRACT_RULE_CREATE_INPUTS, exception.message)
+        assertEquals(FungibleConstraints.CONTRACT_RULE_CREATE_OUTPUTS, exception.message)
     }
 
     @Test

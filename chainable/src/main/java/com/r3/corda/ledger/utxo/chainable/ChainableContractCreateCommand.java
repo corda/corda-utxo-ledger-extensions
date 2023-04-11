@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
  * Represents the base class for implementing {@link ChainableContract} create commands.
  * This should be implemented by commands intended to create new ledger instances of {@link ChainableState} and will verify the following constraints:
  * <ol>
- *     <li>On chainable state(s) creating, zero chainable states must be consumed.</li>
  *     <li>On chainable state(s) creating, at least one chainable state must be created.</li>
  *     <li>On chainable state(s) creating, the previous state pointer of every created chainable state must be null</li>
  * </ol>

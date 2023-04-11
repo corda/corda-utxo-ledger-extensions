@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * This should be implemented by commands intended to create new ledger instances of {@link FungibleState} and will verify the following constraints:
  * <ol>
- *     <li>On fungible state(s) creating, zero fungible states must be consumed.</li>
+ *     <li>On fungible state(s) creating, at least one fungible state must be created.</li>
  *     <li>On fungible state(s) creating, the quantity of every created fungible state must be greater than zero.</li>
  * </ol>
  */
