@@ -29,3 +29,7 @@ dependencies {
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 }
+
+tasks.named('jar', Jar) {
+    archiveBaseName = "corda-ledger-extensions-${project.name}"
+}

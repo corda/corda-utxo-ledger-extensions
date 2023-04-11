@@ -17,3 +17,7 @@ cordapp {
 dependencies {
     cordapp project(':base')
 }
+
+tasks.named('jar', Jar) {
+    archiveBaseName = "corda-ledger-extensions-${project.name}"
+}

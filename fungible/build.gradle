@@ -26,3 +26,7 @@ dependencies {
     testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
 }
+
+tasks.named('jar', Jar) {
+    archiveBaseName = "corda-ledger-extensions-${project.name}"
+}
