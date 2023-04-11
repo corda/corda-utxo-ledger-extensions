@@ -8,7 +8,8 @@ import kotlin.test.assertEquals
 
 class FungibleContractDeleteCommandTests : ContractTest() {
 
-    private val state = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
+    private val stateA = ExampleFungibleStateA(ALICE_KEY, BOB_KEY, NumericDecimal.TEN)
+    private val stateB = ExampleFungibleStateB(ALICE_KEY, BOB_KEY, NumericDecimal.ONE)
     private val contract = ExampleFungibleContract()
 
     @Test
@@ -16,7 +17,10 @@ class FungibleContractDeleteCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
+            addInputState(stateA.copy(quantity = NumericDecimal.TEN))
+            addInputState(stateB.copy(quantity =  NumericDecimal.TEN))
+            addOutputState(stateA.copy(quantity = NumericDecimal.ONE))
+            addOutputState(stateB.copy(quantity =  NumericDecimal.ONE))
             addCommand(ExampleFungibleContract.Delete())
         }
 
@@ -29,7 +33,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
+            addInputState(stateA)
         }
 
         // Act
@@ -62,8 +66,8 @@ class FungibleContractDeleteCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
-            addOutputState(state)
+            addInputState(stateA)
+            addOutputState(stateA)
             addCommand(ExampleFungibleContract.Delete())
         }
 
@@ -79,9 +83,9 @@ class FungibleContractDeleteCommandTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction(NOTARY_PARTY) {
-            addInputState(state)
-            addOutputState(state)
-            addOutputState(state)
+            addInputState(stateA)
+            addOutputState(stateA)
+            addOutputState(stateA)
             addCommand(ExampleFungibleContract.Delete())
         }
 
@@ -90,5 +94,22 @@ class FungibleContractDeleteCommandTests : ContractTest() {
 
         // Assert
         assertEquals(FungibleConstraints.CONTRACT_RULE_DELETE_SUM, exception.message)
+    }
+
+    @Test
+    fun `On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the sum of the created states that are fungible with each other`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_PARTY) {
+            addInputState(stateA)
+            addOutputState(stateB)
+            addCommand(ExampleFungibleContract.Delete())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(FungibleConstraints.CONTRACT_RULE_DELETE_GROUP_SUM, exception.message)
     }
 }

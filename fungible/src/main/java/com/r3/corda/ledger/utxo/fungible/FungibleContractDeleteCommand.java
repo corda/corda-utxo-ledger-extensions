@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * <ul>
  *     <li>On fungible state(s) deleting, at least one fungible state input must be consumed.</li>
  *     <li>On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.</li>
+ *     <li>On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the sum of the created states that are fungible with each other.</li>
  * </ul>
  */
 public abstract class FungibleContractDeleteCommand extends FungibleContractCommand {
