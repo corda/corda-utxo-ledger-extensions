@@ -43,7 +43,7 @@ class UpdateSupportTicketFlowResponder(private val session: FlowSession) : SubFl
 
     @InitiatedBy(protocol = "update-support-ticket-flow")
     @Suppress("unused")
-    internal class Responder : ResponderFlow {
+    class Responder : ResponderFlow {
 
         @CordaInject
         private lateinit var flowEngine: FlowEngine

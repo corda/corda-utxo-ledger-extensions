@@ -52,6 +52,7 @@ class IdentifiableTests {
 
     @BeforeAll
     fun beforeAll() {
+        uploadTrustedCertificate()
         conditionallyUploadCordaPackage(cpiName, TEST_CPB_LOCATION, GROUP_ID, staticMemberList)
         conditionallyUploadCordaPackage(notaryCpiName, TEST_NOTARY_CPB_LOCATION, GROUP_ID, staticMemberList)
 
@@ -71,7 +72,6 @@ class IdentifiableTests {
     @Test
     fun `Alice issues a support ticket to Bob, Bob opens and completes the ticket, Alice closes the ticket`() {
 
-        // Alice issues tokens to Bob
         val issueSupportTicketRequestId = startRpcFlow(
             aliceHoldingId,
             mapOf(
@@ -91,7 +91,6 @@ class IdentifiableTests {
         val createSupportTicketResponse = objectMapper
             .readValue(createFlowResponse.flowResult, CreateSupportTicketResponse::class.java)
 
-        // Bob transfers tokens to Charlie and receives change
         val openSupportTicketRequestId = startRpcFlow(
             bobHoldingId,
             mapOf(
@@ -109,6 +108,7 @@ class IdentifiableTests {
         val openSupportTicketResponse = objectMapper
             .readValue(openFlowResult.flowResult, UpdateSupportTicketResponse::class.java)
 
+        assertThat(openSupportTicketResponse.title).isEqualTo(createSupportTicketResponse.title)
 
         val doneSupportTicketRequestId = startRpcFlow(
             bobHoldingId,
@@ -127,7 +127,7 @@ class IdentifiableTests {
         val doneSupportTicketResponse = objectMapper
             .readValue(doneFlowResult.flowResult, UpdateSupportTicketResponse::class.java)
 
-        assertThat(doneSupportTicketResponse.id).isEqualTo(createSupportTicketResponse.id)
+        assertThat(doneSupportTicketResponse.title).isEqualTo(openSupportTicketResponse.title)
 
         val deleteSupportTicketRequestId = startRpcFlow(
             aliceHoldingId,
@@ -146,10 +146,10 @@ class IdentifiableTests {
         val deleteSupportTicketResponse = objectMapper
             .readValue(doneFlowResult.flowResult, DeleteSupportTicketResponse::class.java)
 
-        assertThat(deleteSupportTicketResponse.id).isEqualTo(doneSupportTicketResponse.id)
+        assertThat(deleteSupportTicketResponse.title).isEqualTo(doneSupportTicketResponse.title)
     }
 
-    data class CreateSupportTicketResponse(val id: String)
-    data class UpdateSupportTicketResponse(val id: String)
-    data class DeleteSupportTicketResponse(val id: String)
+    data class CreateSupportTicketResponse(val id: String, val title: String)
+    data class UpdateSupportTicketResponse(val id: String, val title: String)
+    data class DeleteSupportTicketResponse(val id: String, val title: String)
 }

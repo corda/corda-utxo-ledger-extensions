@@ -42,7 +42,7 @@ class MintTokenFlowResponder(private val session: FlowSession) : SubFlow<UtxoSig
     }
 
     @InitiatedBy(protocol = "mint-token-flow")
-    internal class Responder : ResponderFlow {
+    class Responder : ResponderFlow {
 
         @CordaInject
         private lateinit var flowEngine: FlowEngine

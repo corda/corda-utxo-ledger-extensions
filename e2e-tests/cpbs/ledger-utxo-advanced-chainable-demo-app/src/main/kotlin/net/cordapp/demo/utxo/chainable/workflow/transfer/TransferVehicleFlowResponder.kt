@@ -43,7 +43,7 @@ class TransferVehicleFlowResponder(private val session: FlowSession) : SubFlow<U
 
     @InitiatedBy(protocol = "transfer-vehicle-flow")
     @Suppress("unused")
-    internal class Responder : ResponderFlow {
+    class Responder : ResponderFlow {
 
         @CordaInject
         private lateinit var flowEngine: FlowEngine

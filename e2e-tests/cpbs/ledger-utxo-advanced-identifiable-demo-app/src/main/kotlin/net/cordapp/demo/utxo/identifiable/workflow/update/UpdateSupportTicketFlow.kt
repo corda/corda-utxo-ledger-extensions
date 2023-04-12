@@ -46,7 +46,7 @@ class UpdateSupportTicketFlow(
 
     @InitiatingFlow(protocol = "update-support-ticket-flow")
     @Suppress("unused")
-    internal class Initiator : ClientStartableFlow {
+    class Initiator : ClientStartableFlow {
 
         private companion object {
             val logger = AppLogger.create<Initiator>()

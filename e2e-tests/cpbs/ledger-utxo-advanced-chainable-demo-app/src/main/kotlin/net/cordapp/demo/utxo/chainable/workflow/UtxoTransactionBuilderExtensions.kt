@@ -7,6 +7,7 @@ import net.corda.v5.ledger.utxo.transaction.UtxoTransactionBuilder
 import net.cordapp.demo.utxo.chainable.contract.Vehicle
 import net.cordapp.demo.utxo.chainable.contract.VehicleContract
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addIssuedVehicle(vehicle: Vehicle, notary: MemberX500Name) = this
@@ -14,7 +15,7 @@ internal fun UtxoTransactionBuilder.addIssuedVehicle(vehicle: Vehicle, notary: M
     .addCommand(VehicleContract.Issue())
     .addSignatories(vehicle.manufacturer)
     .setNotary(notary)
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addTransferredVehicle(oldVehicle: StateAndRef<Vehicle>, newVehicle: Vehicle) = this
@@ -23,4 +24,4 @@ internal fun UtxoTransactionBuilder.addTransferredVehicle(oldVehicle: StateAndRe
     .addCommand(VehicleContract.Transfer())
     .addSignatories(oldVehicle.state.contractState.owner)
     .setNotary(oldVehicle.state.notaryName)
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))

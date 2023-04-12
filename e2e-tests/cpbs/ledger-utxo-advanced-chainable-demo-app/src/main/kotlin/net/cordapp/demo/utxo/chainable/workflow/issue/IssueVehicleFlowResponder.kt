@@ -42,7 +42,7 @@ class IssueVehicleFlowResponder(private val session: FlowSession) : SubFlow<Utxo
     }
 
     @InitiatedBy(protocol = "issue-vehicle-flow")
-    internal class Responder : ResponderFlow {
+    class Responder : ResponderFlow {
 
         @CordaInject
         private lateinit var flowEngine: FlowEngine

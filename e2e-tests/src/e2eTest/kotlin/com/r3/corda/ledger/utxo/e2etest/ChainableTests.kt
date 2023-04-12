@@ -55,6 +55,7 @@ class ChainableTests {
 
     @BeforeAll
     fun beforeAll() {
+        uploadTrustedCertificate()
         conditionallyUploadCordaPackage(cpiName, TEST_CPB_LOCATION, GROUP_ID, staticMemberList)
         conditionallyUploadCordaPackage(notaryCpiName, TEST_NOTARY_CPB_LOCATION, GROUP_ID, staticMemberList)
 

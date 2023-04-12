@@ -7,6 +7,7 @@ import net.corda.v5.ledger.utxo.transaction.UtxoTransactionBuilder
 import net.cordapp.demo.utxo.fungible.contract.Token
 import net.cordapp.demo.utxo.fungible.contract.TokenContract
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addMintToken(token: Token, notary: MemberX500Name) = this
@@ -14,7 +15,7 @@ internal fun UtxoTransactionBuilder.addMintToken(token: Token, notary: MemberX50
     .addCommand(TokenContract.Mint())
     .addSignatories(token.issuer)
     .setNotary(notary)
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addMoveTokens(oldTokens: List<StateAndRef<Token>>, newTokens: List<Token>) = this
@@ -23,7 +24,7 @@ internal fun UtxoTransactionBuilder.addMoveTokens(oldTokens: List<StateAndRef<To
     .addCommand(TokenContract.Move())
     .addSignatories(newTokens.map { it.owner })
     .setNotary(oldTokens.map { it.state.notaryName }.distinct().single())
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addBurnTokens(oldTokens: List<StateAndRef<Token>>, changeToken: Token?) = this
@@ -33,4 +34,4 @@ internal fun UtxoTransactionBuilder.addBurnTokens(oldTokens: List<StateAndRef<To
     .addSignatories(oldTokens.map { it.state.contractState.owner })
     .addSignatories(oldTokens.map { it.state.contractState.issuer })
     .setNotary(oldTokens.map { it.state.notaryName }.distinct().single())
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))

@@ -43,7 +43,7 @@ class MoveTokenFlowResponder(private val session: FlowSession) : SubFlow<UtxoSig
 
     @InitiatedBy(protocol = "move-token-flow")
     @Suppress("unused")
-    internal class Responder : ResponderFlow {
+    class Responder : ResponderFlow {
 
         @CordaInject
         private lateinit var flowEngine: FlowEngine

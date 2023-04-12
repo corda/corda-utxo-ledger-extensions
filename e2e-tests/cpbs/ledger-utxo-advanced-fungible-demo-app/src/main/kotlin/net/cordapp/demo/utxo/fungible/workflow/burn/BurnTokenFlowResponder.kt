@@ -43,7 +43,7 @@ class BurnTokenFlowResponder(private val session: FlowSession) : SubFlow<UtxoSig
 
     @InitiatedBy(protocol = "burn-token-flow")
     @Suppress("unused")
-    internal class Responder : ResponderFlow {
+    class Responder : ResponderFlow {
 
         @CordaInject
         private lateinit var flowEngine: FlowEngine

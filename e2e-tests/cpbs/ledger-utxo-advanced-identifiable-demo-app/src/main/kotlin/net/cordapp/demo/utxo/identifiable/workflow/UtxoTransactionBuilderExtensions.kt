@@ -7,6 +7,7 @@ import net.corda.v5.ledger.utxo.transaction.UtxoTransactionBuilder
 import net.cordapp.demo.utxo.identifiable.contract.SupportTicket
 import net.cordapp.demo.utxo.identifiable.contract.SupportTicketContract
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addCreatedSupportTicket(ticket: SupportTicket, notary: MemberX500Name) = this
@@ -14,7 +15,7 @@ internal fun UtxoTransactionBuilder.addCreatedSupportTicket(ticket: SupportTicke
     .addCommand(SupportTicketContract.Create())
     .addSignatories(ticket.reporter)
     .setNotary(notary)
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addUpdatedSupportTicket(
@@ -26,7 +27,7 @@ internal fun UtxoTransactionBuilder.addUpdatedSupportTicket(
     .addCommand(SupportTicketContract.Update())
     .addSignatories(newTicket.assignee)
     .setNotary(oldTicket.state.notaryName)
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))
 
 @Suspendable
 internal fun UtxoTransactionBuilder.addDeletedSupportTicket(ticket: StateAndRef<SupportTicket>) = this
@@ -34,4 +35,4 @@ internal fun UtxoTransactionBuilder.addDeletedSupportTicket(ticket: StateAndRef<
     .addCommand(SupportTicketContract.Delete())
     .addSignatories(ticket.state.contractState.reporter)
     .setNotary(ticket.state.notaryName)
-    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plusSeconds(60))
+    .setTimeWindowBetween(Instant.now().minusSeconds(60), Instant.now().plus(60, ChronoUnit.MINUTES))

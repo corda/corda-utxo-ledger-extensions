@@ -1,11 +1,13 @@
 package net.cordapp.demo.utxo.identifiable.workflow.create
 
 import net.corda.v5.ledger.utxo.transaction.UtxoSignedTransaction
+import net.cordapp.demo.utxo.identifiable.contract.SupportTicket
 
-data class CreateSupportTicketResponse(val id: String) {
+data class CreateSupportTicketResponse(val id: String, val title: String) {
     internal companion object {
         fun fromTransaction(transaction: UtxoSignedTransaction): CreateSupportTicketResponse {
-            return CreateSupportTicketResponse(transaction.outputStateAndRefs.single().ref.toString())
+            val stateAndRef = transaction.outputStateAndRefs.single()
+            return CreateSupportTicketResponse(stateAndRef.ref.toString(), (stateAndRef.state.contractState as SupportTicket).title)
         }
     }
 }
