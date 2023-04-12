@@ -36,6 +36,12 @@ allprojects {
         }
     }
 
+    pluginManager.withPlugin('net.corda.plugins.cordapp-cpk2') {
+        tasks.named('jar', Jar) {
+            archiveBaseName = "corda-ledger-extensions-${project.name}"
+        }
+    }
+
     repositories {
         mavenLocal()
 
