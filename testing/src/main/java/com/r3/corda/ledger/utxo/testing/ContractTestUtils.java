@@ -6,7 +6,6 @@ import net.corda.v5.ledger.utxo.StateRef;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
