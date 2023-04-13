@@ -8,7 +8,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'net.corda.cordapp.cordapp-configuration'
     id 'com.r3.internal.gradle.plugins.r3Publish'
-    id 'net.corda.cordapp.cordapp-configuration'
 }
 
 def javaVersion = 11
