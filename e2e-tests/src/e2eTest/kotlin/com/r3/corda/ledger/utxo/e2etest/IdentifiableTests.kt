@@ -24,8 +24,8 @@ import java.util.UUID
 class IdentifiableTests {
 
     private companion object {
-        const val TEST_CPI_NAME = "ledger-utxo-advanced-identifiable-demo-app"
-        const val TEST_CPB_LOCATION = "/META-INF/ledger-utxo-advanced-identifiable-demo-app.cpb"
+        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-identifiable-demo-app"
+        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-identifiable-demo-app.cpb"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
