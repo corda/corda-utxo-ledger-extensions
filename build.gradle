@@ -1,10 +1,17 @@
+import static org.gradle.jvm.toolchain.JavaLanguageVersion.of
+import static org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+import static org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_8
+
 plugins {
     id 'java'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm'
+    id 'net.corda.cordapp.cordapp-configuration'
     id 'com.r3.internal.gradle.plugins.r3Publish'
     id 'net.corda.cordapp.cordapp-configuration'
 }
+
+def javaVersion = 11
 
 allprojects {
     group 'com.r3.corda.ledger.utxo'
@@ -32,8 +39,27 @@ allprojects {
 
     pluginManager.withPlugin('java') {
         java {
+            toolchain {
+                languageVersion = of(javaVersion)
+            }
+
             withJavadocJar()
             withSourcesJar()
+        }
+    }
+
+    pluginManager.withPlugin('org.jetbrains.kotlin.jvm') {
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            compilerOptions {
+                allWarningsAsErrors = true
+                languageVersion = KOTLIN_1_8
+                apiVersion = KOTLIN_1_8
+                jvmTarget = JVM_11
+                javaParameters = true   // Useful for reflection.
+                freeCompilerArgs.addAll([
+                    "-Xjvm-default=all"
+                ])
+            }
         }
     }
 

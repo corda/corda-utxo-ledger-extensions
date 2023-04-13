@@ -16,7 +16,6 @@ cordapp {
 
 dependencies {
     cordaProvided 'org.jetbrains.kotlin:kotlin-osgi-bundle'
-    cordaProvided 'org.jetbrains:annotations:24.0.1'
     cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
     cordaProvided 'net.corda:corda-base'
     cordaProvided 'net.corda:corda-ledger-utxo'
