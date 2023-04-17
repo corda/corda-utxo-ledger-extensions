@@ -55,9 +55,6 @@ class DeleteSupportTicketFlow(
         private lateinit var utxoLedgerService: UtxoLedgerService
 
         @CordaInject
-        private lateinit var digestService: DigestService
-
-        @CordaInject
         private lateinit var jsonMarshallingService: JsonMarshallingService
 
         @CordaInject
@@ -71,7 +68,7 @@ class DeleteSupportTicketFlow(
             val request = requestBody.getRequestBodyAs(jsonMarshallingService, DeleteSupportTicketRequest::class.java)
             logger.logMarshallingRequest(request)
 
-            val supportTicket = request.getInputState(utxoLedgerService, digestService)
+            val supportTicket = request.getInputState(utxoLedgerService)
             val sessions = request.getFlowSessions(flowMessaging)
 
             val transaction = flowEngine.subFlow(DeleteSupportTicketFlow(supportTicket, sessions))

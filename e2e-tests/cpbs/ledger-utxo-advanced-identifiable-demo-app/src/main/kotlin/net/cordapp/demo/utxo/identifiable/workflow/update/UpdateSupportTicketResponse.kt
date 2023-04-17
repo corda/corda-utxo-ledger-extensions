@@ -6,8 +6,8 @@ import net.cordapp.demo.utxo.identifiable.contract.SupportTicket
 data class UpdateSupportTicketResponse(val id: String, val title: String) {
     internal companion object {
         fun fromTransaction(transaction: UtxoSignedTransaction): UpdateSupportTicketResponse {
-            val stateAndRef = transaction.outputStateAndRefs.single()
-            return UpdateSupportTicketResponse(stateAndRef.ref.toString(), (stateAndRef.state.contractState as SupportTicket).title)
+            val state = transaction.outputStateAndRefs.single().state.contractState as SupportTicket
+            return UpdateSupportTicketResponse(state.id!!.toString(), state.title)
         }
     }
 }

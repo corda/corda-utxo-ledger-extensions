@@ -108,6 +108,7 @@ class IdentifiableTests {
         val openSupportTicketResponse = objectMapper
             .readValue(openFlowResult.flowResult, UpdateSupportTicketResponse::class.java)
 
+        assertThat(openSupportTicketResponse.id).isEqualTo(createSupportTicketResponse.id)
         assertThat(openSupportTicketResponse.title).isEqualTo(createSupportTicketResponse.title)
 
         val doneSupportTicketRequestId = startRpcFlow(
@@ -127,6 +128,7 @@ class IdentifiableTests {
         val doneSupportTicketResponse = objectMapper
             .readValue(doneFlowResult.flowResult, UpdateSupportTicketResponse::class.java)
 
+        assertThat(doneSupportTicketResponse.id).isEqualTo(openSupportTicketResponse.id)
         assertThat(doneSupportTicketResponse.title).isEqualTo(openSupportTicketResponse.title)
 
         val deleteSupportTicketRequestId = startRpcFlow(
@@ -146,10 +148,72 @@ class IdentifiableTests {
         val deleteSupportTicketResponse = objectMapper
             .readValue(doneFlowResult.flowResult, DeleteSupportTicketResponse::class.java)
 
+        assertThat(deleteSupportTicketResponse.id).isEqualTo(doneSupportTicketResponse.id)
         assertThat(deleteSupportTicketResponse.title).isEqualTo(doneSupportTicketResponse.title)
+    }
+
+    @Test
+    fun `query identifiable states`() {
+
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(),
+            "net.cordapp.demo.utxo.identifiable.workflow.query.IdentifiableStateQueryFlow"
+        )
+        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(createFlowResponse.flowError).isNull()
+
+        val response = objectMapper
+            .readValue(createFlowResponse.flowResult, IdentifiableStateQueryResponse::class.java)
+
+        assertThat(response.before).isEmpty()
+
+        assertThat(response.after).hasSize(1)
+        assertThat(response.after.single().id).isNull()
+
+        assertThat(response.updated).hasSize(1)
+        assertThat(response.updated.single().id).isEqualTo(response.after.single().stateRef)
+        assertThat(response.updated.single().stateRef).isNotEqualTo(response.updated.single().id)
+
+        assertThat(response.consumed).isEmpty()
+    }
+
+    @Test
+    fun `identifiable pointer resolution`() {
+
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(),
+            "net.cordapp.demo.utxo.identifiable.workflow.query.IdentifiablePointerFlow"
+        )
+        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(createFlowResponse.flowError).isNull()
+
+        val response = objectMapper
+            .readValue(createFlowResponse.flowResult, IdentifiableStateQueryResponse::class.java)
+
+        assertThat(response.before).isEmpty()
+
+        assertThat(response.after).hasSize(1)
+        assertThat(response.after.single().id).isNull()
+
+        assertThat(response.updated).hasSize(1)
+        assertThat(response.updated.single().id).isEqualTo(response.after.single().stateRef)
+        assertThat(response.updated.single().stateRef).isNotEqualTo(response.updated.single().id)
+
+        assertThat(response.consumed).isEmpty()
     }
 
     data class CreateSupportTicketResponse(val id: String, val title: String)
     data class UpdateSupportTicketResponse(val id: String, val title: String)
     data class DeleteSupportTicketResponse(val id: String, val title: String)
+    data class IdentifiableStateQueryResponse(
+        val before: List<IdentifiableStateValues>,
+        val after: List<IdentifiableStateValues>,
+        val updated: List<IdentifiableStateValues>,
+        val consumed: List<IdentifiableStateValues>
+    )
+    data class IdentifiableStateValues(val stateRef: String, val id: String?)
 }
