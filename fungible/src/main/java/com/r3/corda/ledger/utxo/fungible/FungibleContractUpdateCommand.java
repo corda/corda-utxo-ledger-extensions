@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  *  <li>On fungible state(s) updating, the sum of the consumed states that are fungible with each other must be equal to the sum of the created states that are fungible with each other.</li>
  * </ol>
  */
-public abstract class FungibleContractUpdateCommand extends FungibleContractCommand {
+public abstract class FungibleContractUpdateCommand<T extends FungibleState<?>> extends FungibleContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -26,7 +26,7 @@ public abstract class FungibleContractUpdateCommand extends FungibleContractComm
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        FungibleConstraints.verifyUpdate(transaction);
+        FungibleConstraints.verifyUpdate(transaction, getContractStateType());
         onVerify(transaction);
     }
 
