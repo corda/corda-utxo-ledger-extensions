@@ -15,7 +15,7 @@ class ExampleSealedDelegatedContractTests : ContractTest() {
     fun `Permitted should be considered a permitted command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleSealedDelegatedContract.ExampleSealedContractCommand.Permitted())
         }
 
@@ -27,7 +27,7 @@ class ExampleSealedDelegatedContractTests : ContractTest() {
     fun `NotPermitted should be considered a permitted command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleSealedDelegatedContract.ExampleSealedContractCommand.NotPermitted())
         }
 

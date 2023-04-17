@@ -1,13 +1,14 @@
 package com.r3.corda.ledger.utxo.testing
 
+import net.corda.v5.base.types.MemberX500Name
 import net.corda.v5.crypto.SecureHash
-import net.corda.v5.ledger.common.Party
 import net.corda.v5.ledger.utxo.StateRef
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction
+import java.security.PublicKey
 
 @TransactionBuilderDslMarker
-fun buildTransaction(notary: Party, action: TransactionBuilderDsl.() -> Unit): UtxoLedgerTransaction {
-    return TransactionBuilderDsl(notary).apply(action).toLedgerTransaction()
+fun buildTransaction(notaryKey: PublicKey, notaryName: MemberX500Name, action: TransactionBuilderDsl.() -> Unit): UtxoLedgerTransaction {
+    return TransactionBuilderDsl(notaryKey, notaryName).apply(action).toLedgerTransaction()
 }
 
 @TransactionBuilderDslMarker

@@ -37,7 +37,7 @@ class DelegatedContractTests : ContractTest() {
     fun `verify calls onVerify from the concrete implementation of DelegatedContract`() {
         var onVerifyCalled = false
         val contract = MyDelegatedContract(isVisible = true, { onVerifyCalled = true })
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(MyVerifiableCommand.One())
         }
         contract.verify(transaction)
@@ -47,7 +47,7 @@ class DelegatedContractTests : ContractTest() {
     @Test
     fun `verify throws an exception when the permitted command types is empty`() {
         val contract = MyDelegatedContract(isVisible = true, permittedCommands = emptyList())
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(MyVerifiableCommand.One())
         }
         assertThrows<IllegalStateException> { contract.verify(transaction) }
@@ -56,7 +56,7 @@ class DelegatedContractTests : ContractTest() {
     @Test
     fun `verify throws an exception when none of the transaction's commands are permitted commands`() {
         val contract = MyDelegatedContract(isVisible = true)
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(MyOtherCommand())
         }
         assertThrows<IllegalStateException> { contract.verify(transaction) }
@@ -67,7 +67,7 @@ class DelegatedContractTests : ContractTest() {
         val contract = MyDelegatedContract(isVisible = true)
         val commandOne = MyVerifiableCommand.One()
         val commandTwo = MyVerifiableCommand.Two()
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(commandOne)
             addCommand(commandTwo)
         }
@@ -79,7 +79,7 @@ class DelegatedContractTests : ContractTest() {
     @Test
     fun `verify throws an exception when a permitted command throws an exception`() {
         val contract = MyDelegatedContract(isVisible = true)
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(MyVerifiableCommand.One())
             addCommand(MyVerifiableCommand.Two())
             addCommand(MyVerifiableCommand.Three())

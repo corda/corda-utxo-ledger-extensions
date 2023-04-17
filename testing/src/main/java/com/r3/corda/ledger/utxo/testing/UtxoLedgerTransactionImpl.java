@@ -1,7 +1,7 @@
 package com.r3.corda.ledger.utxo.testing;
 
+import net.corda.v5.base.types.MemberX500Name;
 import net.corda.v5.crypto.SecureHash;
-import net.corda.v5.ledger.common.Party;
 import net.corda.v5.ledger.common.transaction.TransactionMetadata;
 import net.corda.v5.ledger.utxo.Attachment;
 import net.corda.v5.ledger.utxo.Command;
@@ -25,7 +25,10 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
     private final SecureHash id;
 
     @NotNull
-    private final Party notary;
+    private final PublicKey notaryKey;
+
+    @NotNull
+    private final MemberX500Name notaryName;
 
     @NotNull
     private final List<Attachment> attachments;
@@ -57,7 +60,8 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
         this.outputStateAndRefs = builder.getOutputStateAndRefs();
         this.referenceStateAndRefs = builder.getReferenceStateAndRefs();
         this.timeWindow = builder.getTimeWindow();
-        this.notary = builder.getNotary();
+        this.notaryKey = builder.getNotaryKey();
+        this.notaryName = builder.getNotaryName();
     }
 
     @NotNull
@@ -68,8 +72,14 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
 
     @NotNull
     @Override
-    public Party getNotary() {
-        return notary;
+    public PublicKey getNotaryKey() {
+        return notaryKey;
+    }
+
+    @NotNull
+    @Override
+    public MemberX500Name getNotaryName() {
+        return notaryName;
     }
 
     @NotNull
@@ -282,7 +292,8 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
                 T castState = type.cast(contractState);
                 TransactionState<T> castTransactionState = new TransactionStateImpl<>(
                         castState,
-                        transactionState.getNotary(),
+                        transactionState.getNotaryKey(),
+                        transactionState.getNotaryName(),
                         transactionState.getEncumbranceGroup()
                 );
 
