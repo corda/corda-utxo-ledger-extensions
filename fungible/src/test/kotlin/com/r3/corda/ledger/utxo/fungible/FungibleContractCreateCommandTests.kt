@@ -15,7 +15,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
     fun `On fungible state(s) creating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
             addCommand(ExampleFungibleContract.Create())
         }
@@ -28,7 +28,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
     fun `On fungible state(s) creating, the transaction should should include the Create command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
         }
 
@@ -46,7 +46,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
     fun `On fungible state(s) creating, at least one fungible state must be created`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleFungibleContract.Create())
         }
 
@@ -61,7 +61,7 @@ class FungibleContractCreateCommandTests : ContractTest() {
     fun `On fungible state(s) creating, the quantity of every created fungible state must be greater than zero`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state.copy(quantity = NumericDecimal.ZERO))
             addCommand(ExampleFungibleContract.Create())
         }

@@ -15,7 +15,7 @@ class ExampleIdentifiableContractCreateCommandTests : ContractTest() {
     fun `On identifiable state(s) creating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
             addCommand(ExampleIdentifiableContract.Create())
         }
@@ -28,7 +28,7 @@ class ExampleIdentifiableContractCreateCommandTests : ContractTest() {
     fun `On identifiable state(s) creating, the transaction should include the Create command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
         }
 
@@ -45,7 +45,7 @@ class ExampleIdentifiableContractCreateCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) creating, at least one identifiable state must be created`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleIdentifiableContract.Create())
         }
 

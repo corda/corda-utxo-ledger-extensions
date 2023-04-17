@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *  <li>On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively.</li>
  * </ol>
  */
-public abstract class ChainableContractUpdateCommand extends ChainableContractCommand {
+public abstract class ChainableContractUpdateCommand<T extends ChainableState<?>> extends ChainableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -23,7 +23,7 @@ public abstract class ChainableContractUpdateCommand extends ChainableContractCo
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        ChainableConstraints.verifyUpdate(transaction);
+        ChainableConstraints.verifyUpdate(transaction, getContractStateType());
         onVerify(transaction);
     }
 

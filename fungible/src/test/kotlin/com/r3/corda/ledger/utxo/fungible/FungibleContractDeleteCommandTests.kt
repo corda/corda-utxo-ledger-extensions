@@ -16,7 +16,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     fun `On fungible state(s) deleting, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA.copy(quantity = NumericDecimal.TEN))
             addInputState(stateB.copy(quantity =  NumericDecimal.TEN))
             addOutputState(stateA.copy(quantity = NumericDecimal.ONE))
@@ -32,7 +32,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     fun `On fungible state(s) deleting, the transaction should include the Delete command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
         }
 
@@ -50,7 +50,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     fun `On fungible state(s) deleting, at least one fungible state input must be consumed`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleFungibleContract.Delete())
         }
 
@@ -65,7 +65,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     fun `On fungible state(s) deleting, the sum of the absolute values of the consumed states must be greater than the sum of the absolute values of the created states (quantity is equal)`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateA)
             addCommand(ExampleFungibleContract.Delete())
@@ -82,7 +82,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     fun `On fungible state(s) deleting, the sum of the absolute values of the consumed states must be greater than the sum of the absolute values of the created states (quantity is greater)`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateA)
             addOutputState(stateA)
@@ -100,7 +100,7 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     fun `On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the sum of the created states that are fungible with each other`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateB)
             addCommand(ExampleFungibleContract.Delete())
