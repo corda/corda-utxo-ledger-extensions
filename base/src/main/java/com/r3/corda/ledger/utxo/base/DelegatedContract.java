@@ -69,8 +69,9 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
         boolean hasExecutedAtLeastOnePermittedCommand = false;
 
         for (final VerifiableCommand command : transaction.getCommands(VerifiableCommand.class)) {
-            final Class<? extends Command> commandClass = command.getClass();
-            if (permittedCommandTypes.stream().anyMatch(it -> it.isAssignableFrom(commandClass))) {
+            final Class<? extends Command> type = command.getClass();
+
+            if (isCommandPermitted(permittedCommandTypes, type)) {
                 hasExecutedAtLeastOnePermittedCommand = true;
                 command.verify(transaction);
             }
@@ -109,5 +110,20 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
         }
 
         return getGenericTypeParameterName((Class<?>) superClass);
+    }
+
+    /**
+     * Determines whether the specified {@link Command} type is permissible by any of the current {@link DelegatedContract}'s permitted
+     * commands. A command is considered permissible by the current {@link DelegatedContract} if it is either directly one of the
+     * permitted commands, or if the command derives from one of the permitted commands.
+     *
+     * @param permittedCommandTypes The list of {@link Command} types that are permissible by the current {@link DelegatedContract}.
+     * @param type                  The type of the {@link Command} to determine is permissible by the current {@link DelegatedContract}.
+     * @return Returns true if the specified {@link Command} is permissible by the current {@link DelegatedContract}; otherwise, false.
+     */
+    private boolean isCommandPermitted(
+            @NotNull final List<Class<? extends T>> permittedCommandTypes,
+            @NotNull final Class<? extends Command> type) {
+        return permittedCommandTypes.stream().anyMatch(it -> it.isAssignableFrom(type));
     }
 }
