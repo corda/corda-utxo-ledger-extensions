@@ -1,6 +1,5 @@
 package com.r3.corda.ledger.utxo.identifiable;
 
-import net.corda.v5.ledger.utxo.BelongsToContract;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.StateRef;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Defines a mechanism for implementing uniquely identifiable states.
  */
-@BelongsToContract(IdentifiableContract.class)
 public interface IdentifiableState extends ContractState {
 
     /**
