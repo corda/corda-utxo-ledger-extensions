@@ -6,7 +6,21 @@ class ExampleChainableContract : ChainableContract() {
         return listOf(Create::class.java, Update::class.java, Delete::class.java)
     }
 
-    class Create : ChainableContractCreateCommand<ExampleChainableState>()
-    class Update : ChainableContractUpdateCommand<ExampleChainableState>()
-    class Delete : ChainableContractDeleteCommand<ExampleChainableState>()
+    class Create : ChainableContractCreateCommand<ExampleChainableState>() {
+        override fun getContractStateType(): Class<ExampleChainableState> {
+            return ExampleChainableState::class.java
+        }
+    }
+
+    class Update : ChainableContractUpdateCommand<ExampleChainableState>() {
+        override fun getContractStateType(): Class<ExampleChainableState> {
+            return ExampleChainableState::class.java
+        }
+    }
+
+    class Delete : ChainableContractDeleteCommand<ExampleChainableState>() {
+        override fun getContractStateType(): Class<ExampleChainableState> {
+            return ExampleChainableState::class.java
+        }
+    }
 }

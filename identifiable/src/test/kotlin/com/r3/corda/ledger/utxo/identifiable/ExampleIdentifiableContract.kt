@@ -6,7 +6,21 @@ class ExampleIdentifiableContract : IdentifiableContract() {
         return listOf(Create::class.java, Update::class.java, Delete::class.java)
     }
 
-    class Create : IdentifiableContractCreateCommand<ExampleIdentifiableState>()
-    class Update : IdentifiableContractUpdateCommand<ExampleIdentifiableState>()
-    class Delete : IdentifiableContractDeleteCommand<ExampleIdentifiableState>()
+    class Create : IdentifiableContractCreateCommand<ExampleIdentifiableState>() {
+        override fun getContractStateType(): Class<ExampleIdentifiableState> {
+            return ExampleIdentifiableState::class.java
+        }
+    }
+
+    class Update : IdentifiableContractUpdateCommand<ExampleIdentifiableState>() {
+        override fun getContractStateType(): Class<ExampleIdentifiableState> {
+            return ExampleIdentifiableState::class.java
+        }
+    }
+
+    class Delete : IdentifiableContractDeleteCommand<ExampleIdentifiableState>() {
+        override fun getContractStateType(): Class<ExampleIdentifiableState> {
+            return ExampleIdentifiableState::class.java
+        }
+    }
 }

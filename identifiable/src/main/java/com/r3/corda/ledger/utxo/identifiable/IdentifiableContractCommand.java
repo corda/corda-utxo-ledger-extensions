@@ -1,6 +1,5 @@
 package com.r3.corda.ledger.utxo.identifiable;
 
-import com.r3.corda.ledger.utxo.base.TypeUtils;
 import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
@@ -13,9 +12,7 @@ public abstract class IdentifiableContractCommand<T extends IdentifiableState> i
      *
      * @return Returns the {@link IdentifiableState} type associated with the current command.
      */
-    protected Class<T> getContractStateType() {
-        return TypeUtils.getGenericArgumentType(getClass());
-    }
+    protected abstract Class<T> getContractStateType();
 
     /**
      * Initializes a new instance of the {@link IdentifiableContractCommand} class.

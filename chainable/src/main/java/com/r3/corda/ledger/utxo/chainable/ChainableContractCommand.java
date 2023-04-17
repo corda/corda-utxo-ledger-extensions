@@ -1,6 +1,5 @@
 package com.r3.corda.ledger.utxo.chainable;
 
-import com.r3.corda.ledger.utxo.base.TypeUtils;
 import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
@@ -13,9 +12,7 @@ public abstract class ChainableContractCommand<T extends ChainableState<?>> impl
      *
      * @return Returns the {@link ChainableState} type associated with the current command.
      */
-    protected Class<T> getContractStateType() {
-        return TypeUtils.getGenericArgumentType(getClass());
-    }
+    protected abstract Class<T> getContractStateType();
 
     /**
      * Initializes a new instance of the {@link ChainableContractCommand} class.

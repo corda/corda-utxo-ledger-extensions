@@ -15,7 +15,7 @@ class ExampleChainableContractDeleteCommandTests : ContractTest() {
     fun `On chainable state(s) deleting, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(state)
             addCommand(ExampleChainableContract.Delete())
         }
@@ -28,7 +28,7 @@ class ExampleChainableContractDeleteCommandTests : ContractTest() {
     fun `On chainable state(s) deleting, the transaction should include the Delete command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(state)
         }
 
@@ -46,7 +46,7 @@ class ExampleChainableContractDeleteCommandTests : ContractTest() {
     fun `On chainable state(s) deleting, at least one chainable state must be consumed`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleChainableContract.Delete())
         }
 

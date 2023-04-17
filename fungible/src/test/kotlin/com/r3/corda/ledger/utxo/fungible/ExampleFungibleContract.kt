@@ -6,7 +6,21 @@ class ExampleFungibleContract : FungibleContract() {
         return listOf(Create::class.java, Update::class.java, Delete::class.java)
     }
 
-    class Create : FungibleContractCreateCommand<ExampleFungibleState>()
-    class Update : FungibleContractUpdateCommand<ExampleFungibleState>()
-    class Delete : FungibleContractDeleteCommand<ExampleFungibleState>()
+    class Create : FungibleContractCreateCommand<ExampleFungibleState>() {
+        override fun getContractStateType(): Class<ExampleFungibleState> {
+            return ExampleFungibleState::class.java
+        }
+    }
+
+    class Update : FungibleContractUpdateCommand<ExampleFungibleState>() {
+        override fun getContractStateType(): Class<ExampleFungibleState> {
+            return ExampleFungibleState::class.java
+        }
+    }
+
+    class Delete : FungibleContractDeleteCommand<ExampleFungibleState>() {
+        override fun getContractStateType(): Class<ExampleFungibleState> {
+            return ExampleFungibleState::class.java
+        }
+    }
 }

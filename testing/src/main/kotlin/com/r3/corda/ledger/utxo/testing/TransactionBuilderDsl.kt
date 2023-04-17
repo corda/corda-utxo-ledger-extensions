@@ -1,7 +1,7 @@
 package com.r3.corda.ledger.utxo.testing
 
+import net.corda.v5.base.types.MemberX500Name
 import net.corda.v5.crypto.SecureHash
-import net.corda.v5.ledger.common.Party
 import net.corda.v5.ledger.utxo.Attachment
 import net.corda.v5.ledger.utxo.Command
 import net.corda.v5.ledger.utxo.ContractState
@@ -12,9 +12,9 @@ import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction
 import java.security.PublicKey
 import java.time.Instant
 
-class TransactionBuilderDsl(private val notary: Party) {
+class TransactionBuilderDsl(private val notaryKey: PublicKey, private val notaryName: MemberX500Name) {
 
-    private val builder = UtxoTransactionBuilder(notary)
+    private val builder = UtxoTransactionBuilder(notaryKey, notaryName)
 
     @TransactionBuilderDslMarker
     fun addAttachment(attachment: Attachment): UtxoTransactionBuilder {
@@ -55,10 +55,11 @@ class TransactionBuilderDsl(private val notary: Party) {
     fun addInputState(
         state: ContractState,
         ref: StateRef,
-        notary: Party,
+        notaryKey: PublicKey,
+        notaryName: MemberX500Name,
         encumbrance: String?
     ): UtxoTransactionBuilder {
-        return builder.addInputState(state, ref, notary, encumbrance)
+        return builder.addInputState(state, ref, notaryKey, notaryName, encumbrance)
     }
 
     @TransactionBuilderDslMarker
@@ -90,10 +91,11 @@ class TransactionBuilderDsl(private val notary: Party) {
     fun addReferenceState(
         state: ContractState,
         ref: StateRef,
-        notary: Party,
+        notaryKey: PublicKey,
+        notaryName: MemberX500Name,
         encumbrance: String?
     ): UtxoTransactionBuilder {
-        return builder.addReferenceState(state, ref, notary, encumbrance)
+        return builder.addReferenceState(state, ref, notaryKey, notaryName, encumbrance)
     }
 
     @TransactionBuilderDslMarker
@@ -112,8 +114,13 @@ class TransactionBuilderDsl(private val notary: Party) {
     }
 
     @TransactionBuilderDslMarker
-    fun getNotary(): Party {
-        return builder.notary
+    fun getNotaryKey(): PublicKey {
+        return builder.notaryKey
+    }
+
+    @TransactionBuilderDslMarker
+    fun getNotaryName(): MemberX500Name {
+        return builder.notaryName
     }
 
     @TransactionBuilderDslMarker

@@ -1,6 +1,5 @@
 package com.r3.corda.ledger.utxo.fungible;
 
-import com.r3.corda.ledger.utxo.base.TypeUtils;
 import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
@@ -22,9 +21,7 @@ public abstract class FungibleContractCommand<T extends FungibleState<?>> implem
      *
      * @return Returns the {@link FungibleState} type associated with the current command.
      */
-    protected Class<T> getContractStateType() {
-        return TypeUtils.getGenericArgumentType(getClass());
-    }
+    protected abstract Class<T> getContractStateType();
 
     /**
      * Initializes a new instance of the {@link FungibleContractCommand} class.

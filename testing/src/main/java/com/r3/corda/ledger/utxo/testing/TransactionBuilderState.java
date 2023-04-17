@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.ledger.common.Party;
+import net.corda.v5.base.types.MemberX500Name;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.EncumbranceGroup;
 import net.corda.v5.ledger.utxo.StateAndRef;
@@ -9,6 +9,7 @@ import net.corda.v5.ledger.utxo.TransactionState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.PublicKey;
 import java.util.stream.StreamSupport;
 
 public final class TransactionBuilderState {
@@ -20,19 +21,24 @@ public final class TransactionBuilderState {
     private final StateRef ref;
 
     @NotNull
-    private final Party notary;
+    private final PublicKey notaryKey;
+
+    @NotNull
+    private final MemberX500Name notaryName;
 
     @Nullable
     private final String encumbrance;
 
     public TransactionBuilderState(
-            @NotNull ContractState state,
-            @NotNull StateRef ref,
-            @NotNull Party notary,
-            @Nullable String encumbrance) {
+            @NotNull final ContractState state,
+            @NotNull final StateRef ref,
+            @NotNull final PublicKey notaryKey,
+            @NotNull final MemberX500Name notaryName,
+            @Nullable final String encumbrance) {
         this.state = state;
         this.ref = ref;
-        this.notary = notary;
+        this.notaryKey = notaryKey;
+        this.notaryName = notaryName;
         this.encumbrance = encumbrance;
     }
 
@@ -47,8 +53,13 @@ public final class TransactionBuilderState {
     }
 
     @NotNull
-    public Party getNotary() {
-        return notary;
+    public PublicKey getNotaryKey() {
+        return notaryKey;
+    }
+
+    @NotNull
+    public MemberX500Name getNotaryName() {
+        return notaryName;
     }
 
     @Nullable
@@ -59,7 +70,7 @@ public final class TransactionBuilderState {
     @NotNull
     public TransactionState<ContractState> toTransactionState(@NotNull final Iterable<TransactionBuilderState> states) {
         if (getEncumbrance() == null) {
-            return new TransactionStateImpl<>(getState(), getNotary(), null);
+            return new TransactionStateImpl<>(getState(), getNotaryKey(), getNotaryName(), null);
         }
 
         int size = (int) StreamSupport
@@ -68,7 +79,7 @@ public final class TransactionBuilderState {
                 .count();
 
         EncumbranceGroup encumbranceGroup = new EncumbranceGroupImpl(size, getEncumbrance());
-        return new TransactionStateImpl<>(getState(), getNotary(), encumbranceGroup);
+        return new TransactionStateImpl<>(getState(), getNotaryKey(), getNotaryName(), encumbranceGroup);
     }
 
     @NotNull

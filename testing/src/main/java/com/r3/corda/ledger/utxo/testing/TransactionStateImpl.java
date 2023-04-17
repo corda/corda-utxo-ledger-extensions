@@ -1,6 +1,6 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.ledger.common.Party;
+import net.corda.v5.base.types.MemberX500Name;
 import net.corda.v5.ledger.utxo.Contract;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.EncumbranceGroup;
@@ -8,23 +8,30 @@ import net.corda.v5.ledger.utxo.TransactionState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.PublicKey;
+
 final class TransactionStateImpl<T extends ContractState> implements TransactionState<T> {
 
     @NotNull
     private final T contractState;
 
     @NotNull
-    private final Party notary;
+    private final PublicKey notaryKey;
+
+    @NotNull
+    private final MemberX500Name notaryName;
 
     @Nullable
     private final EncumbranceGroup encumbrance;
 
     public TransactionStateImpl(
             @NotNull final T contractState,
-            @NotNull final Party notary,
+            @NotNull final PublicKey notaryKey,
+            @NotNull final MemberX500Name notaryName,
             @Nullable final EncumbranceGroup encumbrance) {
         this.contractState = contractState;
-        this.notary = notary;
+        this.notaryKey = notaryKey;
+        this.notaryName = notaryName;
         this.encumbrance = encumbrance;
     }
 
@@ -49,8 +56,14 @@ final class TransactionStateImpl<T extends ContractState> implements Transaction
 
     @NotNull
     @Override
-    public Party getNotary() {
-        return notary;
+    public PublicKey getNotaryKey() {
+        return notaryKey;
+    }
+
+    @NotNull
+    @Override
+    public MemberX500Name getNotaryName() {
+        return notaryName;
     }
 
     @Nullable

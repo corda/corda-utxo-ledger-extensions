@@ -1,10 +1,10 @@
 package com.r3.corda.ledger.utxo.testing;
 
 import net.corda.v5.base.types.MemberX500Name;
-import net.corda.v5.ledger.common.Party;
 
 import java.security.PublicKey;
 
+@SuppressWarnings("unused")
 public abstract class ContractTest {
 
     protected final static MemberX500Name ALICE_NAME = MemberX500Name.parse("CN=Alice, OU=Test Dept, O=R3, L=London, C=GB");
@@ -24,13 +24,4 @@ public abstract class ContractTest {
     protected final static PublicKey BANK_A_KEY = ContractTestUtils.createRandomPublicKey();
     protected final static PublicKey BANK_B_KEY = ContractTestUtils.createRandomPublicKey();
     protected final static PublicKey NOTARY_KEY = ContractTestUtils.createRandomPublicKey();
-
-    protected final static Party ALICE_PARTY = new Party(ALICE_NAME, ALICE_KEY);
-    protected final static Party BOB_PARTY = new Party(BOB_NAME, BOB_KEY);
-    protected final static Party CHARLIE_PARTY = new Party(CHARLIE_NAME, CHARLIE_KEY);
-    protected final static Party DAVE_PARTY = new Party(DAVE_NAME, DAVE_KEY);
-    protected final static Party EVE_PARTY = new Party(EVE_NAME, EVE_KEY);
-    protected final static Party BANK_A_PARTY = new Party(BANK_A_NAME, BANK_A_KEY);
-    protected final static Party BANK_B_PARTY = new Party(BANK_B_NAME, BANK_B_KEY);
-    protected final static Party NOTARY_PARTY = new Party(NOTARY_NAME, NOTARY_KEY);
 }

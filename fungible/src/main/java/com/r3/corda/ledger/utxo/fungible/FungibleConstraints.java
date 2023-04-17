@@ -38,6 +38,9 @@ public final class FungibleConstraints {
     final static String CONTRACT_RULE_DELETE_INPUTS =
             "On fungible state(s) deleting, at least one fungible state input must be consumed.";
 
+    final static String CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES =
+            "On fungible state(s) deleting, the quantity of every created fungible state must be greater than zero.";
+
     final static String CONTRACT_RULE_DELETE_SUM =
             "On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.";
 
@@ -156,6 +159,7 @@ public final class FungibleConstraints {
      * This should be implemented by commands intended to delete existing ledger instances of {@link FungibleState} and will verify the following constraints:
      * <ol>
      *     <li>On fungible state(s) deleting, at least one fungible state input must be consumed.</li>
+     *     <li>On fungible state(s) deleting, the quantity of every created fungible state must be greater than zero.</li>
      *     <li>On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.</li>
      *     <li>On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the sum of the created states that are fungible with each other.</li>
      * </ol>
@@ -170,6 +174,7 @@ public final class FungibleConstraints {
         final List<T> outputs = transaction.getOutputStates(type);
 
         Check.isNotEmpty(inputs, CONTRACT_RULE_DELETE_INPUTS);
+        Check.all(outputs, it -> it.getQuantity().getUnscaledValue().compareTo(BigInteger.ZERO) > 0, CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES);
         Check.isGreaterThan(FungibleUtils.sum(inputs), FungibleUtils.sum(outputs), CONTRACT_RULE_DELETE_SUM);
 
         // We have to check all inputs and outputs, because we might create an extra output for which there is no input.
@@ -197,6 +202,7 @@ public final class FungibleConstraints {
      * This should be implemented by commands intended to delete existing ledger instances of {@link FungibleState} and will verify the following constraints:
      * <ol>
      *     <li>On fungible state(s) deleting, at least one fungible state input must be consumed.</li>
+     *     <li>On fungible state(s) deleting, the quantity of every created fungible state must be greater than zero.</li>
      *     <li>On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.</li>
      *     <li>On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the sum of the created states that are fungible with each other.</li>
      * </ol>
