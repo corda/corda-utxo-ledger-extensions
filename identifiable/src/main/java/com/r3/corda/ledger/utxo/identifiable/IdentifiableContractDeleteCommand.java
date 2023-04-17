@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>On identifiable state(s) deleting, at least one identifiable state must be consumed.</li>
  * </ol>
  */
-public abstract class IdentifiableContractDeleteCommand extends IdentifiableContractCommand {
+public abstract class IdentifiableContractDeleteCommand<T extends IdentifiableState> extends IdentifiableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -20,7 +20,7 @@ public abstract class IdentifiableContractDeleteCommand extends IdentifiableCont
      */
     @Override
     public final void verify(@NotNull UtxoLedgerTransaction transaction) {
-        IdentifiableConstraints.verifyDelete(transaction);
+        IdentifiableConstraints.verifyDelete(transaction, getContractStateType());
         onVerify(transaction);
     }
 
