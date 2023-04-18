@@ -16,7 +16,7 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
     fun `On chainable state(s) creating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
             addCommand(ExampleChainableContract.Create())
         }
@@ -29,7 +29,7 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
     fun `On chainable state(s) creating, the transaction should include the Create command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
         }
 
@@ -47,7 +47,7 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
     fun `On chainable state(s) creating, at least one chainable state must be created`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addCommand(ExampleChainableContract.Create())
         }
 
@@ -62,7 +62,7 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
     fun `On chainable state(s) creating, the previous state pointer of every created chainable state must be null`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state.next(randomStateRef()))
             addCommand(ExampleChainableContract.Create())
         }

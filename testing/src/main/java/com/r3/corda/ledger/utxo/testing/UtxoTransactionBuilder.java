@@ -1,7 +1,7 @@
 package com.r3.corda.ledger.utxo.testing;
 
+import net.corda.v5.base.types.MemberX500Name;
 import net.corda.v5.crypto.SecureHash;
-import net.corda.v5.ledger.common.Party;
 import net.corda.v5.ledger.utxo.Attachment;
 import net.corda.v5.ledger.utxo.Command;
 import net.corda.v5.ledger.utxo.ContractState;
@@ -27,7 +27,10 @@ public final class UtxoTransactionBuilder {
     private final SecureHash transactionId;
 
     @NotNull
-    private final Party notary;
+    private final PublicKey notaryKey;
+
+    @NotNull
+    private final MemberX500Name notaryName;
 
     @NotNull
     private final List<Attachment> attachments = new ArrayList<>();
@@ -52,8 +55,9 @@ public final class UtxoTransactionBuilder {
 
     private int outputIndex = 0;
 
-    public UtxoTransactionBuilder(@NotNull final Party notary) {
-        this.notary = notary;
+    public UtxoTransactionBuilder(@NotNull final PublicKey notaryKey, @NotNull final MemberX500Name notaryName) {
+        this.notaryKey = notaryKey;
+        this.notaryName = notaryName;
         this.transactionId = ContractTestUtils.createRandomSecureHash();
         this.timeWindow = new TimeWindowBetweenImpl(Instant.MIN, Instant.MAX);
     }
@@ -97,15 +101,16 @@ public final class UtxoTransactionBuilder {
     public UtxoTransactionBuilder addInputState(
             @NotNull final ContractState state,
             @NotNull final StateRef ref,
-            @NotNull final Party notary,
+            @NotNull final PublicKey notaryKey,
+            @NotNull final MemberX500Name notaryName,
             @Nullable final String encumbrance) {
-        TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notary, encumbrance);
+        TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notaryKey, notaryName, encumbrance);
         return addInputState(transactionBuilderState);
     }
 
     @NotNull
     public UtxoTransactionBuilder addInputState(@NotNull final ContractState state) {
-        return addInputState(state, ContractTestUtils.createRandomStateRef(), notary, null);
+        return addInputState(state, ContractTestUtils.createRandomStateRef(), notaryKey, notaryName, null);
     }
 
     @NotNull
@@ -119,7 +124,7 @@ public final class UtxoTransactionBuilder {
             @NotNull final ContractState state,
             @Nullable final String encumbrance) {
         StateRef ref = getNextOutputStateRef();
-        TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notary, encumbrance);
+        TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notaryKey, notaryName, encumbrance);
         return addOutputState(transactionBuilderState);
     }
 
@@ -138,15 +143,16 @@ public final class UtxoTransactionBuilder {
     public UtxoTransactionBuilder addReferenceState(
             @NotNull final ContractState state,
             @NotNull final StateRef ref,
-            @NotNull final Party notary,
+            @NotNull final PublicKey notaryKey,
+            @NotNull final MemberX500Name notaryName,
             @Nullable final String encumbrance) {
-        TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notary, encumbrance);
+        TransactionBuilderState transactionBuilderState = new TransactionBuilderState(state, ref, notaryKey, notaryName, encumbrance);
         return addReferenceState(transactionBuilderState);
     }
 
     @NotNull
     public UtxoTransactionBuilder addReferenceState(@NotNull final ContractState state) {
-        return addReferenceState(state, ContractTestUtils.createRandomStateRef(), notary, null);
+        return addReferenceState(state, ContractTestUtils.createRandomStateRef(), notaryKey, notaryName, null);
     }
 
     @NotNull
@@ -167,8 +173,13 @@ public final class UtxoTransactionBuilder {
     }
 
     @NotNull
-    public Party getNotary() {
-        return notary;
+    public PublicKey getNotaryKey() {
+        return notaryKey;
+    }
+
+    @NotNull
+    public MemberX500Name getNotaryName() {
+        return notaryName;
     }
 
     @NotNull

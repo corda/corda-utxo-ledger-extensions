@@ -16,7 +16,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateA)
             addCommand(ExampleFungibleContract.Update())
@@ -30,7 +30,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, the transaction should include the Update command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateA)
         }
@@ -49,7 +49,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, at least one fungible state input must be consumed`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(stateA)
             addCommand(ExampleFungibleContract.Update())
         }
@@ -65,7 +65,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, at least one fungible state must be created`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addCommand(ExampleFungibleContract.Update())
         }
@@ -81,7 +81,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, the quantity of every created fungible state must be greater than zero`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateA)
             addOutputState(stateA.copy(quantity = NumericDecimal.ZERO))
@@ -99,7 +99,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states (quantity increase)`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA.copy(quantity = NumericDecimal.ONE))
             addOutputState(stateA)
             addCommand(ExampleFungibleContract.Update())
@@ -116,7 +116,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the unscaled values of the created states (quantity decrease)`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateA.copy(quantity = NumericDecimal.ONE))
             addCommand(ExampleFungibleContract.Update())
@@ -133,7 +133,7 @@ class FungibleContractUpdateCommandTests : ContractTest() {
     fun `On fungible state(s) updating, the sum of the consumed states that are fungible with each other must be equal to the sum of the created states that are fungible with each other`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(stateA)
             addOutputState(stateB)
             addCommand(ExampleFungibleContract.Update())

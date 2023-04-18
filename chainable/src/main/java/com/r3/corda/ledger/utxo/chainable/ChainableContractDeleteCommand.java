@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>On chainable state(s) deleting, at least one chainable state must be consumed.</li>
  * </ol>
  */
-public abstract class ChainableContractDeleteCommand extends ChainableContractCommand {
+public abstract class ChainableContractDeleteCommand<T extends ChainableState<?>> extends ChainableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -20,7 +20,7 @@ public abstract class ChainableContractDeleteCommand extends ChainableContractCo
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        ChainableConstraints.verifyDelete(transaction);
+        ChainableConstraints.verifyDelete(transaction, getContractStateType());
         onVerify(transaction);
     }
 

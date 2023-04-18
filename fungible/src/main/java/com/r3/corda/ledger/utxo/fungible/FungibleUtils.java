@@ -24,7 +24,7 @@ final class FungibleUtils {
      */
     @NotNull
     @SuppressWarnings("rawtypes")
-    public static BigInteger sum(@NotNull final List<FungibleState> states) {
+    public static <T extends FungibleState<?>> BigInteger sum(@NotNull final List<T> states) {
         BigInteger result = BigInteger.ZERO;
 
         for (final FungibleState state : states) {

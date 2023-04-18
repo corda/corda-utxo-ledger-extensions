@@ -1,12 +1,10 @@
 package com.r3.corda.ledger.utxo.testing;
 
-import net.corda.v5.base.types.ByteArrays;
 import net.corda.v5.crypto.SecureHash;
 import net.corda.v5.ledger.utxo.StateRef;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
@@ -16,18 +14,15 @@ public final class ContractTestUtils {
 
     private static final Random random = new Random();
 
+    public static byte[] createRandomByteArray(final int length) {
+        byte[] result = new byte[length];
+        random.nextBytes(result);
+
+        return result;
+    }
+
     @NotNull
     public static SecureHash createRandomSecureHash() {
-        final int length = 64;
-        final StringBuilder builder = new StringBuilder();
-
-        while (builder.length() < length) {
-            final String hex = Integer.toHexString(random(0, 255));
-            builder.append(hex);
-        }
-
-        final byte[] hex = ByteArrays.parseAsHex(builder.substring(0, length));
-
         return new SecureHash() {
             @NotNull
             @Override
@@ -37,14 +32,9 @@ public final class ContractTestUtils {
 
             @NotNull
             @Override
-            public byte[] getBytes() {
-                return hex;
-            }
-
-            @NotNull
-            @Override
             public String toHexString() {
-                return ByteArrays.toHexString(hex);
+                byte[] bytes = createRandomByteArray(32);
+                return convertToHexadecimalString(bytes);
             }
         };
     }
@@ -72,7 +62,7 @@ public final class ContractTestUtils {
 
             @Override
             public byte[] getEncoded() {
-                return createRandomSecureHash().getBytes();
+                return createRandomByteArray(64);
             }
 
             @Override
@@ -90,6 +80,20 @@ public final class ContractTestUtils {
                 return Base64.getEncoder().encodeToString(getEncoded());
             }
         };
+    }
+
+    @NotNull
+    private static String convertToHexadecimalString(final byte[] bytes) {
+        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+        final char[] hexChars = new char[bytes.length * 2];
+
+        for (int index = 0; index < bytes.length; index++) {
+            int value = bytes[index] & 0xFF;
+            hexChars[index * 2] = HEX_ARRAY[value >>> 4];
+            hexChars[index * 2 + 1] = HEX_ARRAY[value & 0x0F];
+        }
+
+        return new String(hexChars);
     }
 
     private static int random(int min, int max) {

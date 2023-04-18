@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>On identifiable state(s) creating, at least one identifiable state must be created.</li>
  * </ol>
  */
-public abstract class IdentifiableContractCreateCommand extends IdentifiableContractCommand {
+public abstract class IdentifiableContractCreateCommand<T extends IdentifiableState> extends IdentifiableContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -21,7 +21,7 @@ public abstract class IdentifiableContractCreateCommand extends IdentifiableCont
      */
     @Override
     public final void verify(@NotNull UtxoLedgerTransaction transaction) {
-        IdentifiableConstraints.verifyCreate(transaction);
+        IdentifiableConstraints.verifyCreate(transaction, getContractStateType());
         onVerify(transaction);
     }
 

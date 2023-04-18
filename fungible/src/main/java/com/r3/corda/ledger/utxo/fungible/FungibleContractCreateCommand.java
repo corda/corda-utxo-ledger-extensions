@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>On fungible state(s) creating, the quantity of every created fungible state must be greater than zero.</li>
  * </ol>
  */
-public abstract class FungibleContractCreateCommand extends FungibleContractCommand {
+public abstract class FungibleContractCreateCommand<T extends FungibleState<?>> extends FungibleContractCommand<T> {
 
     /**
      * Verifies the specified transaction associated with the current contract.
@@ -23,7 +23,7 @@ public abstract class FungibleContractCreateCommand extends FungibleContractComm
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
-        FungibleConstraints.verifyCreate(transaction);
+        FungibleConstraints.verifyCreate(transaction, getContractStateType());
         onVerify(transaction);
     }
 

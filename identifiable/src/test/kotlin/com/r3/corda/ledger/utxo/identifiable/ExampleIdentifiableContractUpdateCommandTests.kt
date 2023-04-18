@@ -16,9 +16,9 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     fun `On identifiable state(s) updating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             val stateRef1 = randomStateRef()
-            addInputState(state, stateRef1, NOTARY_PARTY, null)
+            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
             addOutputState(state.copy(id = stateRef1))
             addCommand(ExampleIdentifiableContract.Update())
         }
@@ -31,9 +31,9 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     fun `On identifiable state(s) updating, the transaction should include the Update command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             val stateRef1 = randomStateRef()
-            addInputState(state, stateRef1, NOTARY_PARTY, null)
+            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
             addOutputState(state.copy(id = stateRef1))
         }
 
@@ -51,7 +51,7 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     fun `On identifiable state(s) updating, at least one identifiable state must be consumed`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addOutputState(state)
             addCommand(ExampleIdentifiableContract.Update())
         }
@@ -67,7 +67,7 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     fun `On identifiable state(s) updating, at least one identifiable state must be created`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             addInputState(state)
             addCommand(ExampleIdentifiableContract.Update())
         }
@@ -82,9 +82,9 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively (initial state)`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             val stateRef1 = randomStateRef()
-            addInputState(state, stateRef1, NOTARY_PARTY, null)
+            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
             addOutputState(state.copy(id = stateRef1))
             addOutputState(state.copy(id = stateRef1))
             addCommand(ExampleIdentifiableContract.Update())
@@ -100,7 +100,7 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively (evolved state)`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_PARTY) {
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
             val stateRef1 = randomStateRef()
             addInputState(state.copy(id = stateRef1))
             addOutputState(state.copy(id = stateRef1))
