@@ -1,18 +1,12 @@
 package com.r3.corda.ledger.utxo.chainable;
 
+import com.r3.corda.ledger.utxo.base.ContractStateType;
 import com.r3.corda.ledger.utxo.base.VerifiableCommand;
 
 /**
  * Represents the base class for implementing {@link ChainableContract} commands.
  */
-public abstract class ChainableContractCommand<T extends ChainableState<?>> implements VerifiableCommand {
-
-    /**
-     * Gets the {@link ChainableState} type associated with the current command.
-     *
-     * @return Returns the {@link ChainableState} type associated with the current command.
-     */
-    protected abstract Class<T> getContractStateType();
+public abstract class ChainableContractCommand<T extends ChainableState<?>> implements VerifiableCommand, ContractStateType<T> {
 
     /**
      * Initializes a new instance of the {@link ChainableContractCommand} class.
