@@ -9,11 +9,11 @@ import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction
 
 class SupportTicketContract : IdentifiableContract() {
 
-    override fun getPermittedCommandTypes(): List<Class<out IdentifiableContractCommand>> {
+    override fun getPermittedCommandTypes(): List<Class<out IdentifiableContractCommand<*>>> {
         return listOf(Create::class.java, Update::class.java, Delete::class.java)
     }
 
-    class Create : IdentifiableContractCreateCommand() {
+    class Create : IdentifiableContractCreateCommand<SupportTicket>() {
         internal companion object {
             const val CONTRACT_RULE_INPUTS =
                 "On support ticket creating, zero support ticket states must be consumed."
@@ -26,6 +26,10 @@ class SupportTicketContract : IdentifiableContract() {
 
             const val CONTRACT_RULE_SIGNERS =
                 "On support ticket creating, the support ticket reporter must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<SupportTicket> {
+            return SupportTicket::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {
@@ -42,7 +46,7 @@ class SupportTicketContract : IdentifiableContract() {
         }
     }
 
-    class Update : IdentifiableContractUpdateCommand() {
+    class Update : IdentifiableContractUpdateCommand<SupportTicket>() {
         internal companion object {
             const val CONTRACT_RULE_INPUTS =
                 "On support ticket updating, only one support ticket state must be consumed."
@@ -55,6 +59,10 @@ class SupportTicketContract : IdentifiableContract() {
 
             const val CONTRACT_RULE_SIGNERS =
                 "On support ticket updating, the support ticket assignee must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<SupportTicket> {
+            return SupportTicket::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {
@@ -72,7 +80,7 @@ class SupportTicketContract : IdentifiableContract() {
         }
     }
 
-    class Delete : IdentifiableContractDeleteCommand() {
+    class Delete : IdentifiableContractDeleteCommand<SupportTicket>() {
         internal companion object {
             const val CONTRACT_RULE_INPUTS =
                 "On support ticket deleting, only one support ticket state must be consumed."
@@ -85,6 +93,10 @@ class SupportTicketContract : IdentifiableContract() {
 
             const val CONTRACT_RULE_SIGNERS =
                 "On support ticket deleting, the support ticket reporter must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<SupportTicket> {
+            return SupportTicket::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {

@@ -14,7 +14,7 @@ class VehicleContract : ChainableContract() {
             "On vehicle contract executing, only one permitted command must be present in the transaction."
     }
 
-    override fun getPermittedCommandTypes(): List<Class<out ChainableContractCommand>> {
+    override fun getPermittedCommandTypes(): List<Class<out ChainableContractCommand<*>>> {
         return listOf(Issue::class.java, Transfer::class.java)
     }
 
@@ -25,7 +25,7 @@ class VehicleContract : ChainableContract() {
 
     private interface VehicleContractCommand : Command
 
-    class Issue : ChainableContractCreateCommand(), VehicleContractCommand {
+    class Issue : ChainableContractCreateCommand<Vehicle>(), VehicleContractCommand {
 
         internal companion object {
             const val CONTRACT_RULE_INPUTS =
@@ -36,6 +36,10 @@ class VehicleContract : ChainableContract() {
 
             const val CONTRACT_RULE_SIGNATORIES =
                 "On vehicle issuing, the vehicle manufacturer must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<Vehicle> {
+            return Vehicle::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {
@@ -51,7 +55,7 @@ class VehicleContract : ChainableContract() {
         }
     }
 
-    class Transfer : ChainableContractUpdateCommand(), VehicleContractCommand {
+    class Transfer : ChainableContractUpdateCommand<Vehicle>(), VehicleContractCommand {
 
         internal companion object {
             const val CONTRACT_RULE_INPUTS =
@@ -62,6 +66,10 @@ class VehicleContract : ChainableContract() {
 
             const val CONTRACT_RULE_SIGNATORIES =
                 "On vehicle transferring, the vehicle owner must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<Vehicle> {
+            return Vehicle::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {

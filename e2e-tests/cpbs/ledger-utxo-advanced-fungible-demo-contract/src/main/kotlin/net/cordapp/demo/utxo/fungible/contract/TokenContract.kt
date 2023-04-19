@@ -9,14 +9,18 @@ import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction
 
 class TokenContract : FungibleContract() {
 
-    override fun getPermittedCommandTypes(): List<Class<out FungibleContractCommand>> {
+    override fun getPermittedCommandTypes(): List<Class<out FungibleContractCommand<*>>> {
         return listOf(Mint::class.java, Move::class.java, Burn::class.java)
     }
 
-    class Mint : FungibleContractCreateCommand() {
+    class Mint : FungibleContractCreateCommand<Token>() {
 
         companion object {
             const val CONTRACT_RULE_SIGNATORIES = "On token(s) minting, the issuer must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<Token> {
+            return Token::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {
@@ -25,10 +29,14 @@ class TokenContract : FungibleContract() {
         }
     }
 
-    class Move : FungibleContractUpdateCommand() {
+    class Move : FungibleContractUpdateCommand<Token>() {
 
         companion object {
             const val CONTRACT_RULE_SIGNATORIES = "On token(s) moving, the owner must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<Token> {
+            return Token::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {
@@ -37,10 +45,14 @@ class TokenContract : FungibleContract() {
         }
     }
 
-    class Burn : FungibleContractDeleteCommand() {
+    class Burn : FungibleContractDeleteCommand<Token>() {
 
         companion object {
             const val CONTRACT_RULE_SIGNATORIES = "On token(s) burning, the issuer and owner must sign the transaction."
+        }
+
+        override fun getContractStateType(): Class<Token> {
+            return Token::class.java
         }
 
         override fun onVerify(transaction: UtxoLedgerTransaction) {

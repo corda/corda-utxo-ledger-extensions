@@ -5,5 +5,5 @@ import com.r3.corda.ledger.utxo.base.DelegatedContract;
 /**
  * Represents the contract that governs {@link ChainableState} instances.
  */
-public abstract class ChainableContract extends DelegatedContract<ChainableContractCommand> {
+public abstract class ChainableContract extends DelegatedContract<ChainableContractCommand<? extends ChainableState<?>>> {
 }
