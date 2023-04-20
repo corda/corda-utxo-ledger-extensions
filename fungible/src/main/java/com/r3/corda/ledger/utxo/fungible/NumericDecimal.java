@@ -62,6 +62,7 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      *
      * @param value The underlying {@link BigDecimal} value.
      */
+    @ConstructorForDeserialization
     public NumericDecimal(@NotNull final BigDecimal value) {
         this.value = value;
     }
