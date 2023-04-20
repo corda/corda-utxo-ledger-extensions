@@ -60,13 +60,9 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
     /**
      * Initializes a new instance of the {@link NumericDecimal} class.
      *
-     * This is a package private constructor used for AMQP deserialization.
-     *
      * @param value The underlying {@link BigDecimal} value.
      */
-    @SuppressWarnings("unused")
-    @ConstructorForDeserialization
-    NumericDecimal(@NotNull final BigDecimal value) {
+    public NumericDecimal(@NotNull final BigDecimal value) {
         this.value = value;
     }
 
