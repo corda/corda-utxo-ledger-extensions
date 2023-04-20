@@ -1,6 +1,6 @@
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-osgi-bundle'
-    implementation 'org.jetbrains:annotations:24.0.1'
+    implementation 'org.jetbrains:annotations'
     implementation platform("net.corda:corda-api:$cordaApiVersion")
     implementation 'net.corda:corda-ledger-utxo'
 }

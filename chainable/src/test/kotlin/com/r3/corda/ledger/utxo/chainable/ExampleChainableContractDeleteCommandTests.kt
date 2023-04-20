@@ -37,7 +37,7 @@ class ExampleChainableContractDeleteCommandTests : ContractTest() {
 
         // Assert
         assertEquals(
-            "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand' must be included in the transaction.\n" +
+            "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand<? extends com.r3.corda.ledger.utxo.chainable.ChainableState<?>>' must be included in the transaction.\n" +
                     "The permitted commands include [Create, Update, Delete].", exception.message
         )
     }

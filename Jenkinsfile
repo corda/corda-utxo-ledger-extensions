@@ -7,5 +7,5 @@ cordaPipelineKubernetesAgent(
     dedicatedJobForSnykDelta: false,
     gitHubComments: false,
     e2eTestName: 'corda-utxo-ledger-extensions-e2e-tests',
-    runE2eTests: false // to be actived once tests are implemented in this repo
+    runE2eTests: true // to be actived once tests are implemented in this repo
     )

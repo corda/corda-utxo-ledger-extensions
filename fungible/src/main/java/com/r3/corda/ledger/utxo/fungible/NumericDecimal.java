@@ -1,5 +1,6 @@
 package com.r3.corda.ledger.utxo.fungible;
 
+import net.corda.v5.base.annotations.ConstructorForDeserialization;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,6 +55,16 @@ public final class NumericDecimal implements Numeric<BigDecimal> {
      */
     public NumericDecimal(@NotNull final BigDecimal value, final int scale, final RoundingMode mode) {
         this.value = value.setScale(scale, mode);
+    }
+
+    /**
+     * Initializes a new instance of the {@link NumericDecimal} class.
+     *
+     * @param value The underlying {@link BigDecimal} value.
+     */
+    @ConstructorForDeserialization
+    public NumericDecimal(@NotNull final BigDecimal value) {
+        this.value = value;
     }
 
     /**
