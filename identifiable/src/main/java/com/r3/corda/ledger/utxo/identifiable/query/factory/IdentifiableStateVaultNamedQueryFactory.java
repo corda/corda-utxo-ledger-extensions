@@ -12,11 +12,10 @@ public class IdentifiableStateVaultNamedQueryFactory implements VaultNamedQueryF
         vaultNamedQueryBuilderFactory
                 .create(IdentifiableStateQueries.GET_BY_IDS)
                 .whereJson(
-                        "WHERE visible_states.custom_representation ? 'com.r3.corda.ledger.utxo.identifiable.IdentifiableState' " +
-                                "AND (" +
+                        "WHERE (" +
                                 "   visible_states.custom_representation -> 'com.r3.corda.ledger.utxo.identifiable.IdentifiableState' ->> 'id' IN :ids " +
                                 "   OR visible_states.custom_representation -> 'net.corda.v5.ledger.utxo.ContractState' ->> 'stateRef' IN :ids " +
-                                ")" +
+                                ") " +
                                 "AND visible_states.consumed IS NULL"
                 )
                 .register();

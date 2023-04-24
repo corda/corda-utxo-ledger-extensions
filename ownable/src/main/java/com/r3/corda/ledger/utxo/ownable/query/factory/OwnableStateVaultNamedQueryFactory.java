@@ -12,8 +12,7 @@ public class OwnableStateVaultNamedQueryFactory implements VaultNamedQueryFactor
         vaultNamedQueryBuilderFactory
                 .create(OwnableStateQueries.GET_BY_OWNER)
                 .whereJson(
-                        "WHERE visible_states.custom_representation ? 'com.r3.corda.ledger.utxo.ownable.OwnableState' " +
-                                "AND visible_states.custom_representation -> 'com.r3.corda.ledger.utxo.ownable.OwnableState' ->> 'owner' = :owner " +
+                        "WHERE visible_states.custom_representation -> 'com.r3.corda.ledger.utxo.ownable.OwnableState' ->> 'owner' = :owner " +
                                 "AND visible_States.custom_representation ? :stateType " +
                                 "AND visible_states.consumed IS NULL"
                 )

@@ -12,8 +12,7 @@ public class WellKnownIssuableStateVaultNamedQueryFactory implements VaultNamedQ
         vaultNamedQueryBuilderFactory
                 .create(WellKnownIssuableStateQueries.GET_BY_ISSUER_NAME)
                 .whereJson(
-                        "WHERE visible_states.custom_representation ? 'com.r3.corda.ledger.utxo.issuable.WellKnownIssuableState' " +
-                                "AND visible_states.custom_representation -> 'com.r3.corda.ledger.utxo.issuable.WellKnownIssuableState' ->> 'issuerName' = :issuerName " +
+                        "WHERE visible_states.custom_representation -> 'com.r3.corda.ledger.utxo.issuable.WellKnownIssuableState' ->> 'issuerName' = :issuerName " +
                                 "AND visible_States.custom_representation ? :stateType " +
                                 "AND visible_states.consumed IS NULL"
                 )
