@@ -16,7 +16,7 @@ public abstract class IdentifiableContractDeleteCommand<T extends IdentifiableSt
      * Verifies the specified transaction associated with the current contract.
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @Override
     public final void verify(@NotNull UtxoLedgerTransaction transaction) {
@@ -28,7 +28,7 @@ public abstract class IdentifiableContractDeleteCommand<T extends IdentifiableSt
      * Verifies the specified transaction associated with the current contract.
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {

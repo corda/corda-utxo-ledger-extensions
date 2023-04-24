@@ -19,7 +19,7 @@ public abstract class ChainableContractUpdateCommand<T extends ChainableState<?>
      * Verifies the specified transaction associated with the current contract.
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
@@ -31,7 +31,7 @@ public abstract class ChainableContractUpdateCommand<T extends ChainableState<?>
      * Verifies the specified transaction associated with the current contract.
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {

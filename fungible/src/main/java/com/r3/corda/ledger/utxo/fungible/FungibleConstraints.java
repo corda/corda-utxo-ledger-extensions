@@ -62,7 +62,7 @@ public final class FungibleConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link FungibleState} to verify.
      * @param <T>         The underlying type of {@link FungibleState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends FungibleState<?>> void verifyCreate(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         final List<T> outputs = transaction.getOutputStates(type);
@@ -81,7 +81,7 @@ public final class FungibleConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyCreate(@NotNull final UtxoLedgerTransaction transaction) {
@@ -103,7 +103,7 @@ public final class FungibleConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link FungibleState} to verify.
      * @param <T>         The underlying type of {@link FungibleState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends FungibleState<?>> void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         final List<T> inputs = transaction.getInputStates(type);
@@ -144,7 +144,7 @@ public final class FungibleConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction) {
@@ -163,7 +163,7 @@ public final class FungibleConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link FungibleState} to verify.
      * @param <T>         The underlying type of {@link FungibleState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends FungibleState<?>> void verifyDelete(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         final List<T> inputs = transaction.getInputStates(type);
@@ -202,7 +202,7 @@ public final class FungibleConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {

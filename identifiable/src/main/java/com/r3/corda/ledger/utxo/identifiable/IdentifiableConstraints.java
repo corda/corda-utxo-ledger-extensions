@@ -54,7 +54,7 @@ public final class IdentifiableConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link IdentifiableState} to verify.
      * @param <T>         The underlying type of {@link IdentifiableState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends IdentifiableState> void verifyCreate(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         final List<T> outputs = transaction.getOutputStates(type);
@@ -71,7 +71,7 @@ public final class IdentifiableConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyCreate(@NotNull final UtxoLedgerTransaction transaction) {
@@ -91,7 +91,7 @@ public final class IdentifiableConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link IdentifiableState} to verify.
      * @param <T>         The underlying type of {@link IdentifiableState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends IdentifiableState> void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         final List<StateAndRef<T>> inputs = transaction.getInputStateAndRefs(type);
@@ -118,7 +118,7 @@ public final class IdentifiableConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction) {
@@ -136,7 +136,7 @@ public final class IdentifiableConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link IdentifiableState} to verify.
      * @param <T>         The underlying type of {@link IdentifiableState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends IdentifiableState> void verifyDelete(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         final List<T> inputs = transaction.getInputStates(type);
@@ -153,7 +153,7 @@ public final class IdentifiableConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {
