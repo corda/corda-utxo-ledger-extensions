@@ -92,7 +92,7 @@ class ChainableTests {
                 "notary" to "O=MyNotaryService, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
-            "net.cordapp.demo.utxo.chainable.workflow.issue.IssueVehicleFlow\$Initiator"
+            "com.r3.corda.demo.utxo.chainable.workflow.issue.IssueVehicleFlow\$Initiator"
         )
         val issueVehicleFlowResult = awaitRpcFlowFinished(aliceHoldingId, issueVehicleFlowRequestId)
         assertThat(issueVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -115,7 +115,7 @@ class ChainableTests {
                 "owner" to charlieX500,
                 "observers" to emptyList<String>()
             ),
-            "net.cordapp.demo.utxo.chainable.workflow.transfer.TransferVehicleFlow\$Initiator"
+            "com.r3.corda.demo.utxo.chainable.workflow.transfer.TransferVehicleFlow\$Initiator"
         )
         val transferVehicleFlowResult = awaitRpcFlowFinished(bobHoldingId, transferVehicleRequestId)
         assertThat(transferVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)

@@ -75,7 +75,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "net.cordapp.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -95,7 +95,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "net.cordapp.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
