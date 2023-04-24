@@ -94,6 +94,6 @@ public final class IssuableConstraints {
      */
     @SuppressWarnings("unused")
     public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {
-        verifyCreate(transaction, IssuableState.class);
+        verifyDelete(transaction, IssuableState.class);
     }
 }
