@@ -24,11 +24,23 @@ data class TestIdentifiableState(private val id: StateRef?, private val particip
 
 class TestIdentifiableContract : IdentifiableContract() {
 
-    class Create : IdentifiableContractCreateCommand()
-    class Update: IdentifiableContractUpdateCommand()
-    class Delete: IdentifiableContractDeleteCommand()
+    class Create : IdentifiableContractCreateCommand<TestIdentifiableState>() {
+        override fun getContractStateType(): Class<TestIdentifiableState> {
+            return TestIdentifiableState::class.java
+        }
+    }
+    class Update: IdentifiableContractUpdateCommand<TestIdentifiableState>() {
+        override fun getContractStateType(): Class<TestIdentifiableState> {
+            return TestIdentifiableState::class.java
+        }
+    }
+    class Delete: IdentifiableContractDeleteCommand<TestIdentifiableState>() {
+        override fun getContractStateType(): Class<TestIdentifiableState> {
+            return TestIdentifiableState::class.java
+        }
+    }
 
-    override fun getPermittedCommandTypes(): List<Class<out IdentifiableContractCommand>> {
+    override fun getPermittedCommandTypes(): List<Class<out IdentifiableContractCommand<*>>> {
         return listOf(Create::class.java, Update::class.java, Delete::class.java)
     }
 }
