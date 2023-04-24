@@ -53,7 +53,7 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
      * Verifies the specified transaction associated with the current contract.
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @Override
     public final void verify(@NotNull final UtxoLedgerTransaction transaction) {
@@ -89,7 +89,7 @@ public abstract class DelegatedContract<T extends VerifiableCommand> implements 
      * Verifies the specified transaction associated with the current contract.
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     protected void onVerify(@NotNull final UtxoLedgerTransaction transaction) {

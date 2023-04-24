@@ -35,7 +35,7 @@ public final class IssuableConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link IssuableState} to verify.
      * @param <T>         The underlying type of {@link IssuableState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends IssuableState> void verifyCreate(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         List<T> outputs = transaction.getOutputStates(type);
@@ -53,7 +53,7 @@ public final class IssuableConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyCreate(@NotNull final UtxoLedgerTransaction transaction) {
@@ -72,7 +72,7 @@ public final class IssuableConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link IssuableState} to verify.
      * @param <T>         The underlying type of {@link IssuableState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends IssuableState> void verifyDelete(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         List<T> inputs = transaction.getInputStates(type);
@@ -90,7 +90,7 @@ public final class IssuableConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyDelete(@NotNull final UtxoLedgerTransaction transaction) {

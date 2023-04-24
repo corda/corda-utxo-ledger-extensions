@@ -32,7 +32,7 @@ public final class OwnableConstraints {
      * @param transaction The transaction to verify.
      * @param type        The type of {@link OwnableState} to verify.
      * @param <T>         The underlying type of {@link OwnableState} to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     public static <T extends OwnableState> void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction, @NotNull final Class<T> type) {
         List<T> inputs = transaction.getInputStates(type);
@@ -50,7 +50,7 @@ public final class OwnableConstraints {
      * </ol>
      *
      * @param transaction The transaction to verify.
-     * @throws RuntimeException if the specified transaction fails verification.
+     * @throws IllegalStateException if the specified transaction fails verification.
      */
     @SuppressWarnings("unused")
     public static void verifyUpdate(@NotNull final UtxoLedgerTransaction transaction) {
