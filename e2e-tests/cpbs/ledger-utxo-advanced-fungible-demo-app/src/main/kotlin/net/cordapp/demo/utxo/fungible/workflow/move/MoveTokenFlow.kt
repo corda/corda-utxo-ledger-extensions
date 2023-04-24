@@ -1,5 +1,6 @@
 package net.cordapp.demo.utxo.fungible.workflow.move
 
+import net.corda.v5.application.crypto.DigestService
 import net.corda.v5.application.flows.ClientRequestBody
 import net.corda.v5.application.flows.ClientStartableFlow
 import net.corda.v5.application.flows.CordaInject
@@ -67,12 +68,15 @@ class MoveTokenFlow(
         @CordaInject
         private lateinit var flowEngine: FlowEngine
 
+        @CordaInject
+        private lateinit var digestService: DigestService
+
         @Suspendable
         override fun call(requestBody: ClientRequestBody): String {
             val request = requestBody.getRequestBodyAs(jsonMarshallingService, MoveTokenRequest::class.java)
             logger.logMarshallingRequest(request)
 
-            val tokenSelector = MoveTokenSelector(request, utxoLedgerService, memberLookup)
+            val tokenSelector = MoveTokenSelector(request, utxoLedgerService, memberLookup, digestService)
 
             val oldTokens = tokenSelector.getInputTokens()
             val newTokens = tokenSelector.getOutputTokens(oldTokens)

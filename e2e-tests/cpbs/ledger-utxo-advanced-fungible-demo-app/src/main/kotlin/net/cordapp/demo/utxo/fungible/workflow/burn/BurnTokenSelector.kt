@@ -1,6 +1,7 @@
 package net.cordapp.demo.utxo.fungible.workflow.burn
 
 import com.r3.corda.ledger.utxo.fungible.NumericDecimal
+import net.corda.v5.application.crypto.DigestService
 import net.corda.v5.application.membership.MemberLookup
 import net.corda.v5.base.annotations.Suspendable
 import net.corda.v5.ledger.utxo.StateAndRef
@@ -15,7 +16,8 @@ import net.cordapp.demo.utxo.fungible.workflow.sum
 class BurnTokenSelector(
     private val request: BurnTokenRequest,
     private val utxoLedgerService: UtxoLedgerService,
-    private val memberLookup: MemberLookup
+    private val memberLookup: MemberLookup,
+    private val digestService: DigestService
 ) {
 
     private val issuerMemberInfo: MemberInfo
@@ -30,7 +32,8 @@ class BurnTokenSelector(
         val availableTokens = utxoLedgerService.getAvailableTokens(
             issuerMemberInfo.ledgerKeys,
             ownerMemberInfo.ledgerKeys,
-            targetQuantity
+            targetQuantity,
+            digestService
         )
         val inputTokens = mutableListOf<StateAndRef<Token>>()
         var remainder = targetQuantity

@@ -1,5 +1,6 @@
 package net.cordapp.demo.utxo.fungible.workflow.burn
 
+import net.corda.v5.application.crypto.DigestService
 import net.corda.v5.application.flows.ClientRequestBody
 import net.corda.v5.application.flows.ClientStartableFlow
 import net.corda.v5.application.flows.CordaInject
@@ -67,12 +68,15 @@ class BurnTokenFlow(
         @CordaInject
         private lateinit var flowEngine: FlowEngine
 
+        @CordaInject
+        private lateinit var digestService: DigestService
+
         @Suspendable
         override fun call(requestBody: ClientRequestBody): String {
             val request = requestBody.getRequestBodyAs(jsonMarshallingService, BurnTokenRequest::class.java)
             logger.logMarshallingRequest(request)
 
-            val tokenSelector = BurnTokenSelector(request, utxoLedgerService, memberLookup)
+            val tokenSelector = BurnTokenSelector(request, utxoLedgerService, memberLookup, digestService)
 
             val oldTokens = tokenSelector.getInputTokens()
             val changeToken = tokenSelector.getChangeToken(oldTokens)

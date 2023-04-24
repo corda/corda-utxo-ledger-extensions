@@ -8,8 +8,8 @@ data class DeleteSupportTicketResponse(val id: String, val title: String) {
     internal companion object {
         @Suspendable
         fun fromTransaction(transaction: UtxoSignedTransaction): DeleteSupportTicketResponse {
-            val stateAndRef = transaction.toLedgerTransaction().inputStateAndRefs.single()
-            return DeleteSupportTicketResponse(stateAndRef.ref.toString(), (stateAndRef.state.contractState as SupportTicket).title)
+            val state = transaction.toLedgerTransaction().inputStateAndRefs.single().state.contractState as SupportTicket
+            return DeleteSupportTicketResponse(state.id!!.toString(), state.title)
         }
     }
 }

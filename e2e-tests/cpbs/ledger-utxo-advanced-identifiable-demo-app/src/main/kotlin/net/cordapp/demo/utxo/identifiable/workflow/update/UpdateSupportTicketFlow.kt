@@ -56,9 +56,6 @@ class UpdateSupportTicketFlow(
         private lateinit var utxoLedgerService: UtxoLedgerService
 
         @CordaInject
-        private lateinit var digestService: DigestService
-
-        @CordaInject
         private lateinit var jsonMarshallingService: JsonMarshallingService
 
         @CordaInject
@@ -72,7 +69,7 @@ class UpdateSupportTicketFlow(
             val request = requestBody.getRequestBodyAs(jsonMarshallingService, UpdateSupportTicketRequest::class.java)
             logger.logMarshallingRequest(request)
 
-            val oldSupportTicket = request.getInputState(utxoLedgerService, digestService)
+            val oldSupportTicket = request.getInputState(utxoLedgerService)
             val newSupportTicket = request.getOutputState(oldSupportTicket)
             val sessions = request.getFlowSessions(flowMessaging)
 

@@ -7,7 +7,7 @@ cordapp {
     targetPlatformVersion platformVersion.toInteger()
     minimumPlatformVersion platformVersion.toInteger()
     contract {
-        name "Advanced UTXO Ledger Demo Identifiable Workflow"
+        name "Advanced UTXO Ledger Demo Identifiable Contract"
         versionId 1
         vendor "R3"
     }

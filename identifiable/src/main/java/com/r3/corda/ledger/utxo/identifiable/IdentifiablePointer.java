@@ -2,7 +2,9 @@ package com.r3.corda.ledger.utxo.identifiable;
 
 import com.r3.corda.ledger.utxo.base.StatePointer;
 import com.r3.corda.ledger.utxo.base.StatePosition;
-import kotlin.NotImplementedError;
+import com.r3.corda.ledger.utxo.identifiable.query.IdentifiableStateQueries;
+import net.corda.v5.application.persistence.PagedQuery;
+import net.corda.v5.base.annotations.Suspendable;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.StateAndRef;
 import net.corda.v5.ledger.utxo.StateRef;
@@ -12,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,8 +91,32 @@ public final class IdentifiablePointer<T extends IdentifiableState> implements S
      * @return Returns a {@link List} of {@link StateAndRef} of type {@link T} resolved by this pointer.
      */
     @Override
+    @Suspendable
     public @NotNull List<StateAndRef<T>> resolve(@NotNull UtxoLedgerService service) {
-        throw new NotImplementedError("See Dan Newton regarding vault queries");
+        List<StateAndRef<T>> resolved = new ArrayList<>();
+        int offset = 0;
+
+        @SuppressWarnings("UNCHECKED_CAST")
+        PagedQuery<StateAndRef<T>> query = (PagedQuery<StateAndRef<T>>) (PagedQuery<?>) service
+                .query(IdentifiableStateQueries.GET_BY_IDS, StateAndRef.class)
+                .setCreatedTimestampLimit(Instant.now())
+                .setLimit(50)
+                .setOffset(offset)
+                .setParameter("ids", List.of(value.toString()));
+
+        PagedQuery.ResultSet<StateAndRef<T>> resultSet = query.execute();
+
+        while (!resultSet.getResults().isEmpty()) {
+            resolved.addAll(resultSet.getResults());
+            offset += 50;
+            resultSet = query.setOffset(offset).execute();
+        }
+
+        if (resolved.size() > 1) {
+            throw new IllegalStateException("There should only be a single unconsumed state for the pointer " + value);
+        }
+
+        return resolved;
     }
 
     /**

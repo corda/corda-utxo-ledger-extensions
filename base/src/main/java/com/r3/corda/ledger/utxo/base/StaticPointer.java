@@ -1,5 +1,6 @@
 package com.r3.corda.ledger.utxo.base;
 
+import net.corda.v5.base.annotations.Suspendable;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.StateAndRef;
 import net.corda.v5.ledger.utxo.StateRef;
@@ -81,6 +82,7 @@ public final class StaticPointer<T extends ContractState> implements StatePointe
      * @return Returns a {@link List} of {@link StateAndRef} of type {@link T} resolved by this pointer.
      */
     @Override
+    @Suspendable
     public @NotNull List<StateAndRef<T>> resolve(@NotNull UtxoLedgerService service) {
         return List.of(service.resolve(value));
     }

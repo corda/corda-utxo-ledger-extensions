@@ -18,6 +18,8 @@ dependencies {
     cordaProvided 'org.jetbrains.kotlin:kotlin-osgi-bundle'
     cordaProvided 'net.corda:corda-ledger-utxo'
 
+    cordapp project(":fungible")
+
     cordapp project(':e2e-tests:cpbs:ledger-utxo-advanced-fungible-demo-contract')
 
     // Common and API packages pulled in as transitive dependencies through client
