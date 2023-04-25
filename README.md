@@ -2,10 +2,6 @@
 
 The Corda 5 Advanced UTXO Ledger Extensions library several powerful features to Corda 5's UTXO ledger. These features have been selected and designed to solve common problems that CorDapp developers face when building states and contracts on Corda.
 
-## Table of Contents
-
-[TOC]
-
 ## Feature Overview
 
 The following definitions provide an overview of each major feature or component that has been implemented in the Corda 5 Advanced UTXO Ledger Extensions library. These features can be used together; for example, a state could be designed to be fungible, issuable and ownable.
@@ -42,7 +38,7 @@ The Corda 5 Advanced UTXO Ledger Extensions library aims to provide abstractions
 
 In order to fully understand the design motivations, first we must understand some of the challenges commonly faced by CorDapp developers.
 
-### Basic Contract Design
+### Basic Contract Design
 
 We'll start by taking a look at a trivial contract implementation, below. The following contract defines three commands; `Create`, `Update` and `Delete`. The `verify` function delegates these command types to `verifyCreate`, `verifyUpdate` and `verifyDelete` functions respectively; for example:
 
@@ -83,11 +79,11 @@ public final class ExampleContract implements Contract {
 }
 ```
 
-Designing a contract like this will suffice in many cases. Assuming that the constraints have been implemented correctly then the contract functionality and design is perfectlt acceptable.
+Designing a contract like this will suffice in many cases. Assuming that the constraints have been implemented correctly then the contract functionality and design is perfectly acceptable.
 
-However there are cases where this design approach no longer fits the design goals of the system being implemented; specifically, with regards to contract extensibility, it's currently not possible to extend this contract to support additional constraints.
+However, there are cases where this design approach no longer fits the design goals of the system being implemented; specifically, in regard to contract extensibility, it's currently not possible to extend this contract to support additional constraints.
 
-### Derivable Contract Design
+### Derivable Contract Design
 
 The following contract refactors the above to support the ability to derive contracts, and provide additional constraints in a secure and controlled way.
 
@@ -233,7 +229,7 @@ public class Delete extends ExampleContractCommand {
 
 Note that the `Create`, `Update` and `Delete` commands are not marked `final`, therefore we can extend the contract verification constraints from these points, but we can't extend from `ExampleContractCommand`.
 
-### Delegated Contract Design
+### Delegated Contract Design
 
 As we have now delegated contract verification constraint logic to the commands themselves, we must also refctor the contract to support this delegation. The contract implementation in this case becomes incredibly simple, since it's no longer responsible for defining contract verification constraints; for example:
 
@@ -253,7 +249,7 @@ public final class ExampleContract implements Contract {
 }
 ```
 
-This design addresses the outstanding issues with regards to being able to extend a contract with multiple commands, and being able to give command's names that make sense in the context that they're used; for example:
+This design addresses the outstanding issues in regard to being able to extend a contract with multiple commands, and being able to give command's names that make sense in the context that they're used; for example:
 
 ```java
 class Mint extends Create { ... }
@@ -268,7 +264,7 @@ Note that the contract now supports five different command types, each of which 
 
 ## Advanced Contract Design
 
-Ultimately, all of the contract design issues that have been highlighted above are implemented by the Corda 5 Advanced UTXO Extensions library, and into all of the specific implementations; for example chainable, fungible and identifiable contracts.
+Ultimately, all the contract design issues that have been highlighted above are implemented by the Corda 5 Advanced UTXO Extensions library, and into all the specific implementations; for example chainable, fungible and identifiable contracts.
 
 ## Base API
 
