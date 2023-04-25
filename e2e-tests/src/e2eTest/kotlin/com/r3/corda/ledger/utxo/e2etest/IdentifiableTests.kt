@@ -82,7 +82,7 @@ class IdentifiableTests {
                 "notary" to "O=MyNotaryService, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
-            "net.cordapp.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, issueSupportTicketRequestId)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -99,7 +99,7 @@ class IdentifiableTests {
                 "status" to "OPEN",
                 "observers" to emptyList<String>()
             ),
-            "net.cordapp.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
         )
         val openFlowResult = awaitRpcFlowFinished(bobHoldingId, openSupportTicketRequestId)
         assertThat(openFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -119,7 +119,7 @@ class IdentifiableTests {
                 "status" to "DONE",
                 "observers" to emptyList<String>()
             ),
-            "net.cordapp.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
         )
         val doneFlowResult = awaitRpcFlowFinished(bobHoldingId, doneSupportTicketRequestId)
         assertThat(doneFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -138,7 +138,7 @@ class IdentifiableTests {
                 "assignee" to bobX500,
                 "observers" to emptyList<String>()
             ),
-            "net.cordapp.demo.utxo.identifiable.workflow.delete.DeleteSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.delete.DeleteSupportTicketFlow\$Initiator"
         )
 
         val deleteSupportTicketResult = awaitRpcFlowFinished(aliceHoldingId, deleteSupportTicketRequestId)
@@ -158,7 +158,7 @@ class IdentifiableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "net.cordapp.demo.utxo.identifiable.workflow.query.IdentifiableStateQueryFlow"
+            "com.r3.corda.demo.utxo.identifiable.workflow.query.IdentifiableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -185,7 +185,7 @@ class IdentifiableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "net.cordapp.demo.utxo.identifiable.workflow.query.IdentifiablePointerFlow"
+            "com.r3.corda.demo.utxo.identifiable.workflow.query.IdentifiablePointerFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)

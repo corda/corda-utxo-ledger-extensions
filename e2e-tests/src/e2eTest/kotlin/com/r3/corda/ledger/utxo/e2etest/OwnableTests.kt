@@ -75,7 +75,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "net.cordapp.demo.utxo.ownable.workflow.query.OwnableStateQueryFlow"
+            "com.r3.corda.demo.utxo.ownable.workflow.query.OwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -95,7 +95,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "net.cordapp.demo.utxo.ownable.workflow.query.WellKnownOwnableStateQueryFlow"
+            "com.r3.corda.demo.utxo.ownable.workflow.query.WellKnownOwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
