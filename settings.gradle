@@ -49,6 +49,8 @@ pluginManagement {
     //  The plugin dependencies with versions of the plugins congruent with the specified CorDapp plugin version,
     //  Corda API version, and Kotlin version.
     plugins {
+        id 'com.gradle.enterprise' version gradleEnterpriseVersion
+        id 'com.gradle.common-custom-user-data-gradle-plugin' version gradleDataPlugin
         id 'net.corda.plugins.cordapp-cpk2' version cordaPluginsVersion
         id 'net.corda.plugins.cordapp-cpb2' version cordaPluginsVersion
         id 'net.corda.cordapp.cordapp-configuration' version cordaApiVersion
@@ -58,6 +60,11 @@ pluginManagement {
         id 'com.r3.internal.gradle.plugins.r3Publish' version internalPublishVersion
         id 'com.r3.internal.gradle.plugins.r3ArtifactoryPublish' version internalPublishVersion
     }
+}
+
+plugins {
+    id 'com.gradle.common-custom-user-data-gradle-plugin'
+    id 'com.gradle.enterprise'
 }
 
 rootProject.name = 'corda-utxo-ledger-extensions'
@@ -81,3 +88,19 @@ include 'issuable'
 include 'ownable'
 
 include 'testing'
+
+gradleEnterprise {
+    server = gradleEnterpriseUrl
+    allowUntrustedServer = false
+    def apiKey = settings.ext.find('CORDA_GRADLE_SCAN_KEY') ?: System.getenv('CORDA_GRADLE_SCAN_KEY')
+    accessKey = apiKey
+    buildScan {
+        if (apiKey?.trim()) {
+            publishAlways()
+            capture {
+                taskInputFiles = true
+            }
+            uploadInBackground = false
+        }
+    }
+}
