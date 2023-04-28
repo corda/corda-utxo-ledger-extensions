@@ -38,6 +38,9 @@ public final class FungibleConstraints {
     final static String CONTRACT_RULE_DELETE_INPUTS =
             "On fungible state(s) deleting, at least one fungible state input must be consumed.";
 
+    final static String CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES =
+            "On fungible state(s) deleting, the quantity of every created fungible state must be greater than zero.";
+
     final static String CONTRACT_RULE_DELETE_SUM =
             "On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of the unscaled values of the created states.";
 
@@ -170,6 +173,7 @@ public final class FungibleConstraints {
         final List<T> outputs = transaction.getOutputStates(type);
 
         Check.isNotEmpty(inputs, CONTRACT_RULE_DELETE_INPUTS);
+        Check.all(outputs, it -> it.getQuantity().getUnscaledValue().compareTo(BigInteger.ZERO) > 0, CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES);
         Check.isGreaterThan(FungibleUtils.sum(inputs), FungibleUtils.sum(outputs), CONTRACT_RULE_DELETE_SUM);
 
         // We have to check all inputs and outputs, because we might create an extra output for which there is no input.
