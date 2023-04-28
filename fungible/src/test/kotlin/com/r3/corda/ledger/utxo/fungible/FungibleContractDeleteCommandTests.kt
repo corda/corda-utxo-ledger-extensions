@@ -62,6 +62,23 @@ class FungibleContractDeleteCommandTests : ContractTest() {
     }
 
     @Test
+    fun `On fungible state(s) deleting, the quantity of every created fungible state must be greater than zero`() {
+
+        // Arrange
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+            addInputState(stateA)
+            addOutputState(stateA.copy(quantity = NumericDecimal.ZERO))
+            addCommand(ExampleFungibleContract.Delete())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(FungibleConstraints.CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES, exception.message)
+    }
+
+    @Test
     fun `On fungible state(s) deleting, the sum of the absolute values of the consumed states must be greater than the sum of the absolute values of the created states (quantity is equal)`() {
 
         // Arrange
