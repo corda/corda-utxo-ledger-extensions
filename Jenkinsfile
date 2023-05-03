@@ -1,11 +1,13 @@
-@Library('corda-shared-build-pipeline-steps@5.0.1') _
+@Library('corda-shared-build-pipeline-steps@Hawk') _
 
-cordaPipelineKubernetesAgent(
+cordaPipeline(
     publishRepoPrefix: 'corda-os-maven',
     slimBuild: true,
     runUnitTests: true,
     dedicatedJobForSnykDelta: false,
     gitHubComments: false,
     e2eTestName: 'corda-utxo-ledger-extensions-e2e-tests',
-    runE2eTests: true // to be actived once tests are implemented in this repo
+    runE2eTests: false,
+    publishToMavenS3Repository: true,
+    enableNotifications: false
     )

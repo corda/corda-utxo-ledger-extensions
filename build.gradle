@@ -69,6 +69,12 @@ subprojects {
         tasks.named('jar', Jar) {
             archiveBaseName = "corda-ledger-extensions-${project.name}"
         }
+
+        ext {
+            releasable = true // all corda-api jars are externally consumable
+        }
+
+        description = project.name
     }
 
     repositories {
