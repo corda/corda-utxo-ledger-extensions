@@ -10,7 +10,6 @@ repositories {
 // So we'll load it into our own object to grab what we need.
 def constants = new Properties()
 file("$rootDir/../gradle.properties").withInputStream { InputStream input -> constants.load(input) }
-def bndVersion = constants.getProperty('bndVersion')
 def internalPublishVersion = constants.getProperty('internalPublishVersion')
 def artifactoryContextUrl = constants.getProperty('artifactoryContextUrl')
 
