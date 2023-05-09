@@ -226,7 +226,7 @@ public final class Check {
         final int originalCount = count(iterable);
         final int distinctCount = count(distinctItems);
 
-        Check.isTrue(originalCount == distinctCount, message);
+        isTrue(originalCount == distinctCount, message);
     }
 
     /**

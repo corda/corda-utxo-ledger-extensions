@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
  * <ol>
  *     <li>On identifiable state(s) updating, at least one identifiable state must be consumed.</li>
  *     <li>On identifiable state(s) updating, at least one identifiable state must be created.</li>
- *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+ *     <li>On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every created identifiable state with a non-null identifier.</li>
+ *     <li>On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null.</li>
  * </ol>
  */
 public abstract class IdentifiableContractUpdateCommand<T extends IdentifiableState> extends IdentifiableContractCommand<T> {

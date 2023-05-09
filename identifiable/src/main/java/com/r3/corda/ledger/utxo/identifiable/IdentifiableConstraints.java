@@ -35,8 +35,6 @@ public final class IdentifiableConstraints {
     final static String CONTRACT_RULE_DELETE_INPUTS =
             "On identifiable state(s) deleting, at least one identifiable state must be consumed.";
 
-    private final static int MAX_OUTPUTS_PER_INPUT = 1;
-
     /**
      * Prevents instances of {@link IdentifiableConstraints} from being created.
      */
@@ -85,7 +83,8 @@ public final class IdentifiableConstraints {
      * <ol>
      *     <li>On identifiable state(s) updating, at least one identifiable state must be consumed.</li>
      *     <li>On identifiable state(s) updating, at least one identifiable state must be created.</li>
-     *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+     *     <li>On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every created identifiable state with a non-null identifier.</li>
+     *     <li>On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null.</li>
      * </ol>
      *
      * @param transaction The transaction to verify.
@@ -114,7 +113,8 @@ public final class IdentifiableConstraints {
      * <ol>
      *     <li>On identifiable state(s) updating, at least one identifiable state must be consumed.</li>
      *     <li>On identifiable state(s) updating, at least one identifiable state must be created.</li>
-     *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+     *     <li>On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every created identifiable state with a non-null identifier.</li>
+     *     <li>On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null.</li>
      * </ol>
      *
      * @param transaction The transaction to verify.
