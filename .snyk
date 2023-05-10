@@ -1,0 +1,14 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JAVA-ORGJETBRAINSKOTLIN-2393744:
+    - '*':
+        reason: >-
+          This vulnerability relates to information exposure via creation of
+          temporary files via Kotlin functions with insecure permissions. Corda
+          does not use any of the vulnerable functions so it not susceptible to
+          this vulnerability.
+        expires: 2023-08-03T08:30:55.438Z
+        created: 2023-05-04T08:30:55.439Z
+patch: {}
