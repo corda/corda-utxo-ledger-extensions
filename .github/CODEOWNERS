@@ -1,3 +1,2 @@
-Jenkinsfile        @corda/blt
-.ci/*              @corda/blt
-.github/*          @corda/blt
+# Reduced list for the duration of 5.0 code freeze 
+* @mnesbit @driessamyn @ronanbrowne @rick-r3 @fenryka @yarivus 
