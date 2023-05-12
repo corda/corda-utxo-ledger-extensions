@@ -89,7 +89,7 @@ class ChainableTests {
                 "id" to vehicleId,
                 "manufacturer" to aliceX500,
                 "owner" to bobX500,
-                "notary" to "O=MyNotaryService, L=London, C=GB",
+                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.chainable.workflow.issue.IssueVehicleFlow\$Initiator"
