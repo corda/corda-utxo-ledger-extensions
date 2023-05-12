@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.corda.e2etest.utilities.RPC_FLOW_STATUS_FAILED
 import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
@@ -129,6 +130,51 @@ class ChainableTests {
         assertThat(transferVehicleResponse.id).isEqualTo(vehicleId)
         assertThat(transferVehicleResponse.manufacturer).isEqualTo(aliceX500)
         assertThat(transferVehicleResponse.owner).isEqualTo(charlieX500)
+    }
+
+    @Test
+    fun `chainable contract create command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "VALID"
+            ),
+            "com.r3.corda.demo.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `chainable contract create command CONTRACT_RULE_CREATE_OUTPUTS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "CONTRACT_RULE_CREATE_OUTPUTS"
+            ),
+            "com.r3.corda.demo.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) creating, at least one chainable state must be created.")
+    }
+
+    @Test
+    fun `chainable contract create command CONTRACT_RULE_CREATE_POINTERS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "CONTRACT_RULE_CREATE_POINTERS"
+            ),
+            "com.r3.corda.demo.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) creating, the previous state pointer of every created chainable state must be null.")
     }
 
     data class VehicleResponse(
