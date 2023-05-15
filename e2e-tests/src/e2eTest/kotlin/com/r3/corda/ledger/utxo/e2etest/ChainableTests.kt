@@ -178,6 +178,21 @@ class ChainableTests {
     }
 
     @Test
+    fun `chainable contract update command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "VALID"
+            ),
+            "com.r3.corda.demo.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
     fun `chainable contract update command CONTRACT_RULE_UPDATE_INPUTS fails`() {
         val request = startRpcFlow(
             aliceHoldingId,
@@ -243,11 +258,11 @@ class ChainableTests {
     }
 
     @Test
-    fun `chainable contract update command valid`() {
+    fun `chainable contract delete command valid`() {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(
-                "command" to "UPDATE",
+                "command" to "DELETE",
                 "rule" to "VALID"
             ),
             "com.r3.corda.demo.utxo.chainable.workflow.testing.ChainableContractTestFlow"
@@ -255,6 +270,21 @@ class ChainableTests {
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `chainable contract delete command CONTRACT_RULE_DELETE_INPUTS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "CONTRACT_RULE_DELETE_INPUTS"
+            ),
+            "com.r3.corda.demo.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) deleting, at least one chainable state must be consumed.")
     }
 
     data class VehicleResponse(

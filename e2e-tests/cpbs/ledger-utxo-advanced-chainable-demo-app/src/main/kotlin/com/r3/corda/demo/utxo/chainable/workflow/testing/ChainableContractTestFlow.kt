@@ -16,6 +16,7 @@ import net.corda.v5.application.membership.MemberLookup
 import net.corda.v5.base.annotations.Suspendable
 import net.corda.v5.crypto.DigestAlgorithmName
 import net.corda.v5.ledger.common.NotaryLookup
+import net.corda.v5.ledger.utxo.ContractState
 import net.corda.v5.ledger.utxo.StateAndRef
 import net.corda.v5.ledger.utxo.StateRef
 import net.corda.v5.ledger.utxo.UtxoLedgerService
@@ -40,13 +41,17 @@ class ChainableContractTestFlow : ClientStartableFlow {
                 val outputs = flowEngine.subFlow(ChainableContractCreateTestFlow("VALID"))
                 flowEngine.subFlow(ChainableContractUpdateTestFlow(request.rule, outputs))
             }
+            "DELETE" -> {
+                val outputs = flowEngine.subFlow(ChainableContractCreateTestFlow("VALID"))
+                flowEngine.subFlow(ChainableContractDeleteTestFlow(request.rule, outputs))
+            }
             else -> throw IllegalArgumentException("Invalid command type passed in")
         }
         return "success"
     }
 }
 
-class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<StateAndRef<MyChainableState>>> {
+class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<StateAndRef<*>>> {
 
     @CordaInject
     private lateinit var digestService: DigestService
@@ -61,7 +66,7 @@ class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<S
     private lateinit var utxoLedgerService: UtxoLedgerService
 
     @Suspendable
-    override fun call(): List<StateAndRef<MyChainableState>> {
+    override fun call(): List<StateAndRef<*>> {
         val key = memberLookup.myInfo().firstLedgerKey
         val outputs = when (rule) {
             "CONTRACT_RULE_CREATE_OUTPUTS" -> listOf(MyContractState(UUID.randomUUID()))
@@ -81,7 +86,8 @@ class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<S
             "VALID" -> {
                 listOf(
                     MyChainableState(UUID.randomUUID(), memberLookup.myInfo().firstLedgerKey, null),
-                    MyChainableState(UUID.randomUUID(), memberLookup.myInfo().firstLedgerKey, null)
+                    MyChainableState(UUID.randomUUID(), memberLookup.myInfo().firstLedgerKey, null),
+                    MyContractState(UUID.randomUUID())
                 )
             }
             else -> throw IllegalArgumentException("Invalid rule type passed in")
@@ -94,22 +100,14 @@ class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<S
             .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
             .toSignedTransaction()
 
-        val finalizationResult = utxoLedgerService.finalize(transaction, emptyList())
-        @Suppress("UNCHECKED_CAST")
-        return finalizationResult
-            .transaction
-            .outputStateAndRefs
-            .filter { it.state.contractState is MyChainableState } as List<StateAndRef<MyChainableState>>
+        return utxoLedgerService.finalize(transaction, emptyList()).transaction.outputStateAndRefs
     }
 }
 
 class ChainableContractUpdateTestFlow(
     private val rule: String,
-    private val stateAndRefs: List<StateAndRef<MyChainableState>>
-) : SubFlow<List<StateAndRef<MyChainableState>>> {
-
-    @CordaInject
-    private lateinit var digestService: DigestService
+    private val stateAndRefs: List<StateAndRef<*>>
+) : SubFlow<List<StateAndRef<*>>> {
 
     @CordaInject
     private lateinit var memberLookup: MemberLookup
@@ -121,7 +119,7 @@ class ChainableContractUpdateTestFlow(
     private lateinit var utxoLedgerService: UtxoLedgerService
 
     @Suspendable
-    override fun call(): List<StateAndRef<MyChainableState>> {
+    override fun call(): List<StateAndRef<*>> {
         val key = memberLookup.myInfo().firstLedgerKey
         val (inputs, outputs) = when (rule) {
             "CONTRACT_RULE_UPDATE_INPUTS" -> {
@@ -131,28 +129,34 @@ class ChainableContractUpdateTestFlow(
                 stateAndRefs.map { it.ref } to emptyList()
             }
             "CONTRACT_RULE_UPDATE_POINTERS" -> {
-                stateAndRefs.map { it.ref } to stateAndRefs.map { it.state.contractState.copy(previousStatePointer = null) }
+                stateAndRefs.map { it.ref } to stateAndRefs
+                    .filter { it.state.contractState is MyChainableState }
+                    .map { (it.state.contractState as MyChainableState).copy(previousStatePointer = null) }
             }
             "CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS" -> {
                 val stateRef = stateAndRefs.first().ref
-                stateAndRefs.map { it.ref } to stateAndRefs.map {
-                    it.state.contractState.copy(
-                        previousStatePointer = StaticPointer(
-                            stateRef,
-                            MyChainableState::class.java
+                stateAndRefs.map { it.ref } to stateAndRefs
+                    .filter { it.state.contractState is MyChainableState }
+                    .map {
+                        (it.state.contractState as MyChainableState).copy(
+                            previousStatePointer = StaticPointer(
+                                stateRef,
+                                MyChainableState::class.java
+                            )
                         )
-                    )
-                }
+                    }
             }
             "VALID" -> {
-                stateAndRefs.map { it.ref } to stateAndRefs.map {
-                    it.state.contractState.copy(
-                        previousStatePointer = StaticPointer(
-                            it.ref,
-                            MyChainableState::class.java
+                stateAndRefs.map { it.ref } to stateAndRefs
+                    .filter { it.state.contractState is MyChainableState }
+                    .map {
+                        (it.state.contractState as MyChainableState).copy(
+                            previousStatePointer = StaticPointer(
+                                it.ref,
+                                MyChainableState::class.java
+                            )
                         )
-                    )
-                }
+                    }
             }
             else -> throw IllegalArgumentException("Invalid rule type passed in")
         }
@@ -165,12 +169,47 @@ class ChainableContractUpdateTestFlow(
             .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
             .toSignedTransaction()
 
-        val finalizationResult = utxoLedgerService.finalize(transaction, emptyList())
-        @Suppress("UNCHECKED_CAST")
-        return finalizationResult
-            .transaction
-            .outputStateAndRefs
-            .filter { it.state.contractState is MyChainableState } as List<StateAndRef<MyChainableState>>
+        return utxoLedgerService.finalize(transaction, emptyList()).transaction.outputStateAndRefs
+    }
+}
+
+class ChainableContractDeleteTestFlow(
+    private val rule: String,
+    private val stateAndRefs: List<StateAndRef<*>>
+) : SubFlow<List<StateAndRef<*>>> {
+
+    @CordaInject
+    private lateinit var memberLookup: MemberLookup
+
+    @CordaInject
+    private lateinit var notaryLookup: NotaryLookup
+
+    @CordaInject
+    private lateinit var utxoLedgerService: UtxoLedgerService
+
+    @Suspendable
+    override fun call(): List<StateAndRef<*>> {
+        val key = memberLookup.myInfo().firstLedgerKey
+        val inputs = when (rule) {
+            "CONTRACT_RULE_DELETE_INPUTS" -> {
+                stateAndRefs
+                    .filter { it.state.contractState !is MyChainableState }
+                    .map { it.ref }
+            }
+            "VALID" -> {
+                stateAndRefs.map { it.ref }
+            }
+            else -> throw IllegalArgumentException("Invalid rule type passed in")
+        }
+        val transaction = utxoLedgerService.createTransactionBuilder()
+            .setNotary(notaryLookup.notaryServices.first().name)
+            .addInputStates(inputs)
+            .addSignatories(key)
+            .addCommand(MyChainableContract.Delete())
+            .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
+            .toSignedTransaction()
+
+        return utxoLedgerService.finalize(transaction, emptyList()).transaction.outputStateAndRefs
     }
 }
 
