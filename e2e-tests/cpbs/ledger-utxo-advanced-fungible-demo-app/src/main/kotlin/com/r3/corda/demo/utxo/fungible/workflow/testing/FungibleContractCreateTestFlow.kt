@@ -1,28 +1,23 @@
-package com.r3.corda.demo.utxo.chainable.workflow.testing
+package com.r3.corda.demo.utxo.fungible.workflow.testing
 
-import com.r3.corda.demo.utxo.chainable.contract.testing.MyChainableContract
-import com.r3.corda.demo.utxo.chainable.contract.testing.MyChainableState
-import com.r3.corda.demo.utxo.chainable.contract.testing.MyContractState
-import com.r3.corda.demo.utxo.chainable.workflow.firstLedgerKey
-import com.r3.corda.ledger.utxo.base.StaticPointer
-import net.corda.v5.application.crypto.DigestService
+import com.r3.corda.demo.utxo.fungible.contract.testing.MyContractState
+import com.r3.corda.demo.utxo.fungible.contract.testing.MyFungibleContract
+import com.r3.corda.demo.utxo.fungible.contract.testing.MyFungibleStateA
+import com.r3.corda.demo.utxo.fungible.contract.testing.MyFungibleStateB
+import com.r3.corda.demo.utxo.fungible.workflow.firstLedgerKey
+import com.r3.corda.ledger.utxo.fungible.NumericInteger
 import net.corda.v5.application.flows.CordaInject
 import net.corda.v5.application.flows.SubFlow
 import net.corda.v5.application.membership.MemberLookup
 import net.corda.v5.base.annotations.Suspendable
-import net.corda.v5.crypto.DigestAlgorithmName
 import net.corda.v5.ledger.common.NotaryLookup
 import net.corda.v5.ledger.utxo.StateAndRef
-import net.corda.v5.ledger.utxo.StateRef
 import net.corda.v5.ledger.utxo.UtxoLedgerService
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
-class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<StateAndRef<*>>> {
-
-    @CordaInject
-    private lateinit var digestService: DigestService
+class FungibleContractCreateTestFlow(private val rule: String) : SubFlow<List<StateAndRef<*>>> {
 
     @CordaInject
     private lateinit var memberLookup: MemberLookup
@@ -38,23 +33,28 @@ class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<S
         val key = memberLookup.myInfo().firstLedgerKey
         val outputs = when (rule) {
             "CONTRACT_RULE_CREATE_OUTPUTS" -> listOf(MyContractState(UUID.randomUUID()))
-            "CONTRACT_RULE_CREATE_POINTERS" -> {
+            "CONTRACT_RULE_CREATE_POSITIVE_QUANTITIES" -> {
                 listOf(
-                    MyChainableState(
-                        UUID.randomUUID(),
-                        key,
-                        StaticPointer(
-                            StateRef(digestService.hash(byteArrayOf(1, 2, 3, 4), DigestAlgorithmName.SHA2_256), 0),
-                            MyChainableState::class.java
-                        )
+                    MyFungibleStateA(
+                        quantity = NumericInteger.ZERO,
+                        owner = key
                     ),
-                    MyChainableState(UUID.randomUUID(), key, null)
+                    MyFungibleStateB(
+                        quantity = NumericInteger.TEN,
+                        owner = key
+                    ),
                 )
             }
             "VALID" -> {
                 listOf(
-                    MyChainableState(UUID.randomUUID(), key, null),
-                    MyChainableState(UUID.randomUUID(), key, null),
+                    MyFungibleStateA(
+                        quantity = NumericInteger.ONE,
+                        owner = key
+                    ),
+                    MyFungibleStateB(
+                        quantity = NumericInteger.TEN,
+                        owner = key
+                    ),
                     MyContractState(UUID.randomUUID())
                 )
             }
@@ -64,7 +64,7 @@ class ChainableContractCreateTestFlow(private val rule: String) : SubFlow<List<S
             .setNotary(notaryLookup.notaryServices.first().name)
             .addOutputStates(outputs)
             .addSignatories(key)
-            .addCommand(MyChainableContract.Create())
+            .addCommand(MyFungibleContract.Create())
             .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
             .toSignedTransaction()
 
