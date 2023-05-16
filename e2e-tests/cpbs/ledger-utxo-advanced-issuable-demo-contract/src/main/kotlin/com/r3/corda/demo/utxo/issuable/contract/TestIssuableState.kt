@@ -1,5 +1,6 @@
 package com.r3.corda.demo.utxo.issuable.contract
 
+import com.r3.corda.ledger.utxo.issuable.IssuableConstraints
 import com.r3.corda.ledger.utxo.issuable.IssuableState
 import com.r3.corda.ledger.utxo.issuable.WellKnownIssuableState
 import net.corda.v5.base.types.MemberX500Name
@@ -25,17 +26,22 @@ data class TestIssuableState(
     }
 
     override fun getIssuerName(): MemberX500Name {
-       return issuerName
+        return issuerName
     }
 }
 
 class TestIssuableContract : Contract {
 
     class Create : Command
-    class Update : Command
     class Delete : Command
 
     override fun verify(transaction: UtxoLedgerTransaction) {
-        // all good
+        val commands = transaction.commands
+        if (commands.any { it::class.java == Create::class.java }) {
+            IssuableConstraints.verifyCreate(transaction)
+        }
+        if (commands.any { it::class.java == Delete::class.java }) {
+            IssuableConstraints.verifyDelete(transaction)
+        }
     }
 }

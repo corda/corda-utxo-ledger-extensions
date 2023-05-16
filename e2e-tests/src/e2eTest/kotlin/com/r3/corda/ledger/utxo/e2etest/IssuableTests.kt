@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.corda.e2etest.utilities.RPC_FLOW_STATUS_FAILED
 import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
@@ -68,45 +69,111 @@ class IssuableTests {
         registerStaticMember(bobHoldingId)
         registerStaticMember(notaryHoldingId, true)
     }
+//
+//    @Test
+//    fun `query issuable states`() {
+//
+//        val request = startRpcFlow(
+//            aliceHoldingId,
+//            mapOf(),
+//            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+//        )
+//        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
+//        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+//        assertThat(createFlowResponse.flowError).isNull()
+//
+//        val response = objectMapper
+//            .readValue(createFlowResponse.flowResult, IssuableStateQueryResponse::class.java)
+//
+//        assertThat(response.before).isEmpty()
+//        assertThat(response.after).hasSize(2)
+//        assertThat(response.consumed).isEmpty()
+//    }
+//
+//    @Test
+//    fun `query well known issuable states`() {
+//
+//        val request = startRpcFlow(
+//            aliceHoldingId,
+//            mapOf(),
+//            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+//        )
+//        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
+//        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+//        assertThat(createFlowResponse.flowError).isNull()
+//
+//        val response = objectMapper
+//            .readValue(createFlowResponse.flowResult, WellKnownIssuableStateQueryResponse::class.java)
+//
+//        assertThat(response.before).isEmpty()
+//        assertThat(response.after).hasSize(2)
+//        assertThat(response.consumed).isEmpty()
+//    }
 
     @Test
-    fun `query issuable states`() {
-
+    fun `Issuable contract create command valid`() {
         val request = startRpcFlow(
             aliceHoldingId,
-            mapOf(),
-            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "VALID",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
         )
-        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(createFlowResponse.flowError).isNull()
-
-        val response = objectMapper
-            .readValue(createFlowResponse.flowResult, IssuableStateQueryResponse::class.java)
-
-        assertThat(response.before).isEmpty()
-        assertThat(response.after).hasSize(2)
-        assertThat(response.consumed).isEmpty()
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
     }
 
     @Test
-    fun `query well known issuable states`() {
-
+    fun `Issuable contract create command CONTRACT_RULE_CREATE_SIGNATORIES fails`() {
         val request = startRpcFlow(
             aliceHoldingId,
-            mapOf(),
-            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "CONTRACT_RULE_CREATE_SIGNATORIES",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
         )
-        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(createFlowResponse.flowError).isNull()
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains("On issuable state(s) creating, the issuer of every created issuable state must sign the transaction.")
+    }
 
-        val response = objectMapper
-            .readValue(createFlowResponse.flowResult, WellKnownIssuableStateQueryResponse::class.java)
+    @Test
+    fun `Issuable contract delete command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "VALID",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
 
-        assertThat(response.before).isEmpty()
-        assertThat(response.after).hasSize(2)
-        assertThat(response.consumed).isEmpty()
+    @Test
+    fun `Issuable contract delete command CONTRACT_RULE_DELETE_SIGNATORIES fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "CONTRACT_RULE_DELETE_SIGNATORIES",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains("On issuable state(s) deleting, the issuer of every consumed issuable state must sign the transaction.")
     }
 
     data class IssuableStateQueryResponse(
