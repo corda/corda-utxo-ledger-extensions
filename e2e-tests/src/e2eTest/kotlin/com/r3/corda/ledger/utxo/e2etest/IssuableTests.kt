@@ -69,46 +69,46 @@ class IssuableTests {
         registerStaticMember(bobHoldingId)
         registerStaticMember(notaryHoldingId, true)
     }
-//
-//    @Test
-//    fun `query issuable states`() {
-//
-//        val request = startRpcFlow(
-//            aliceHoldingId,
-//            mapOf(),
-//            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
-//        )
-//        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
-//        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-//        assertThat(createFlowResponse.flowError).isNull()
-//
-//        val response = objectMapper
-//            .readValue(createFlowResponse.flowResult, IssuableStateQueryResponse::class.java)
-//
-//        assertThat(response.before).isEmpty()
-//        assertThat(response.after).hasSize(2)
-//        assertThat(response.consumed).isEmpty()
-//    }
-//
-//    @Test
-//    fun `query well known issuable states`() {
-//
-//        val request = startRpcFlow(
-//            aliceHoldingId,
-//            mapOf(),
-//            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
-//        )
-//        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
-//        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-//        assertThat(createFlowResponse.flowError).isNull()
-//
-//        val response = objectMapper
-//            .readValue(createFlowResponse.flowResult, WellKnownIssuableStateQueryResponse::class.java)
-//
-//        assertThat(response.before).isEmpty()
-//        assertThat(response.after).hasSize(2)
-//        assertThat(response.consumed).isEmpty()
-//    }
+
+    @Test
+    fun `query issuable states`() {
+
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(),
+            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+        )
+        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(createFlowResponse.flowError).isNull()
+
+        val response = objectMapper
+            .readValue(createFlowResponse.flowResult, IssuableStateQueryResponse::class.java)
+
+        assertThat(response.before).isEmpty()
+        assertThat(response.after).hasSize(2)
+        assertThat(response.consumed).isEmpty()
+    }
+
+    @Test
+    fun `query well known issuable states`() {
+
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(),
+            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+        )
+        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(createFlowResponse.flowError).isNull()
+
+        val response = objectMapper
+            .readValue(createFlowResponse.flowResult, WellKnownIssuableStateQueryResponse::class.java)
+
+        assertThat(response.before).isEmpty()
+        assertThat(response.after).hasSize(2)
+        assertThat(response.consumed).isEmpty()
+    }
 
     @Test
     fun `Issuable contract create command valid`() {

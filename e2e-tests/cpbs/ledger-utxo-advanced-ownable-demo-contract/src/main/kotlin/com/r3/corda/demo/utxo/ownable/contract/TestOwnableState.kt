@@ -1,5 +1,6 @@
 package com.r3.corda.demo.utxo.ownable.contract
 
+import com.r3.corda.ledger.utxo.ownable.OwnableConstraints
 import com.r3.corda.ledger.utxo.ownable.OwnableState
 import com.r3.corda.ledger.utxo.ownable.WellKnownOwnableState
 import net.corda.v5.base.types.MemberX500Name
@@ -36,6 +37,9 @@ class TestOwnableContract : Contract {
     class Delete : Command
 
     override fun verify(transaction: UtxoLedgerTransaction) {
-        // all good
+        val commands = transaction.commands
+        if (commands.any { it::class.java == Update::class.java }) {
+            OwnableConstraints.verifyUpdate(transaction)
+        }
     }
 }
