@@ -1,8 +1,8 @@
 package com.r3.corda.demo.utxo.issuable.workflow.testing
 
 import com.r3.corda.demo.utxo.issuable.contract.MyContractState
-import com.r3.corda.demo.utxo.issuable.contract.TestIssuableContract
-import com.r3.corda.demo.utxo.issuable.contract.TestIssuableState
+import com.r3.corda.demo.utxo.issuable.contract.MyIssuableContract
+import com.r3.corda.demo.utxo.issuable.contract.MyIssuableState
 import com.r3.corda.demo.utxo.issuable.workflow.firstLedgerKey
 import net.corda.v5.application.flows.CordaInject
 import net.corda.v5.application.flows.InitiatedBy
@@ -50,15 +50,15 @@ class IssuableContractCreateTestFlow(
             else -> throw IllegalArgumentException("Invalid rule type passed in")
         }
         val outputs = listOf(
-            TestIssuableState(issuer, issuerName, participants = listOf(key)),
-            TestIssuableState(issuer, issuerName, participants = listOf(key)),
+            MyIssuableState(issuer, issuerName, participants = listOf(key)),
+            MyIssuableState(issuer, issuerName, participants = listOf(key)),
             MyContractState(UUID.randomUUID())
         )
         val transaction = utxoLedgerService.createTransactionBuilder()
             .setNotary(notaryLookup.notaryServices.first().name)
             .addOutputStates(outputs)
             .addSignatories(signatories)
-            .addCommand(TestIssuableContract.Create())
+            .addCommand(MyIssuableContract.Create())
             .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
             .toSignedTransaction()
 

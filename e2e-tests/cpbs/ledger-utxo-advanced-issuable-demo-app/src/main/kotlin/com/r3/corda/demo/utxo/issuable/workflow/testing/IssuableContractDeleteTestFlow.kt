@@ -1,6 +1,6 @@
 package com.r3.corda.demo.utxo.issuable.workflow.testing
 
-import com.r3.corda.demo.utxo.issuable.contract.TestIssuableContract
+import com.r3.corda.demo.utxo.issuable.contract.MyIssuableContract
 import com.r3.corda.demo.utxo.issuable.workflow.firstLedgerKey
 import net.corda.v5.application.flows.CordaInject
 import net.corda.v5.application.flows.InitiatedBy
@@ -51,7 +51,7 @@ class IssuableContractDeleteTestFlow(
             .setNotary(notaryLookup.notaryServices.first().name)
             .addInputStates(stateAndRefs.map { it.ref })
             .addSignatories(signatories)
-            .addCommand(TestIssuableContract.Delete())
+            .addCommand(MyIssuableContract.Delete())
             .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
             .toSignedTransaction()
 

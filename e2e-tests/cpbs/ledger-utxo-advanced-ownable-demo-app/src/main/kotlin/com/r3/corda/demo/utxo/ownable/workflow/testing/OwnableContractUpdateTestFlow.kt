@@ -1,7 +1,7 @@
 package com.r3.corda.demo.utxo.ownable.workflow.testing
 
 import com.r3.corda.demo.utxo.ownable.contract.MyContractState
-import com.r3.corda.demo.utxo.ownable.contract.TestOwnableContract
+import com.r3.corda.demo.utxo.ownable.contract.MyOwnableContract
 import com.r3.corda.demo.utxo.ownable.contract.TestOwnableState
 import com.r3.corda.demo.utxo.ownable.workflow.firstLedgerKey
 import net.corda.v5.application.flows.CordaInject
@@ -62,7 +62,7 @@ class OwnableContractDeleteTestFlow(
             .addInputStates(stateAndRefs.map { it.ref })
             .addOutputStates(outputs)
             .addSignatories(signatories)
-            .addCommand(TestOwnableContract.Update())
+            .addCommand(MyOwnableContract.Update())
             .setTimeWindowUntil(Instant.now().plus(10, ChronoUnit.DAYS))
             .toSignedTransaction()
 
