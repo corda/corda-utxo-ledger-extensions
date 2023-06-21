@@ -19,11 +19,11 @@ dependencies {
     cordapp project(':base')
 
     testImplementation project(':testing')
-    testRuntimeOnly libs.slf4j.simple
+    testRuntimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
     testImplementation libs.junit.jupiter
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.mockito.core
     testImplementation libs.mockito.kotlin
-    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation libs.hamcrest.library
     testImplementation libs.kotlin.test
 }
