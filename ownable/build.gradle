@@ -25,5 +25,5 @@ dependencies {
     testImplementation libs.mockito.core
     testImplementation libs.mockito.kotlin
     testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testImplementation libs.kotlin.test
 }
