@@ -69,7 +69,7 @@ dependencies {
 
     e2eTestImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     e2eTestImplementation libs.jackson.module
-    e2eTestImplementation "org.assertj:assertj-core:$assertjVersion"
+    e2eTestImplementation libs.assertj.core
     e2eTestImplementation "net.corda:corda-e2e-test-utilities:$cordaRuntimeOsVersion"
     e2eTestImplementation "net.corda:corda-test-utilities:$cordaRuntimeOsVersion"
     e2eTestImplementation "net.corda:corda-rest:$cordaRuntimeOsVersion"
