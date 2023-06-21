@@ -24,6 +24,6 @@ dependencies {
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.mockito.core
     testImplementation libs.mockito.kotlin
-    testImplementation libs.hamcrest.library
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
 }
