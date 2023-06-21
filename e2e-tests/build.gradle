@@ -73,7 +73,7 @@ dependencies {
     e2eTestImplementation "net.corda:corda-e2e-test-utilities:$cordaRuntimeOsVersion"
     e2eTestImplementation "net.corda:corda-test-utilities:$cordaRuntimeOsVersion"
     e2eTestImplementation "net.corda:corda-rest:$cordaRuntimeOsVersion"
-    e2eTestImplementation libs.slf4j
+    e2eTestImplementation libs.slf4j.api
     e2eTestImplementation libs.junit.jupiter
 
     e2eTestRuntimeOnly libs.junit.jupiter.engine
