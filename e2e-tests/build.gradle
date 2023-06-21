@@ -68,15 +68,15 @@ dependencies {
     cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-ownable-demo-app', configuration: 'cordaCPB')
 
     e2eTestImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    e2eTestImplementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+    e2eTestImplementation libs.jackson.module
     e2eTestImplementation "org.assertj:assertj-core:$assertjVersion"
     e2eTestImplementation "net.corda:corda-e2e-test-utilities:$cordaRuntimeOsVersion"
     e2eTestImplementation "net.corda:corda-test-utilities:$cordaRuntimeOsVersion"
     e2eTestImplementation "net.corda:corda-rest:$cordaRuntimeOsVersion"
     e2eTestImplementation "org.slf4j:slf4j-api:$slf4jVersion"
-    e2eTestImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    e2eTestImplementation libs.junit.jupiter
 
-    e2eTestRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    e2eTestRuntimeOnly libs.junit.jupiter.engine
     e2eTestRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
 }
 

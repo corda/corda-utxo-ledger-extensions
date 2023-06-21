@@ -23,9 +23,9 @@ dependencies {
     testImplementation project(':testing')
 
     testImplementation 'org.jetbrains.kotlin:kotlin-osgi-bundle'
-    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testImplementation libs.junit.jupiter
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
 
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly libs.junit.jupiter.engine
 }
