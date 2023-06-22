@@ -2,7 +2,6 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import net.corda.e2etest.utilities.GROUP_ID
 import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
@@ -33,6 +32,7 @@ class IssuableTests {
     }
 
     private val testRunUniqueId = UUID.randomUUID()
+    private val groupId = UUID.randomUUID().toString()
     private val cpiName = "${TEST_CPI_NAME}_$testRunUniqueId"
     private val notaryCpiName = "${TEST_NOTARY_CPI_NAME}_$testRunUniqueId"
 
@@ -40,9 +40,9 @@ class IssuableTests {
     private val bobX500 = "CN=Bob-${testRunUniqueId}, OU=Application, O=R3, L=London, C=GB"
     private val notaryX500 = "CN=Notary-${testRunUniqueId}, OU=Application, O=R3, L=London, C=GB"
 
-    private val aliceHoldingId: String = getHoldingIdShortHash(aliceX500, GROUP_ID)
-    private val bobHoldingId: String = getHoldingIdShortHash(bobX500, GROUP_ID)
-    private val notaryHoldingId: String = getHoldingIdShortHash(notaryX500, GROUP_ID)
+    private val aliceHoldingId: String = getHoldingIdShortHash(aliceX500, groupId)
+    private val bobHoldingId: String = getHoldingIdShortHash(bobX500, groupId)
+    private val notaryHoldingId: String = getHoldingIdShortHash(notaryX500, groupId)
 
     private val staticMemberList = listOf(
         aliceX500,
@@ -53,8 +53,8 @@ class IssuableTests {
     @BeforeAll
     fun beforeAll() {
         uploadTrustedCertificate()
-        conditionallyUploadCordaPackage(cpiName, TEST_CPB_LOCATION, GROUP_ID, staticMemberList)
-        conditionallyUploadCordaPackage(notaryCpiName, TEST_NOTARY_CPB_LOCATION, GROUP_ID, staticMemberList)
+        conditionallyUploadCordaPackage(cpiName, TEST_CPB_LOCATION, groupId, staticMemberList)
+        conditionallyUploadCordaPackage(notaryCpiName, TEST_NOTARY_CPB_LOCATION, groupId, staticMemberList)
 
         val aliceActualHoldingId = getOrCreateVirtualNodeFor(aliceX500, cpiName)
         val bobActualHoldingId = getOrCreateVirtualNodeFor(bobX500, cpiName)
