@@ -25,6 +25,7 @@ class FungibleTests {
     }
 
     private val testRunUniqueId = UUID.randomUUID()
+    private val groupId = UUID.randomUUID().toString()
     private val cpiName = "${TEST_CPI_NAME}_$testRunUniqueId"
     private val notaryCpiName = "${TEST_NOTARY_CPI_NAME}_$testRunUniqueId"
 
@@ -33,10 +34,10 @@ class FungibleTests {
     private val charlieX500 = "CN=Charlie-${testRunUniqueId}, OU=Application, O=R3, L=London, C=GB"
     private val notaryX500 = "CN=Notary-${testRunUniqueId}, OU=Application, O=R3, L=London, C=GB"
 
-    private val aliceHoldingId: String = getHoldingIdShortHash(aliceX500, GROUP_ID)
-    private val bobHoldingId: String = getHoldingIdShortHash(bobX500, GROUP_ID)
-    private val charlieHoldingId: String = getHoldingIdShortHash(charlieX500, GROUP_ID)
-    private val notaryHoldingId: String = getHoldingIdShortHash(notaryX500, GROUP_ID)
+    private val aliceHoldingId: String = getHoldingIdShortHash(aliceX500, groupId)
+    private val bobHoldingId: String = getHoldingIdShortHash(bobX500, groupId)
+    private val charlieHoldingId: String = getHoldingIdShortHash(charlieX500, groupId)
+    private val notaryHoldingId: String = getHoldingIdShortHash(notaryX500, groupId)
 
     private val staticMemberList = listOf(
         aliceX500,
@@ -52,8 +53,8 @@ class FungibleTests {
     @BeforeAll
     fun beforeAll() {
         uploadTrustedCertificate()
-        conditionallyUploadCordaPackage(cpiName, TEST_CPB_LOCATION, GROUP_ID, staticMemberList)
-        conditionallyUploadCordaPackage(notaryCpiName, TEST_NOTARY_CPB_LOCATION, GROUP_ID, staticMemberList)
+        conditionallyUploadCordaPackage(cpiName, TEST_CPB_LOCATION, groupId, staticMemberList)
+        conditionallyUploadCordaPackage(notaryCpiName, TEST_NOTARY_CPB_LOCATION, groupId, staticMemberList)
 
         val aliceActualHoldingId = getOrCreateVirtualNodeFor(aliceX500, cpiName)
         val bobActualHoldingId = getOrCreateVirtualNodeFor(bobX500, cpiName)
@@ -81,7 +82,7 @@ class FungibleTests {
                 "issuer" to aliceX500,
                 "owner" to bobX500,
                 "quantity" to 123.45.toScaledBigDecimal(),
-                "notary" to "O=MyNotaryService, L=London, C=GB",
+                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
