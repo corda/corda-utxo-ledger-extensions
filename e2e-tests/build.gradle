@@ -67,7 +67,7 @@ dependencies {
     cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-chainable-demo-app', configuration: 'cordaCPB')
     cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-ownable-demo-app', configuration: 'cordaCPB')
 
-    e2eTestImplementation libs.kotlin.stdlib
+    e2eTestImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     e2eTestImplementation libs.jackson.module
     e2eTestImplementation libs.assertj.core
     e2eTestImplementation "net.corda:corda-e2e-test-utilities:$cordaRuntimeOsVersion"
