@@ -5,5 +5,7 @@ endToEndPipeline(
     gradleTestTargetsToExecute: ['e2eTest'],
     usePackagedCordaHelmChart: true,
     helmVersion: '^5.0.0-beta',
-    dynamicCordaApiVersion: false
+    dynamicCordaApiVersion: false,
+    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.0.0.0-beta+'
+    )
 )
