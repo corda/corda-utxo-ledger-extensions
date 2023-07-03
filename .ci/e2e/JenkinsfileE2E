@@ -7,5 +7,4 @@ endToEndPipeline(
     helmVersion: '^5.0.0-beta',
     dynamicCordaApiVersion: false,
     gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.0.0.0-beta+'
-    )
 )
