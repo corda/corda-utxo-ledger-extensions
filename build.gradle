@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' apply false
     id 'net.corda.cordapp.cordapp-configuration'
-    id 'com.r3.internal.gradle.plugins.r3ArtifactoryPublish'
+    id 'corda.root-publish'
 }
 
 def javaVersion = 11
@@ -69,6 +69,12 @@ subprojects {
         tasks.named('jar', Jar) {
             archiveBaseName = "corda-ledger-extensions-${project.name}"
         }
+
+        ext {
+            releasable = true // all jars are externally consumable
+        }
+
+        description = project.name
     }
 
     repositories {
