@@ -2,7 +2,7 @@ package com.r3.corda.demo.utxo.ownable.workflow.testing
 
 import com.r3.corda.demo.utxo.ownable.contract.MyContractState
 import com.r3.corda.demo.utxo.ownable.contract.MyOwnableContract
-import com.r3.corda.demo.utxo.ownable.contract.TestOwnableState
+import com.r3.corda.demo.utxo.ownable.contract.MyOwnableState
 import com.r3.corda.demo.utxo.ownable.workflow.firstLedgerKey
 import net.corda.v5.application.flows.CordaInject
 import net.corda.v5.application.flows.InitiatedBy
@@ -22,8 +22,8 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
-@InitiatingFlow(protocol = "OwnableContractDeleteTestFlow")
-class OwnableContractDeleteTestFlow(
+@InitiatingFlow(protocol = "OwnableContractUpdateTestFlow")
+class OwnableContractUpdateTestFlow(
     private val rule: String,
     private val owner: PublicKey,
     private val ownerName: MemberX500Name,
@@ -53,8 +53,8 @@ class OwnableContractDeleteTestFlow(
             else -> throw IllegalArgumentException("Invalid rule type passed in")
         }
         val outputs = listOf(
-            TestOwnableState(owner = key, ownerName = name, participants = listOf(key)),
-            TestOwnableState(owner = key, ownerName = name, participants = listOf(key)),
+            MyOwnableState(owner = key, ownerName = name, participants = listOf(key)),
+            MyOwnableState(owner = key, ownerName = name, participants = listOf(key)),
             MyContractState(UUID.randomUUID())
         )
         val transaction = utxoLedgerService.createTransactionBuilder()
@@ -71,7 +71,7 @@ class OwnableContractDeleteTestFlow(
     }
 }
 
-@InitiatedBy(protocol = "OwnableContractDeleteTestFlow")
+@InitiatedBy(protocol = "OwnableContractUpdateTestFlow")
 class OwnableContractDeleteTestResponderFlow : ResponderFlow {
 
     @CordaInject

@@ -2,7 +2,7 @@ package com.r3.corda.demo.utxo.ownable.workflow.testing
 
 import com.r3.corda.demo.utxo.ownable.contract.MyContractState
 import com.r3.corda.demo.utxo.ownable.contract.MyOwnableContract
-import com.r3.corda.demo.utxo.ownable.contract.TestOwnableState
+import com.r3.corda.demo.utxo.ownable.contract.MyOwnableState
 import com.r3.corda.demo.utxo.ownable.workflow.firstLedgerKey
 import net.corda.v5.application.flows.CordaInject
 import net.corda.v5.application.flows.InitiatedBy
@@ -49,8 +49,8 @@ class OwnableContractCreateTestFlow(
             else -> throw IllegalArgumentException("Invalid rule type passed in")
         }
         val outputs = listOf(
-            TestOwnableState(owner, ownerName, participants = listOf(key)),
-            TestOwnableState(owner, ownerName, participants = listOf(key)),
+            MyOwnableState(owner, ownerName, participants = listOf(key)),
+            MyOwnableState(owner, ownerName, participants = listOf(key)),
             MyContractState(UUID.randomUUID())
         )
         val transaction = utxoLedgerService.createTransactionBuilder()

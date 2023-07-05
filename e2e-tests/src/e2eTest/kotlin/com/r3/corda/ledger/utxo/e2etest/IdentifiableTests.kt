@@ -81,7 +81,7 @@ class IdentifiableTests {
                 "description" to "Build super-duper DLT and call it Corda 5",
                 "reporter" to aliceX500,
                 "assignee" to bobX500,
-                "notary" to "O=MyNotaryService, L=London, C=GB",
+                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"

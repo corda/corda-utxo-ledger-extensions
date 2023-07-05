@@ -34,7 +34,6 @@ class MyOwnableContract : Contract {
 
     class Create : Command
     class Update : Command
-    class Delete : Command
 
     override fun verify(transaction: UtxoLedgerTransaction) {
         val commands = transaction.commands

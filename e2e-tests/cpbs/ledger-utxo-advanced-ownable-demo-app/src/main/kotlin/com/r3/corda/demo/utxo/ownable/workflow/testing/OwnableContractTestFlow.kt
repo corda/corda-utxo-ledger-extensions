@@ -31,7 +31,7 @@ class OwnableContractTestFlow : ClientStartableFlow {
         when (request.command) {
             "UPDATE" -> {
                 val outputs = flowEngine.subFlow(OwnableContractCreateTestFlow("VALID", owner, ownerName))
-                flowEngine.subFlow(OwnableContractDeleteTestFlow(request.rule, owner, ownerName, outputs))
+                flowEngine.subFlow(OwnableContractUpdateTestFlow(request.rule, owner, ownerName, outputs))
             }
             else -> throw IllegalArgumentException("Invalid command type passed in")
         }
