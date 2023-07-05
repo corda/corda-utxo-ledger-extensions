@@ -127,7 +127,7 @@ class OwnableTests {
     }
 
     @Test
-    fun `Ownable contract create command CONTRACT_RULE_UPDATE_SIGNATORIES fails`() {
+    fun `Ownable contract update command CONTRACT_RULE_UPDATE_SIGNATORIES fails`() {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(
