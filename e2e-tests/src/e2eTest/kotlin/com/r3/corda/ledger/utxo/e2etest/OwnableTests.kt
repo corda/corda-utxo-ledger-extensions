@@ -108,6 +108,9 @@ class OwnableTests {
         assertThat(response.before).isEmpty()
         assertThat(response.after).hasSize(2)
         assertThat(response.consumed).isEmpty()
+//        assertThat(response.after).hasSize(response.before.size + 2)
+//        assertThat(response.after).containsAll(response.before)
+//        assertThat(response.consumed - response.before).isEmpty()
     }
 
     @Test
