@@ -17,7 +17,7 @@ dependencies {
     cordaProvided platform("net.corda:corda-api:$cordaApiVersion")
     cordaProvided 'net.corda:corda-ledger-utxo'
 
-    cordapp project(':e2e-tests:cpbs:ledger-utxo-advanced-ownable-demo-contract')
+    cordapp project(':examples:ledger-utxo-advanced-ownable-demo-contract')
 
     // Common and API packages pulled in as transitive dependencies through client
     cordapp "com.r3.corda.notary.plugin.nonvalidating:notary-plugin-non-validating-client:$cordaNotaryPluginsVersion"
