@@ -24,6 +24,7 @@ subprojects {
         }
         version = "$cordautxoVersion$versionSuffix"
     }
+    cordaNotaryPluginsVersion = project.findProperty("cordaNotaryPluginsVersion") ?: cordaRuntimeOsVersion
 
     apply plugin: 'maven-publish'
 
