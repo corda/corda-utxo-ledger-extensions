@@ -24,8 +24,8 @@ import java.util.UUID
 class IssuableTests {
 
     private companion object {
-        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-issuable-demo-app"
-        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-issuable-demo-app.cpb"
+        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-issuable-test-app"
+        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-issuable-test-app.cpb"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -76,7 +76,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.query.IssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -96,7 +96,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -119,7 +119,7 @@ class IssuableTests {
                 "rule" to "VALID",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -135,7 +135,7 @@ class IssuableTests {
                 "rule" to "CONTRACT_RULE_CREATE_SIGNATORIES",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -152,7 +152,7 @@ class IssuableTests {
                 "rule" to "VALID",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -168,7 +168,7 @@ class IssuableTests {
                 "rule" to "CONTRACT_RULE_DELETE_SIGNATORIES",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.demo.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)

@@ -24,8 +24,8 @@ import java.util.UUID
 class OwnableTests {
 
     private companion object {
-        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-ownable-demo-app"
-        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-ownable-demo-app.cpb"
+        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-ownable-test-app"
+        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-ownable-test-app.cpb"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -76,7 +76,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.ownable.workflow.query.OwnableStateQueryFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.query.OwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -96,7 +96,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.ownable.workflow.query.WellKnownOwnableStateQueryFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.query.WellKnownOwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -122,7 +122,7 @@ class OwnableTests {
                 "rule" to "VALID",
                 "owner" to bobX500
             ),
-            "com.r3.corda.demo.utxo.ownable.workflow.testing.OwnableContractTestFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.testing.OwnableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -138,7 +138,7 @@ class OwnableTests {
                 "rule" to "CONTRACT_RULE_UPDATE_SIGNATORIES",
                 "owner" to bobX500
             ),
-            "com.r3.corda.demo.utxo.ownable.workflow.testing.OwnableContractTestFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.testing.OwnableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
