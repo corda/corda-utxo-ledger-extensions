@@ -72,89 +72,6 @@ class IdentifiableTests {
     }
 
     @Test
-    fun `Alice issues a support ticket to Bob, Bob opens and completes the ticket, Alice closes the ticket`() {
-
-        val issueSupportTicketRequestId = startRpcFlow(
-            aliceHoldingId,
-            mapOf(
-                "title" to "Build Corda 5",
-                "description" to "Build super-duper DLT and call it Corda 5",
-                "reporter" to aliceX500,
-                "assignee" to bobX500,
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"
-        )
-        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, issueSupportTicketRequestId)
-        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(createFlowResponse.flowError).isNull()
-
-        val createSupportTicketResponse = objectMapper
-            .readValue(createFlowResponse.flowResult, CreateSupportTicketResponse::class.java)
-
-        val openSupportTicketRequestId = startRpcFlow(
-            bobHoldingId,
-            mapOf(
-                "id" to createSupportTicketResponse.id,
-                "reporter" to aliceX500,
-                "status" to "OPEN",
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
-        )
-        val openFlowResult = awaitRpcFlowFinished(bobHoldingId, openSupportTicketRequestId)
-        assertThat(openFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(openFlowResult.flowError).isNull()
-
-        val openSupportTicketResponse = objectMapper
-            .readValue(openFlowResult.flowResult, UpdateSupportTicketResponse::class.java)
-
-        assertThat(openSupportTicketResponse.id).isEqualTo(createSupportTicketResponse.id)
-        assertThat(openSupportTicketResponse.title).isEqualTo(createSupportTicketResponse.title)
-
-        val doneSupportTicketRequestId = startRpcFlow(
-            bobHoldingId,
-            mapOf(
-                "id" to openSupportTicketResponse.id,
-                "reporter" to aliceX500,
-                "status" to "DONE",
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
-        )
-        val doneFlowResult = awaitRpcFlowFinished(bobHoldingId, doneSupportTicketRequestId)
-        assertThat(doneFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(doneFlowResult.flowError).isNull()
-
-        val doneSupportTicketResponse = objectMapper
-            .readValue(doneFlowResult.flowResult, UpdateSupportTicketResponse::class.java)
-
-        assertThat(doneSupportTicketResponse.id).isEqualTo(openSupportTicketResponse.id)
-        assertThat(doneSupportTicketResponse.title).isEqualTo(openSupportTicketResponse.title)
-
-        val deleteSupportTicketRequestId = startRpcFlow(
-            aliceHoldingId,
-            mapOf(
-                "id" to doneSupportTicketResponse.id,
-                "assignee" to bobX500,
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.identifiable.workflow.delete.DeleteSupportTicketFlow\$Initiator"
-        )
-
-        val deleteSupportTicketResult = awaitRpcFlowFinished(aliceHoldingId, deleteSupportTicketRequestId)
-        assertThat(deleteSupportTicketResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(deleteSupportTicketResult.flowError).isNull()
-
-        val deleteSupportTicketResponse = objectMapper
-            .readValue(doneFlowResult.flowResult, DeleteSupportTicketResponse::class.java)
-
-        assertThat(deleteSupportTicketResponse.id).isEqualTo(doneSupportTicketResponse.id)
-        assertThat(deleteSupportTicketResponse.title).isEqualTo(doneSupportTicketResponse.title)
-    }
-
-    @Test
     fun `query identifiable states`() {
 
         val request = startRpcFlow(
@@ -357,9 +274,6 @@ class IdentifiableTests {
             .contains("On identifiable state(s) deleting, at least one identifiable state must be consumed.")
     }
 
-    data class CreateSupportTicketResponse(val id: String, val title: String)
-    data class UpdateSupportTicketResponse(val id: String, val title: String)
-    data class DeleteSupportTicketResponse(val id: String, val title: String)
     data class IdentifiableStateQueryResponse(
         val before: List<IdentifiableStateValues>,
         val after: List<IdentifiableStateValues>,

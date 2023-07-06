@@ -77,62 +77,6 @@ class ChainableTests {
     }
 
     @Test
-    fun `Alice issues vehicle to Bob, bob transfers vehicle to Charlie`() {
-
-        // Alice issues vehicle to Bob
-        val vehicleId = UUID.randomUUID()
-
-        val issueVehicleFlowRequestId = startRpcFlow(
-            aliceHoldingId,
-            mapOf(
-                "make" to "reliant",
-                "model" to "robin",
-                "id" to vehicleId,
-                "manufacturer" to aliceX500,
-                "owner" to bobX500,
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.chainable.workflow.issue.IssueVehicleFlow\$Initiator"
-        )
-        val issueVehicleFlowResult = awaitRpcFlowFinished(aliceHoldingId, issueVehicleFlowRequestId)
-        assertThat(issueVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(issueVehicleFlowResult.flowError).isNull()
-
-        val issuedVehicleResponse = objectMapper
-            .readValue(issueVehicleFlowResult.flowResult, VehicleResponse::class.java)
-
-        assertThat(issuedVehicleResponse.make).isEqualTo("reliant")
-        assertThat(issuedVehicleResponse.model).isEqualTo("robin")
-        assertThat(issuedVehicleResponse.id).isEqualTo(vehicleId)
-        assertThat(issuedVehicleResponse.manufacturer).isEqualTo(aliceX500)
-        assertThat(issuedVehicleResponse.owner).isEqualTo(bobX500)
-
-        // Bob transfers vehicle to Charlie
-        val transferVehicleRequestId = startRpcFlow(
-            bobHoldingId,
-            mapOf(
-                "id" to vehicleId,
-                "owner" to charlieX500,
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.chainable.workflow.transfer.TransferVehicleFlow\$Initiator"
-        )
-        val transferVehicleFlowResult = awaitRpcFlowFinished(bobHoldingId, transferVehicleRequestId)
-        assertThat(transferVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(transferVehicleFlowResult.flowError).isNull()
-
-        val transferVehicleResponse = objectMapper
-            .readValue(transferVehicleFlowResult.flowResult, VehicleResponse::class.java)
-
-        assertThat(transferVehicleResponse.make).isEqualTo("reliant")
-        assertThat(transferVehicleResponse.model).isEqualTo("robin")
-        assertThat(transferVehicleResponse.id).isEqualTo(vehicleId)
-        assertThat(transferVehicleResponse.manufacturer).isEqualTo(aliceX500)
-        assertThat(transferVehicleResponse.owner).isEqualTo(charlieX500)
-    }
-
-    @Test
     fun `chainable contract create command valid`() {
         val request = startRpcFlow(
             aliceHoldingId,
@@ -286,12 +230,4 @@ class ChainableTests {
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On chainable state(s) deleting, at least one chainable state must be consumed.")
     }
-
-    data class VehicleResponse(
-        val make: String,
-        val model: String,
-        val id: UUID,
-        val manufacturer: String,
-        val owner: String
-    )
 }

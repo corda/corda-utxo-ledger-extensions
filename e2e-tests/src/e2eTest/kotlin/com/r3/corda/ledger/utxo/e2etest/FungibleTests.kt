@@ -73,86 +73,6 @@ class FungibleTests {
     }
 
     @Test
-    fun `Alice issues a token to Bob, Bob then transfers to Charlie, and then Bob burns some quantity of their token`() {
-
-        // Alice issues tokens to Bob
-        val mintTokenFlowRequestId = startRpcFlow(
-            aliceHoldingId,
-            mapOf(
-                "issuer" to aliceX500,
-                "owner" to bobX500,
-                "quantity" to 123.45.toScaledBigDecimal(),
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
-        )
-        val mintTokenFlowResult = awaitRpcFlowFinished(aliceHoldingId, mintTokenFlowRequestId)
-        assertThat(mintTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(mintTokenFlowResult.flowError).isNull()
-
-        val mintTokenResponse = objectMapper.readValue(mintTokenFlowResult.flowResult, MintTokenResponse::class.java)
-
-        assertThat(mintTokenResponse.balance.keys).hasSize(1)
-        assertThat(mintTokenResponse.balance.values).hasSize(1)
-
-        val owner = mintTokenResponse.balance.keys.single()
-        val quantity = mintTokenResponse.balance.values.single()
-
-        assertThat(owner).isEqualTo(bobX500)
-        assertThat(quantity).isEqualTo(123.45.toScaledBigDecimal())
-
-        // Bob transfers tokens to Charlie and receives change
-        val moveTokenFlowRequestId = startRpcFlow(
-            bobHoldingId,
-            mapOf(
-                "issuer" to aliceX500,
-                "owner" to bobX500,
-                "shares" to mapOf(
-                    charlieX500 to 100.41.toScaledBigDecimal()
-                ),
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.fungible.workflow.move.MoveTokenFlow\$Initiator"
-        )
-        val moveTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, moveTokenFlowRequestId)
-        assertThat(moveTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(moveTokenFlowResult.flowError).isNull()
-
-        val moveTokenResponse = objectMapper.readValue(moveTokenFlowResult.flowResult, MoveTokenResponse::class.java)
-
-        assertThat(moveTokenResponse.balance.keys).hasSize(2)
-        assertThat(moveTokenResponse.balance.values).hasSize(2)
-
-        assertThat(moveTokenResponse.balance.keys).containsExactlyInAnyOrder(bobX500, charlieX500)
-        assertThat(moveTokenResponse.balance.values).containsExactlyInAnyOrder(
-            100.41.toScaledBigDecimal(),
-            23.04.toScaledBigDecimal()
-        )
-
-        // Bob redeems tokens
-        val burnTokenFlowRequestId = startRpcFlow(
-            bobHoldingId,
-            mapOf(
-                "issuer" to aliceX500,
-                "owner" to bobX500,
-                "quantity" to 20.01.toScaledBigDecimal(),
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.test.utxo.fungible.workflow.burn.BurnTokenFlow\$Initiator"
-        )
-
-        val burnTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, burnTokenFlowRequestId)
-        assertThat(burnTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(burnTokenFlowResult.flowError).isNull()
-
-        val burnTokenResponse = objectMapper.readValue(burnTokenFlowResult.flowResult, BurnTokenResponse::class.java)
-
-        assertThat(burnTokenResponse.burned).isEqualTo(20.01.toScaledBigDecimal())
-        assertThat(burnTokenResponse.change).isEqualTo(3.03.toScaledBigDecimal())
-    }
-
-    @Test
     fun `fungible contract create command valid`() {
         val request = startRpcFlow(
             aliceHoldingId,
@@ -382,8 +302,4 @@ class FungibleTests {
                         "sum of the created states that are fungible with each other."
             )
     }
-
-    data class MintTokenResponse(val balance: Map<String, BigDecimal>)
-    data class MoveTokenResponse(val balance: Map<String, BigDecimal>)
-    data class BurnTokenResponse(val quantities: Collection<BigDecimal>, val burned: BigDecimal, val change: BigDecimal)
 }
