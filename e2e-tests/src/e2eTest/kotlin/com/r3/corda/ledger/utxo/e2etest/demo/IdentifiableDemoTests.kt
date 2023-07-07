@@ -83,7 +83,7 @@ class IdentifiableDemoTests {
                 "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, issueSupportTicketRequestId)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -100,7 +100,7 @@ class IdentifiableDemoTests {
                 "status" to "OPEN",
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
         )
         val openFlowResult = awaitRpcFlowFinished(bobHoldingId, openSupportTicketRequestId)
         assertThat(openFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -120,7 +120,7 @@ class IdentifiableDemoTests {
                 "status" to "DONE",
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
         )
         val doneFlowResult = awaitRpcFlowFinished(bobHoldingId, doneSupportTicketRequestId)
         assertThat(doneFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -139,7 +139,7 @@ class IdentifiableDemoTests {
                 "assignee" to bobX500,
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.delete.DeleteSupportTicketFlow\$Initiator"
+            "com.r3.corda.demo.utxo.identifiable.workflow.delete.DeleteSupportTicketFlow\$Initiator"
         )
 
         val deleteSupportTicketResult = awaitRpcFlowFinished(aliceHoldingId, deleteSupportTicketRequestId)

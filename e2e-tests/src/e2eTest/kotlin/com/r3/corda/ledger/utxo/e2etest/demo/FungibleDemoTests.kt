@@ -86,7 +86,7 @@ class FungibleDemoTests {
                 "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
+            "com.r3.corda.demo.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
         )
         val mintTokenFlowResult = awaitRpcFlowFinished(aliceHoldingId, mintTokenFlowRequestId)
         assertThat(mintTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -114,7 +114,7 @@ class FungibleDemoTests {
                 ),
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.move.MoveTokenFlow\$Initiator"
+            "com.r3.corda.demo.utxo.fungible.workflow.move.MoveTokenFlow\$Initiator"
         )
         val moveTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, moveTokenFlowRequestId)
         assertThat(moveTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -140,7 +140,7 @@ class FungibleDemoTests {
                 "quantity" to 20.01.toScaledBigDecimal(),
                 "observers" to emptyList<String>()
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.burn.BurnTokenFlow\$Initiator"
+            "com.r3.corda.demo.utxo.fungible.workflow.burn.BurnTokenFlow\$Initiator"
         )
 
         val burnTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, burnTokenFlowRequestId)
