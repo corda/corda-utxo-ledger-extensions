@@ -76,7 +76,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.test.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -96,7 +96,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.test.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.WellKnownIssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -119,7 +119,7 @@ class IssuableTests {
                 "rule" to "VALID",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -135,7 +135,7 @@ class IssuableTests {
                 "rule" to "CONTRACT_RULE_CREATE_SIGNATORIES",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -152,7 +152,7 @@ class IssuableTests {
                 "rule" to "VALID",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -168,7 +168,7 @@ class IssuableTests {
                 "rule" to "CONTRACT_RULE_DELETE_SIGNATORIES",
                 "issuer" to bobX500
             ),
-            "com.r3.corda.test.utxo.issuable.workflow.testing.IssuableContractTestFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)

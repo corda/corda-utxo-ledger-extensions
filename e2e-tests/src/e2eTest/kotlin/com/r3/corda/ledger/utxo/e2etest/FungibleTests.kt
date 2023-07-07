@@ -80,7 +80,7 @@ class FungibleTests {
                 "command" to "CREATE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -95,7 +95,7 @@ class FungibleTests {
                 "command" to "CREATE",
                 "rule" to "CONTRACT_RULE_CREATE_OUTPUTS"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -110,7 +110,7 @@ class FungibleTests {
                 "command" to "CREATE",
                 "rule" to "CONTRACT_RULE_CREATE_POSITIVE_QUANTITIES"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -127,7 +127,7 @@ class FungibleTests {
                 "command" to "UPDATE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -142,7 +142,7 @@ class FungibleTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_INPUTS"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -157,7 +157,7 @@ class FungibleTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_OUTPUTS"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -172,7 +172,7 @@ class FungibleTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_POSITIVE_QUANTITIES"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -188,7 +188,7 @@ class FungibleTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_SUM"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -207,7 +207,7 @@ class FungibleTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_GROUP_SUM"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -226,7 +226,7 @@ class FungibleTests {
                 "command" to "DELETE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -241,7 +241,7 @@ class FungibleTests {
                 "command" to "DELETE",
                 "rule" to "CONTRACT_RULE_DELETE_INPUTS"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -256,7 +256,7 @@ class FungibleTests {
                 "command" to "DELETE",
                 "rule" to "CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -273,7 +273,7 @@ class FungibleTests {
                 "command" to "DELETE",
                 "rule" to "CONTRACT_RULE_DELETE_SUM"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -292,7 +292,7 @@ class FungibleTests {
                 "command" to "DELETE",
                 "rule" to "CONTRACT_RULE_DELETE_GROUP_SUM"
             ),
-            "com.r3.corda.test.utxo.fungible.workflow.testing.FungibleContractTestFlow"
+            "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)

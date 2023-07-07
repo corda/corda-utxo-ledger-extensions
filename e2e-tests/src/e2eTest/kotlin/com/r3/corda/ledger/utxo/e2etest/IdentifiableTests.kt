@@ -77,7 +77,7 @@ class IdentifiableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.test.utxo.identifiable.workflow.query.IdentifiableStateQueryFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -104,7 +104,7 @@ class IdentifiableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.test.utxo.identifiable.workflow.query.IdentifiablePointerFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiablePointerFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -133,7 +133,7 @@ class IdentifiableTests {
                 "command" to "CREATE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -148,7 +148,7 @@ class IdentifiableTests {
                 "command" to "CREATE",
                 "rule" to "CONTRACT_RULE_CREATE_OUTPUTS"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -164,7 +164,7 @@ class IdentifiableTests {
                 "command" to "UPDATE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -179,7 +179,7 @@ class IdentifiableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_INPUTS"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -195,7 +195,7 @@ class IdentifiableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_OUTPUTS"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -211,7 +211,7 @@ class IdentifiableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -232,7 +232,7 @@ class IdentifiableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -251,7 +251,7 @@ class IdentifiableTests {
                 "command" to "DELETE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -266,7 +266,7 @@ class IdentifiableTests {
                 "command" to "DELETE",
                 "rule" to "CONTRACT_RULE_DELETE_INPUTS"
             ),
-            "com.r3.corda.test.utxo.identifiable.workflow.testing.IdentifiableContractTestFlow"
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)

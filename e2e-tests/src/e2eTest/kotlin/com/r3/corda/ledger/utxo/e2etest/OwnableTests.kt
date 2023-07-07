@@ -76,7 +76,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.test.utxo.ownable.workflow.query.OwnableStateQueryFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.OwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -96,7 +96,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.test.utxo.ownable.workflow.query.WellKnownOwnableStateQueryFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.WellKnownOwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -119,7 +119,7 @@ class OwnableTests {
                 "rule" to "VALID",
                 "owner" to bobX500
             ),
-            "com.r3.corda.test.utxo.ownable.workflow.testing.OwnableContractTestFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.OwnableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -135,7 +135,7 @@ class OwnableTests {
                 "rule" to "CONTRACT_RULE_UPDATE_SIGNATORIES",
                 "owner" to bobX500
             ),
-            "com.r3.corda.test.utxo.ownable.workflow.testing.OwnableContractTestFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.OwnableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)

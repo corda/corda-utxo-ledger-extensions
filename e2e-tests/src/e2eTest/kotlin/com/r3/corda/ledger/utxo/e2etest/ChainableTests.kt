@@ -84,7 +84,7 @@ class ChainableTests {
                 "command" to "CREATE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -99,7 +99,7 @@ class ChainableTests {
                 "command" to "CREATE",
                 "rule" to "CONTRACT_RULE_CREATE_OUTPUTS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -114,7 +114,7 @@ class ChainableTests {
                 "command" to "CREATE",
                 "rule" to "CONTRACT_RULE_CREATE_POINTERS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -129,7 +129,7 @@ class ChainableTests {
                 "command" to "UPDATE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -144,7 +144,7 @@ class ChainableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_INPUTS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -159,7 +159,7 @@ class ChainableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_OUTPUTS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -174,7 +174,7 @@ class ChainableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_POINTERS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -190,7 +190,7 @@ class ChainableTests {
                 "command" to "UPDATE",
                 "rule" to "CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
@@ -209,7 +209,7 @@ class ChainableTests {
                 "command" to "DELETE",
                 "rule" to "VALID"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -224,7 +224,7 @@ class ChainableTests {
                 "command" to "DELETE",
                 "rule" to "CONTRACT_RULE_DELETE_INPUTS"
             ),
-            "com.r3.corda.test.utxo.chainable.workflow.testing.ChainableContractTestFlow"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
         val response = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
