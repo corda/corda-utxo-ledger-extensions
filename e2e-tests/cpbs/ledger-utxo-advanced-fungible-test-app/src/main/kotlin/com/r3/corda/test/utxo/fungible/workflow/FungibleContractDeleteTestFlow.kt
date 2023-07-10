@@ -33,6 +33,9 @@ class FungibleContractDeleteTestFlow(
     @Suspendable
     override fun call(): List<StateAndRef<*>> {
         val key = memberLookup.myInfo().firstLedgerKey
+        val states = stateAndRefs.map { it.state.contractState }
+        val fungibleStateAStateAndRef = states.filterIsInstance<MyFungibleStateA>().single()
+        val fungibleStateBStateAndRef = states.filterIsInstance<MyFungibleStateB>().single()
         val (inputs, outputs) = when (rule) {
             "CONTRACT_RULE_DELETE_INPUTS" -> {
                 stateAndRefs
@@ -41,42 +44,24 @@ class FungibleContractDeleteTestFlow(
             }
             "CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES" -> {
                 stateAndRefs.map { it.ref } to listOf(
-                    MyFungibleStateA(
-                        quantity = NumericInteger.ZERO,
-                        owner = key
-                    ),
-                    MyFungibleStateB(
-                        quantity = NumericInteger.TEN,
-                        owner = key
-                    )
+                    fungibleStateAStateAndRef.copy(quantity = NumericInteger.ZERO),
+                    fungibleStateBStateAndRef.copy()
                 )
             }
             "CONTRACT_RULE_DELETE_SUM" -> {
                 stateAndRefs.map { it.ref } to listOf(
-                    MyFungibleStateA(
-                        quantity = NumericInteger.ONE,
-                        owner = key
-                    ),
-                    MyFungibleStateB(
-                        quantity = NumericInteger.TEN,
-                        owner = key
-                    )
+                    fungibleStateAStateAndRef.copy(),
+                    fungibleStateBStateAndRef.copy()
                 )
             }
+            // Must be more inputs (deleted) states than outputs (created) per group.
+            // Fungible state A has increased compared to the input of state A so fails the check.
             "CONTRACT_RULE_DELETE_GROUP_SUM" -> {
+                val total = (fungibleStateAStateAndRef.quantity + fungibleStateBStateAndRef.quantity).unscaledValue.toLong()
                 stateAndRefs.map { it.ref } to listOf(
-                    MyFungibleStateA(
-                        quantity = NumericInteger(BigInteger.valueOf(2)),
-                        owner = key
-                    ),
-                    MyFungibleStateB(
-                        quantity = NumericInteger(BigInteger.valueOf(3)),
-                        owner = key
-                    ),
-                    MyFungibleStateB(
-                        quantity = NumericInteger(BigInteger.valueOf(4)),
-                        owner = key
-                    ),
+                    fungibleStateAStateAndRef.copy(quantity = fungibleStateAStateAndRef.quantity + NumericInteger.ONE),
+                    fungibleStateBStateAndRef.copy(quantity = NumericInteger(BigInteger.valueOf(total / 2 - 1))),
+                    fungibleStateBStateAndRef.copy(quantity = NumericInteger(BigInteger.valueOf((total / 2) - 1))),
                 )
             }
             "VALID" -> {
