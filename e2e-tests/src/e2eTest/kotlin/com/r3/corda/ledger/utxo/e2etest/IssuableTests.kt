@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.corda.e2etest.utilities.RPC_FLOW_STATUS_FAILED
 import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
@@ -23,8 +24,8 @@ import java.util.UUID
 class IssuableTests {
 
     private companion object {
-        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-issuable-demo-app"
-        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-issuable-demo-app.cpb"
+        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-issuable-test-app"
+        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-issuable-test-app.cpb"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -75,7 +76,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.issuable.workflow.query.IssuableStateQueryFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -95,7 +96,7 @@ class IssuableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.issuable.workflow.query.WellKnownIssuableStateQueryFlow"
+            "com.r3.corda.test.utxo.issuable.workflow.WellKnownIssuableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -107,6 +108,72 @@ class IssuableTests {
         assertThat(response.before).isEmpty()
         assertThat(response.after).hasSize(2)
         assertThat(response.consumed).isEmpty()
+    }
+
+    @Test
+    fun `Issuable contract create command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "VALID",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `Issuable contract create command CONTRACT_RULE_CREATE_SIGNATORIES fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "CONTRACT_RULE_CREATE_SIGNATORIES",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains("On issuable state(s) creating, the issuer of every created issuable state must sign the transaction.")
+    }
+
+    @Test
+    fun `Issuable contract delete command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "VALID",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `Issuable contract delete command CONTRACT_RULE_DELETE_SIGNATORIES fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "CONTRACT_RULE_DELETE_SIGNATORIES",
+                "issuer" to bobX500
+            ),
+            "com.r3.corda.test.utxo.issuable.workflow.IssuableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains("On issuable state(s) deleting, the issuer of every consumed issuable state must sign the transaction.")
     }
 
     data class IssuableStateQueryResponse(

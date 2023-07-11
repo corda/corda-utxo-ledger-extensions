@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.corda.e2etest.utilities.RPC_FLOW_STATUS_FAILED
 import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
@@ -23,8 +24,8 @@ import java.util.UUID
 class OwnableTests {
 
     private companion object {
-        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-ownable-demo-app"
-        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-ownable-demo-app.cpb"
+        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-ownable-test-app"
+        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-ownable-test-app.cpb"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -75,7 +76,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.ownable.workflow.query.OwnableStateQueryFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.OwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -95,7 +96,7 @@ class OwnableTests {
         val request = startRpcFlow(
             aliceHoldingId,
             mapOf(),
-            "com.r3.corda.demo.utxo.ownable.workflow.query.WellKnownOwnableStateQueryFlow"
+            "com.r3.corda.test.utxo.ownable.workflow.WellKnownOwnableStateQueryFlow"
         )
         val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, request)
         assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
@@ -107,6 +108,39 @@ class OwnableTests {
         assertThat(response.before).isEmpty()
         assertThat(response.after).hasSize(2)
         assertThat(response.consumed).isEmpty()
+    }
+
+    @Test
+    fun `Ownable contract update command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "VALID",
+                "owner" to bobX500
+            ),
+            "com.r3.corda.test.utxo.ownable.workflow.OwnableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `Ownable contract update command CONTRACT_RULE_UPDATE_SIGNATORIES fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "CONTRACT_RULE_UPDATE_SIGNATORIES",
+                "owner" to bobX500
+            ),
+            "com.r3.corda.test.utxo.ownable.workflow.OwnableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains("On ownable state(s) updating, the owner of every consumed ownable state must sign the transaction.")
     }
 
     data class OwnableStateQueryResponse(
