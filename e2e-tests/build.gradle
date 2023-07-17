@@ -61,11 +61,15 @@ dependencies {
         }
     }
 
-    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-fungible-demo-app', configuration: 'cordaCPB')
-    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-identifiable-demo-app', configuration: 'cordaCPB')
-    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-issuable-demo-app', configuration: 'cordaCPB')
-    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-chainable-demo-app', configuration: 'cordaCPB')
-    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-ownable-demo-app', configuration: 'cordaCPB')
+    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-fungible-test-app', configuration: 'cordaCPB')
+    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-identifiable-test-app', configuration: 'cordaCPB')
+    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-issuable-test-app', configuration: 'cordaCPB')
+    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-chainable-test-app', configuration: 'cordaCPB')
+    cpis project(path: ':e2e-tests:cpbs:ledger-utxo-advanced-ownable-test-app', configuration: 'cordaCPB')
+
+    cpis project(path: ':examples:ledger-utxo-advanced-fungible-demo-app', configuration: 'cordaCPB')
+    cpis project(path: ':examples:ledger-utxo-advanced-identifiable-demo-app', configuration: 'cordaCPB')
+    cpis project(path: ':examples:ledger-utxo-advanced-chainable-demo-app', configuration: 'cordaCPB')
 
     e2eTestImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     e2eTestImplementation libs.jackson.module
