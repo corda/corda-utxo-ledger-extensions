@@ -115,7 +115,11 @@ public final class FungibleConstraints {
         Check.isNotEmpty(inputs, CONTRACT_RULE_UPDATE_INPUTS);
         Check.isNotEmpty(outputs, CONTRACT_RULE_UPDATE_OUTPUTS);
         Check.all(outputs, it -> it.getQuantity().getUnscaledValue().compareTo(BigInteger.ZERO) > 0, CONTRACT_RULE_UPDATE_POSITIVE_QUANTITIES);
-        Check.isEqual(FungibleUtils.sum(inputs), FungibleUtils.sum(outputs), CONTRACT_RULE_UPDATE_SUM);
+
+        BigInteger inputsSum = FungibleUtils.sum(inputs);
+        BigInteger outputsSum = FungibleUtils.sum(outputs);
+
+        Check.isEqual(inputsSum, outputsSum, CONTRACT_RULE_UPDATE_SUM);
 
         for (final T input : inputs) {
 
@@ -174,6 +178,7 @@ public final class FungibleConstraints {
 
         Check.isNotEmpty(inputs, CONTRACT_RULE_DELETE_INPUTS);
         Check.all(outputs, it -> it.getQuantity().getUnscaledValue().compareTo(BigInteger.ZERO) > 0, CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES);
+
         Check.isGreaterThan(FungibleUtils.sum(inputs), FungibleUtils.sum(outputs), CONTRACT_RULE_DELETE_SUM);
 
         // We have to check all inputs and outputs, because we might create an extra output for which there is no input.

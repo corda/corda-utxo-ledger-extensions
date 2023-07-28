@@ -2,6 +2,7 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.corda.e2etest.utilities.RPC_FLOW_STATUS_FAILED
 import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
@@ -23,8 +24,8 @@ import java.util.UUID
 class ChainableTests {
 
     private companion object {
-        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-chainable-demo-app"
-        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-chainable-demo-app.cpb"
+        const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-chainable-test-app"
+        const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-chainable-test-app.cpb"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -76,66 +77,157 @@ class ChainableTests {
     }
 
     @Test
-    fun `Alice issues vehicle to Bob, bob transfers vehicle to Charlie`() {
-
-        // Alice issues vehicle to Bob
-        val vehicleId = UUID.randomUUID()
-
-        val issueVehicleFlowRequestId = startRpcFlow(
+    fun `chainable contract create command valid`() {
+        val request = startRpcFlow(
             aliceHoldingId,
             mapOf(
-                "make" to "reliant",
-                "model" to "robin",
-                "id" to vehicleId,
-                "manufacturer" to aliceX500,
-                "owner" to bobX500,
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
-                "observers" to emptyList<String>()
+                "command" to "CREATE",
+                "rule" to "VALID"
             ),
-            "com.r3.corda.demo.utxo.chainable.workflow.issue.IssueVehicleFlow\$Initiator"
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val issueVehicleFlowResult = awaitRpcFlowFinished(aliceHoldingId, issueVehicleFlowRequestId)
-        assertThat(issueVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(issueVehicleFlowResult.flowError).isNull()
-
-        val issuedVehicleResponse = objectMapper
-            .readValue(issueVehicleFlowResult.flowResult, VehicleResponse::class.java)
-
-        assertThat(issuedVehicleResponse.make).isEqualTo("reliant")
-        assertThat(issuedVehicleResponse.model).isEqualTo("robin")
-        assertThat(issuedVehicleResponse.id).isEqualTo(vehicleId)
-        assertThat(issuedVehicleResponse.manufacturer).isEqualTo(aliceX500)
-        assertThat(issuedVehicleResponse.owner).isEqualTo(bobX500)
-
-        // Bob transfers vehicle to Charlie
-        val transferVehicleRequestId = startRpcFlow(
-            bobHoldingId,
-            mapOf(
-                "id" to vehicleId,
-                "owner" to charlieX500,
-                "observers" to emptyList<String>()
-            ),
-            "com.r3.corda.demo.utxo.chainable.workflow.transfer.TransferVehicleFlow\$Initiator"
-        )
-        val transferVehicleFlowResult = awaitRpcFlowFinished(bobHoldingId, transferVehicleRequestId)
-        assertThat(transferVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
-        assertThat(transferVehicleFlowResult.flowError).isNull()
-
-        val transferVehicleResponse = objectMapper
-            .readValue(transferVehicleFlowResult.flowResult, VehicleResponse::class.java)
-
-        assertThat(transferVehicleResponse.make).isEqualTo("reliant")
-        assertThat(transferVehicleResponse.model).isEqualTo("robin")
-        assertThat(transferVehicleResponse.id).isEqualTo(vehicleId)
-        assertThat(transferVehicleResponse.manufacturer).isEqualTo(aliceX500)
-        assertThat(transferVehicleResponse.owner).isEqualTo(charlieX500)
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
     }
 
-    data class VehicleResponse(
-        val make: String,
-        val model: String,
-        val id: UUID,
-        val manufacturer: String,
-        val owner: String
-    )
+    @Test
+    fun `chainable contract create command CONTRACT_RULE_CREATE_OUTPUTS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "CONTRACT_RULE_CREATE_OUTPUTS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) creating, at least one chainable state must be created.")
+    }
+
+    @Test
+    fun `chainable contract create command CONTRACT_RULE_CREATE_POINTERS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "CREATE",
+                "rule" to "CONTRACT_RULE_CREATE_POINTERS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) creating, the previous state pointer of every created chainable state must be null.")
+    }
+
+    @Test
+    fun `chainable contract update command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "VALID"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `chainable contract update command CONTRACT_RULE_UPDATE_INPUTS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "CONTRACT_RULE_UPDATE_INPUTS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) updating, at least one chainable state must be consumed.")
+    }
+
+    @Test
+    fun `chainable contract update command CONTRACT_RULE_UPDATE_OUTPUTS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "CONTRACT_RULE_UPDATE_OUTPUTS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) updating, at least one chainable state must be created.")
+    }
+
+    @Test
+    fun `chainable contract update command CONTRACT_RULE_UPDATE_POINTERS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "CONTRACT_RULE_UPDATE_POINTERS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains("On chainable state(s) updating, the previous state pointer of every created chainable state must not be null.")
+    }
+
+    @Test
+    fun `chainable contract update command CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains(
+                "On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly " +
+                        "one consumed chainable state, exclusively."
+            )
+    }
+
+    @Test
+    fun `chainable contract delete command valid`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "VALID"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        assertThat(response.flowError).isNull()
+    }
+
+    @Test
+    fun `chainable contract delete command CONTRACT_RULE_DELETE_INPUTS fails`() {
+        val request = startRpcFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "DELETE",
+                "rule" to "CONTRACT_RULE_DELETE_INPUTS"
+            ),
+            "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
+        )
+        val response = awaitRpcFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message).contains("On chainable state(s) deleting, at least one chainable state must be consumed.")
+    }
 }
