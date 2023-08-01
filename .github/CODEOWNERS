@@ -1,2 +1,6 @@
-# Reduced list for the duration of 5.0 code freeze 
-* @mnesbit @driessamyn @ronanbrowne @rick-r3 @fenryka @yarivus 
+* @corda/ledger
+*.gradle           @corda/blt
+gradle.properties  @corda/corda5-team-leads
+Jenkinsfile        @corda/blt
+.ci/*              @corda/blt
+gradle/*           @corda/blt
