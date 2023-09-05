@@ -20,8 +20,6 @@ dependencies {
     cordaProvided 'net.corda:corda-base'
     cordaProvided 'net.corda:corda-ledger-utxo'
 
-    testImplementation project(':testing')
-
     testImplementation 'org.jetbrains.kotlin:kotlin-osgi-bundle'
     testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"

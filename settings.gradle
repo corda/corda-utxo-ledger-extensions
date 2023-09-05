@@ -30,6 +30,19 @@ pluginManagement {
                 }
             }
             maven {
+                url "$artifactoryContextUrl/corda-os-maven-unstable"
+                authentication {
+                    basic(BasicAuthentication)
+                }
+                credentials {
+                    username = settings.ext.find('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
+                    password = settings.ext.find('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
+                }
+                content {
+                    includeGroupByRegex 'com\\.r3\\.internal(\\..*)?'
+                }
+            }
+            maven {
                 url "$artifactoryContextUrl/engineering-tools-maven"
                 credentials {
                     username = settings.ext.find('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
@@ -92,7 +105,6 @@ include 'fungible'
 include 'identifiable'
 include 'issuable'
 include 'ownable'
-include 'testing'
 
 gradleEnterprise {
     server = gradleEnterpriseUrl
