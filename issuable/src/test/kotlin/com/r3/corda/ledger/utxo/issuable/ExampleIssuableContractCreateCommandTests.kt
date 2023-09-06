@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 class ExampleIssuableContractCreateCommandTests : ContractTest() {
 
     private val state = ExampleIssuableState(aliceKey)
-    private val contract = ExampleIssuableContract()
 
     @Test
     fun `On issuable state(s) creating, the transaction should verify successfully`() {

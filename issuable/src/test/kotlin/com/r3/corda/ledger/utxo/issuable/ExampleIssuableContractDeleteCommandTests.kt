@@ -3,13 +3,10 @@ package com.r3.corda.ledger.utxo.issuable
 import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
 
 class ExampleIssuableContractDeleteCommandTests : ContractTest() {
 
     private val state = ExampleIssuableState(aliceKey)
-    private val contract = ExampleIssuableContract()
 
     @Test
     fun `On issuable state(s) deleting, the transaction should verify successfully`() {

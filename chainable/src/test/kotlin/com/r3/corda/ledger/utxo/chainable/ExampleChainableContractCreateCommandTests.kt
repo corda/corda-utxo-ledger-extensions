@@ -2,7 +2,6 @@ package com.r3.corda.ledger.utxo.chainable
 
 import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
-import com.r3.corda.ledger.utxo.testing.ContractTestUtils.createRandomStateRef
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
@@ -10,6 +9,7 @@ import kotlin.test.assertEquals
 class ExampleChainableContractCreateCommandTests : ContractTest() {
 
     private val state = ExampleChainableState(aliceKey, bobKey, null)
+    private val anotherState = ExampleChainableState(aliceKey, bobKey, null)
     private val contract = ExampleChainableContract()
 
     @Test
@@ -58,11 +58,15 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
     fun `On chainable state(s) creating, the previous state pointer of every created chainable state must be null`() {
 
         // Arrange
-        val transaction = buildTransaction {
-            addOutputState(state.next(createRandomStateRef()))
+        val transaction1 = buildTransaction {
+            addOutputState(anotherState)
+            addCommand(ExampleChainableContract.Create())
+        }
+        val transaction2 = buildTransaction {
+            addOutputState(state.next(transaction1.outputStateAndRefs.single().ref))
             addCommand(ExampleChainableContract.Create())
         }
 
-        assertFailsWith(transaction, ChainableConstraints.CONTRACT_RULE_CREATE_POINTERS)
+        assertFailsWith(transaction2, ChainableConstraints.CONTRACT_RULE_CREATE_POINTERS)
     }
 }

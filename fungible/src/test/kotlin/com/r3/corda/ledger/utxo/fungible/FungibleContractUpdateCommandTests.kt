@@ -8,7 +8,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
 
     private val stateA = ExampleFungibleStateA(aliceKey, bobKey, NumericDecimal.TEN)
     private val stateB = ExampleFungibleStateB(aliceKey, bobKey, NumericDecimal.TEN)
-    private val contract = ExampleFungibleContract()
 
     @Test
     fun `On fungible state(s) updating, the transaction should verify successfully`() {
