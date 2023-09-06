@@ -2,43 +2,51 @@ package com.r3.corda.ledger.utxo.identifiable
 
 import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
-import com.r3.corda.ledger.utxo.testing.randomStateRef
+//import com.r3.corda.ledger.utxo.testing.randomStateRef
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
 
-    private val state = ExampleIdentifiableState(ALICE_KEY, BOB_KEY, null)
+    private val state = ExampleIdentifiableState(aliceKey, bobKey, null)
+    private val anotherState = ExampleIdentifiableState(aliceKey, bobKey, null)
     private val contract = ExampleIdentifiableContract()
 
     @Test
     fun `On identifiable state(s) updating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val stateRef1 = randomStateRef()
-            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
-            addOutputState(state.copy(id = stateRef1))
+        val transaction1 = buildTransaction {
+            addOutputState(state)
             addCommand(ExampleIdentifiableContract.Update())
         }
+        val transaction2 = buildTransaction {
+            val stateRef1 = transaction1.outputStateAndRefs.single().ref
+            addInputState(stateRef1)
+            addOutputState(state.copy(id = stateRef1))
+            addCommand(ExampleIdentifiableContract.Update())
+        }.toLedgerTransaction()
 
         // Act
-        contract.verify(transaction)
+        contract.verify(transaction2)
     }
 
     @Test
     fun `On identifiable state(s) updating, the transaction should include the Update command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val stateRef1 = randomStateRef()
-            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
-            addOutputState(state.copy(id = stateRef1))
+        val transaction1 = buildTransaction {
+            addOutputState(state)
         }
+        val transaction2 = buildTransaction {
+            val stateRef1 = transaction1.outputStateAndRefs.single().ref
+            addInputState(stateRef1)
+            addOutputState(state.copy(id = stateRef1))
+        }.toLedgerTransaction()
 
         // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction2) }
 
         // Assert
         assertEquals(
@@ -51,10 +59,10 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     fun `On identifiable state(s) updating, at least one identifiable state must be consumed`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addOutputState(state)
             addCommand(ExampleIdentifiableContract.Update())
-        }
+        }.toLedgerTransaction()
 
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
@@ -67,13 +75,17 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     fun `On identifiable state(s) updating, at least one identifiable state must be created`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
             addCommand(ExampleIdentifiableContract.Update())
         }
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
+            addCommand(ExampleIdentifiableContract.Update())
+        }.toLedgerTransaction()
 
         // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction2) }
 
         // Assert
         assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_OUTPUTS, exception.message)
@@ -82,16 +94,20 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively (initial state)`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val stateRef1 = randomStateRef()
-            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+            addCommand(ExampleIdentifiableContract.Update())
+        }
+        val transaction2 = buildTransaction {
+            val stateRef1 = transaction1.outputStateAndRefs.single().ref
+            addInputState(stateRef1)
             addOutputState(state.copy(id = stateRef1))
             addOutputState(state.copy(id = stateRef1))
             addCommand(ExampleIdentifiableContract.Update())
-        }
+        }.toLedgerTransaction()
 
         // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction2) }
 
         // Assert
         assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY, exception.message)
@@ -100,16 +116,24 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively (evolved state)`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val stateRef1 = randomStateRef()
-            addInputState(state.copy(id = stateRef1))
-            addOutputState(state.copy(id = stateRef1))
-            addOutputState(state.copy(id = stateRef1))
+        val transaction1 = buildTransaction {
+            addOutputState(anotherState)
             addCommand(ExampleIdentifiableContract.Update())
         }
+        val transaction2 = buildTransaction {
+            addOutputState(state.copy(id = transaction1.outputStateAndRefs.single().ref))
+            addCommand(ExampleIdentifiableContract.Update())
+        }
+        val transaction3 = buildTransaction {
+            val tx2StateRef = transaction2.outputStateAndRefs.single()
+            addInputState(tx2StateRef.ref)
+            addOutputState(tx2StateRef.state.contractState)
+            addOutputState(tx2StateRef.state.contractState)
+            addCommand(ExampleIdentifiableContract.Update())
+        }.toLedgerTransaction()
 
         // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction3) }
 
         // Assert
         assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY, exception.message)
