@@ -16,7 +16,7 @@ class ExampleSealedDelegatedContractTests : ContractTest() {
 
         // Arrange
         val transaction = buildTransaction {
-            addCommand(ExampleSealedDelegatedContract.ExampleSealedContractCommand.Permitted)
+            addCommand(ExampleSealedDelegatedContract.ExampleSealedContractCommand.Permitted())
         }.toLedgerTransaction()
 
         // Act
@@ -44,7 +44,7 @@ class ExampleSealedDelegatedContractTests : ContractTest() {
     class ExampleSealedDelegatedContract : DelegatedContract<ExampleSealedDelegatedContract.ExampleSealedContractCommand>() {
 
         sealed interface ExampleSealedContractCommand : VerifiableCommand {
-            object Permitted : ExampleSealedContractCommand {
+            class Permitted : ExampleSealedContractCommand {
                 override fun verify(transaction: UtxoLedgerTransaction) {
                 }
             }
