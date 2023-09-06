@@ -8,47 +8,49 @@ import kotlin.test.assertEquals
 
 class ExampleChainableContractDeleteCommandTests : ContractTest() {
 
-    private val state = ExampleChainableState(ALICE_KEY, BOB_KEY, null)
+    private val state = ExampleChainableState(aliceKey, bobKey, null)
     private val contract = ExampleChainableContract()
 
     @Test
     fun `On chainable state(s) deleting, the transaction should verify successfully`() {
-
-        // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
             addCommand(ExampleChainableContract.Delete())
         }
 
-        // Act
-        contract.verify(transaction)
+        // Arrange
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
+            addCommand(ExampleChainableContract.Delete())
+        }
+
+        // Assert
+        assertVerifies(transaction2)
     }
 
     @Test
     fun `On chainable state(s) deleting, the transaction should include the Delete command`() {
-
-        // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        // Arrange
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
+        }
 
         // Assert
-        assertEquals(
-            "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand<? extends com.r3.corda.ledger.utxo.chainable.ChainableState<?>>' must be included in the transaction.\n" +
-                    "The permitted commands include [Create, Update, Delete].", exception.message
-        )
+        assertFailsWith(transaction2, "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand<? extends com.r3.corda.ledger.utxo.chainable.ChainableState<?>>' must be included in the transaction.\n" +
+                "The permitted commands include [Create, Update, Delete].")
     }
 
     @Test
     fun `On chainable state(s) deleting, at least one chainable state must be consumed`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addCommand(ExampleChainableContract.Delete())
-        }
+        }.toLedgerTransaction()
 
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
