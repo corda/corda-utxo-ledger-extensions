@@ -15,7 +15,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)
@@ -66,7 +65,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)
@@ -83,11 +81,9 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction2 = buildTransaction {
             addOutputState(stateA.copy(quantity = NumericDecimal.ZERO))
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction3 = buildTransaction {
             val tx1OutputStateRef = transaction1.outputStateAndRefs.single()
@@ -107,7 +103,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA.copy(quantity = NumericDecimal.ONE))
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)
@@ -125,7 +120,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)
@@ -143,7 +137,6 @@ class FungibleContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Update())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)

@@ -17,7 +17,6 @@ class ExampleOwnableContractTransferCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleOwnableContract.Update)
         }
         val transaction2 = buildTransaction {
             val tx1StateRef = transaction1.outputStateAndRefs.single()
@@ -61,7 +60,6 @@ class ExampleOwnableContractTransferCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleOwnableContract.Update)
         }
         val transaction2 = buildTransaction {
             val tx1StateRef = transaction1.outputStateAndRefs.single()

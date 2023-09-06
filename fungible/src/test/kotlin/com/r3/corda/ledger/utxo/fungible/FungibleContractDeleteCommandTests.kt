@@ -112,7 +112,6 @@ class FungibleContractDeleteCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Delete())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)
@@ -131,7 +130,6 @@ class FungibleContractDeleteCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(stateA)
-            addCommand(ExampleFungibleContract.Delete())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)

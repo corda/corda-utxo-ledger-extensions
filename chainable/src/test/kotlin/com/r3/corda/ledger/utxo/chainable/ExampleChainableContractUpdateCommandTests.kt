@@ -14,7 +14,6 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
 
         val transaction2 = buildTransaction {
@@ -63,7 +62,6 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
 
         val transaction2 = buildTransaction {
@@ -80,7 +78,6 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
 
         val transaction2 = buildTransaction {
@@ -99,11 +96,9 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
         val transaction2 =  buildTransaction {
             addOutputState(anotherState)
-            addCommand(ExampleChainableContract.Update())
         }
         val transaction3 = buildTransaction {
             val inputStateRef = transaction2.outputStateAndRefs.single().ref
@@ -121,11 +116,9 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
         val transaction2 = buildTransaction {
             addOutputState(anotherState)
-            addCommand(ExampleChainableContract.Update())
         }
 
         val transaction3 = buildTransaction {
@@ -144,11 +137,9 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
         val transaction2 = buildTransaction {
             addOutputState(anotherState)
-            addCommand(ExampleChainableContract.Update())
         }
         val transaction3 = buildTransaction {
             val inputStateRef1 = transaction1.outputStateAndRefs.single().ref
@@ -168,7 +159,6 @@ class ExampleChainableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Update())
         }
         val transaction2 = buildTransaction {
             val inputStateRef = transaction1.outputStateAndRefs.single().ref

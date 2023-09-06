@@ -17,7 +17,6 @@ class ExampleIdentifiableContractDeleteCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleIdentifiableContract.Delete())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)

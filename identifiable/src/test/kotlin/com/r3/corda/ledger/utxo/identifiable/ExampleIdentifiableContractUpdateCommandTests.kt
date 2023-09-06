@@ -19,7 +19,6 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleIdentifiableContract.Update())
         }
         val transaction2 = buildTransaction {
             val stateRef1 = transaction1.outputStateAndRefs.single().ref
@@ -77,7 +76,6 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleIdentifiableContract.Update())
         }
         val transaction2 = buildTransaction {
             addInputState(transaction1.outputStateAndRefs.single().ref)
@@ -96,7 +94,6 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleIdentifiableContract.Update())
         }
         val transaction2 = buildTransaction {
             val stateRef1 = transaction1.outputStateAndRefs.single().ref
@@ -118,11 +115,9 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(anotherState)
-            addCommand(ExampleIdentifiableContract.Update())
         }
         val transaction2 = buildTransaction {
             addOutputState(state.copy(id = transaction1.outputStateAndRefs.single().ref))
-            addCommand(ExampleIdentifiableContract.Update())
         }
         val transaction3 = buildTransaction {
             val tx2StateRef = transaction2.outputStateAndRefs.single()

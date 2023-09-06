@@ -60,7 +60,6 @@ class ExampleChainableContractCreateCommandTests : ContractTest() {
         // Arrange
         val transaction1 = buildTransaction {
             addOutputState(anotherState)
-            addCommand(ExampleChainableContract.Create())
         }
         val transaction2 = buildTransaction {
             addOutputState(state.next(transaction1.outputStateAndRefs.single().ref))

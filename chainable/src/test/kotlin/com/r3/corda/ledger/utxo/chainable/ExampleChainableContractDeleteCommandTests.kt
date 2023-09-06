@@ -15,7 +15,6 @@ class ExampleChainableContractDeleteCommandTests : ContractTest() {
     fun `On chainable state(s) deleting, the transaction should verify successfully`() {
         val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleChainableContract.Delete())
         }
 
         // Arrange
