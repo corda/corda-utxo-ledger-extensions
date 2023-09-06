@@ -82,24 +82,9 @@ subprojects {
         mavenLocal()
         maven {
             url = "https://download.corda.net/maven/corda-dependencies"
-            credentials {
-                username = findProperty('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
-                password = findProperty('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
-            }
         }
         maven {
             url = "$artifactoryContextUrl/corda-os-maven"
-            authentication {
-                basic(BasicAuthentication)
-            }
-            credentials {
-                username = findProperty('cordaArtifactoryUsername') ?: System.getenv('CORDA_ARTIFACTORY_USERNAME')
-                password = findProperty('cordaArtifactoryPassword') ?: System.getenv('CORDA_ARTIFACTORY_PASSWORD')
-            }
-        }
-
-        maven {
-            url = "$artifactoryContextUrl/corda-os-maven-unstable"
             authentication {
                 basic(BasicAuthentication)
             }
