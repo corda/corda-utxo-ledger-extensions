@@ -25,4 +25,6 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testImplementation "com.r3.corda.ledger.utxo:contract-testing:$cordaContractTestingVersion"
+    testImplementation "com.r3.corda.ledger.utxo:contract-testing-kotlin:$cordaContractTestingVersion"
 }
