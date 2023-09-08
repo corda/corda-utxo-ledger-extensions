@@ -35,14 +35,11 @@ class DelegatedContractTests : ContractTest() {
 
     @Test
     fun `verify calls onVerify from the concrete implementation of DelegatedContract`() {
-        var onVerifyCalled = false
-        val contract = MyDelegatedContract(isVisible = true, { onVerifyCalled = true })
         val transaction = buildTransaction {
             addCommand(MyVerifiableCommand.One())
-        }.toLedgerTransaction()
+        }
 
-        contract.verify(transaction)
-        assertTrue(onVerifyCalled)
+        assertVerifies(transaction)
     }
 
     @Test
