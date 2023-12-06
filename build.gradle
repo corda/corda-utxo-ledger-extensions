@@ -11,6 +11,17 @@ plugins {
 
 def javaVersion = 11
 
+allprojects {
+    // CORE-17624: We need these notary dependencies at the same version to pass validation checks when building the CPI
+    pluginManager.withPlugin('net.corda.plugins.cordapp-cpb2') {
+        dependencies {
+            cordapp "com.r3.corda.notary.plugin.common:notary-plugin-common:$cordaNotaryPluginsVersion"
+            cordapp "com.r3.corda.notary.plugin.nonvalidating:notary-plugin-non-validating-api:$cordaNotaryPluginsVersion"
+            cordapp "com.r3.corda.notary.plugin.nonvalidating:notary-plugin-non-validating-client:$cordaNotaryPluginsVersion"
+        }
+    }
+}
+
 subprojects {
     group 'com.r3.corda.ledger.utxo'
     if (System.getenv("RELEASE_VERSION")?.trim()) {
@@ -119,6 +130,10 @@ subprojects {
                     includeGroup 'antlr'
                 }
             }
+        }
+
+        maven {
+            url = "https://download.corda.net/maven/corda-dependencies"
         }
     }
 }

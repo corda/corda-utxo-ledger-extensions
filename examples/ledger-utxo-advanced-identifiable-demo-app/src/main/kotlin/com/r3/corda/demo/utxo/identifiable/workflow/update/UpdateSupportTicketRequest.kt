@@ -21,8 +21,8 @@ data class UpdateSupportTicketRequest(
     @Suspendable
     fun getInputState(utxoLedgerService: UtxoLedgerService): StateAndRef<SupportTicket> {
         return utxoLedgerService.query(IdentifiableStateQueries.GET_BY_IDS, StateAndRef::class.java)
-            .setCreatedTimestampLimit(Instant.now()).setLimit(50)
-            .setOffset(0)
+            .setCreatedTimestampLimit(Instant.now())
+            .setLimit(50)
             .setParameter("ids", listOf(id))
             .execute()
             .results
