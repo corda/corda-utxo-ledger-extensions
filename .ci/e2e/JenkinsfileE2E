@@ -6,5 +6,6 @@ endToEndPipeline(
     usePackagedCordaHelmChart: true,
     helmVersion: '^5.0.0-beta',
     dynamicCordaApiVersion: false,
-    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.0.0.0-beta+'
+    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.0.0.0-beta+',
+    javaVersion: '17'
 )
