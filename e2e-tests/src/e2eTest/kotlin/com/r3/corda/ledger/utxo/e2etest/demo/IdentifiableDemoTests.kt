@@ -81,7 +81,7 @@ class IdentifiableDemoTests {
                 "description" to "Build super-duper DLT and call it Corda 5",
                 "reporter" to aliceX500,
                 "assignee" to bobX500,
-                "notary" to notaryX500,
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"

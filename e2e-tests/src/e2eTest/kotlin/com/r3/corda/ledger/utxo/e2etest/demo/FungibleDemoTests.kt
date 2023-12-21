@@ -84,7 +84,7 @@ class FungibleDemoTests {
                 "issuer" to aliceX500,
                 "owner" to bobX500,
                 "quantity" to 123.45.toScaledBigDecimal(),
-                "notary" to notaryX500,
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
