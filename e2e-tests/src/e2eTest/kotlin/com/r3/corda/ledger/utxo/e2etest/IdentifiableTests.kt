@@ -27,6 +27,7 @@ class IdentifiableTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-identifiable-test-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-identifiable-test-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -68,7 +69,7 @@ class IdentifiableTests {
 
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test

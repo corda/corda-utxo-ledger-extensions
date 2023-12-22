@@ -19,7 +19,4 @@ dependencies {
     cordaProvided 'net.corda:corda-ledger-utxo'
 
     cordapp project(':e2e-tests:cpbs:ledger-utxo-advanced-identifiable-test-contract')
-
-    // Common and API packages pulled in as transitive dependencies through client
-    cordapp "com.r3.corda.notary.plugin.nonvalidating:notary-plugin-non-validating-client:$cordaNotaryPluginsVersion"
 }

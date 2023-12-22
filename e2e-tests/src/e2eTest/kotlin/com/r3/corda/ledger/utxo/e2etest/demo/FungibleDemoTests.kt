@@ -19,6 +19,7 @@ class FungibleDemoTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-fungible-demo-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-fungible-demo-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -70,7 +71,7 @@ class FungibleDemoTests {
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
         registerStaticMember(charlieHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test
@@ -83,7 +84,7 @@ class FungibleDemoTests {
                 "issuer" to aliceX500,
                 "owner" to bobX500,
                 "quantity" to 123.45.toScaledBigDecimal(),
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"

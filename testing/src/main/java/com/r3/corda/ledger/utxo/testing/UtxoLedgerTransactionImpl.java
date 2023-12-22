@@ -3,7 +3,6 @@ package com.r3.corda.ledger.utxo.testing;
 import net.corda.v5.base.types.MemberX500Name;
 import net.corda.v5.crypto.SecureHash;
 import net.corda.v5.ledger.common.transaction.TransactionMetadata;
-import net.corda.v5.ledger.utxo.Attachment;
 import net.corda.v5.ledger.utxo.Command;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.StateAndRef;
@@ -11,6 +10,7 @@ import net.corda.v5.ledger.utxo.StateRef;
 import net.corda.v5.ledger.utxo.TimeWindow;
 import net.corda.v5.ledger.utxo.TransactionState;
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
+import net.corda.v5.membership.GroupParameters;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
@@ -29,9 +29,6 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
 
     @NotNull
     private final MemberX500Name notaryName;
-
-    @NotNull
-    private final List<Attachment> attachments;
 
     @NotNull
     private final List<Command> commands;
@@ -53,7 +50,6 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
 
     public UtxoLedgerTransactionImpl(@NotNull final UtxoTransactionBuilder builder) {
         this.id = builder.getTransactionId();
-        this.attachments = builder.getAttachments();
         this.commands = builder.getCommands();
         this.signatories = builder.getSignatories();
         this.inputStateAndRefs = builder.getInputStateAndRefs();
@@ -86,12 +82,6 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
     @Override
     public TransactionMetadata getMetadata() {
         throw new UnsupportedOperationException("TODO : Implement TransactionMetadata");
-    }
-
-    @NotNull
-    @Override
-    public List<Attachment> getAttachments() {
-        return attachments;
     }
 
     @NotNull
@@ -204,25 +194,6 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
 
     @NotNull
     @Override
-    public Attachment getAttachment(@NotNull final SecureHash id) {
-        List<Attachment> matches = getAttachments()
-                .stream()
-                .filter(attachment -> attachment.getId() == id)
-                .collect(Collectors.toUnmodifiableList());
-
-        if (matches.size() == 0) {
-            throw new IllegalArgumentException("Attachment with the specified ID not found: " + id);
-        }
-
-        if (matches.size() > 1) {
-            throw new IllegalArgumentException("Multiple attachments found with the specified ID: " + id);
-        }
-
-        return matches.get(0);
-    }
-
-    @NotNull
-    @Override
     public <T extends Command> List<T> getCommands(@NotNull final Class<T> type) {
         return getCommands()
                 .stream()
@@ -302,5 +273,11 @@ final class UtxoLedgerTransactionImpl implements UtxoLedgerTransaction {
         }
 
         return Collections.unmodifiableList(result);
+    }
+
+    @NotNull
+    @Override
+    public GroupParameters getGroupParameters() {
+        return null;
     }
 }

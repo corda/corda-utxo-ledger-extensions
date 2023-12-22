@@ -96,18 +96,14 @@ class WellKnownOwnableStateQueryFlow : ClientStartableFlow {
     private fun executeQuery(
         query: VaultNamedParameterizedQuery<StateAndRef<TestOwnableState>>
     ): List<StateAndRef<TestOwnableState>> {
-        var offset = 0
         query.apply {
-            setOffset(offset)
             setCreatedTimestampLimit(Instant.now())
         }
         val results = mutableListOf<StateAndRef<TestOwnableState>>()
-        var resultSet = query.execute()
-        while (resultSet.results.isNotEmpty()) {
-            results += resultSet.results
-            offset += 50
-            query.setOffset(offset)
-            resultSet = query.execute()
+        val resultSet = query.execute()
+        results += resultSet.results
+        while (resultSet.hasNext()) {
+            results += resultSet.next()
         }
         return results
     }

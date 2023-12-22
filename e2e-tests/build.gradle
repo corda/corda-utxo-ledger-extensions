@@ -82,6 +82,7 @@ dependencies {
 
     e2eTestRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     e2eTestRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+    e2eTestRuntimeOnly "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
 }
 
 def e2eTestResources = tasks.named('processE2eTestResources', ProcessResources) {

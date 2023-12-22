@@ -93,23 +93,19 @@ public final class IdentifiablePointer<T extends IdentifiableState> implements S
     @Override
     @Suspendable
     public @NotNull List<StateAndRef<T>> resolve(@NotNull UtxoLedgerService service) {
-        List<StateAndRef<T>> resolved = new ArrayList<>();
-        int offset = 0;
 
         @SuppressWarnings("UNCHECKED_CAST")
         PagedQuery<StateAndRef<T>> query = (PagedQuery<StateAndRef<T>>) (PagedQuery<?>) service
                 .query(IdentifiableStateQueries.GET_BY_IDS, StateAndRef.class)
                 .setCreatedTimestampLimit(Instant.now())
                 .setLimit(50)
-                .setOffset(offset)
                 .setParameter("ids", List.of(value.toString()));
 
         PagedQuery.ResultSet<StateAndRef<T>> resultSet = query.execute();
 
-        while (!resultSet.getResults().isEmpty()) {
-            resolved.addAll(resultSet.getResults());
-            offset += 50;
-            resultSet = query.setOffset(offset).execute();
+        List<StateAndRef<T>> resolved = new ArrayList<>(resultSet.getResults());
+        while (resultSet.hasNext()) {
+            resolved.addAll(resultSet.next());
         }
 
         if (resolved.size() > 1) {

@@ -2,7 +2,6 @@ package com.r3.corda.ledger.utxo.testing;
 
 import net.corda.v5.base.types.MemberX500Name;
 import net.corda.v5.crypto.SecureHash;
-import net.corda.v5.ledger.utxo.Attachment;
 import net.corda.v5.ledger.utxo.Command;
 import net.corda.v5.ledger.utxo.ContractState;
 import net.corda.v5.ledger.utxo.StateAndRef;
@@ -33,9 +32,6 @@ public final class UtxoTransactionBuilder {
     private final MemberX500Name notaryName;
 
     @NotNull
-    private final List<Attachment> attachments = new ArrayList<>();
-
-    @NotNull
     private final List<Command> commands = new ArrayList<>();
 
     @NotNull
@@ -60,12 +56,6 @@ public final class UtxoTransactionBuilder {
         this.notaryName = notaryName;
         this.transactionId = ContractTestUtils.createRandomSecureHash();
         this.timeWindow = new TimeWindowBetweenImpl(Instant.MIN, Instant.MAX);
-    }
-
-    @NotNull
-    public UtxoTransactionBuilder addAttachment(@NotNull final Attachment attachment) {
-        attachments.add(attachment);
-        return this;
     }
 
     @NotNull
@@ -180,11 +170,6 @@ public final class UtxoTransactionBuilder {
     @NotNull
     public MemberX500Name getNotaryName() {
         return notaryName;
-    }
-
-    @NotNull
-    public List<Attachment> getAttachments() {
-        return attachments;
     }
 
     @NotNull

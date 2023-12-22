@@ -2,7 +2,6 @@ package com.r3.corda.ledger.utxo.testing
 
 import net.corda.v5.base.types.MemberX500Name
 import net.corda.v5.crypto.SecureHash
-import net.corda.v5.ledger.utxo.Attachment
 import net.corda.v5.ledger.utxo.Command
 import net.corda.v5.ledger.utxo.ContractState
 import net.corda.v5.ledger.utxo.StateAndRef
@@ -15,11 +14,6 @@ import java.time.Instant
 class TransactionBuilderDsl(private val notaryKey: PublicKey, private val notaryName: MemberX500Name) {
 
     private val builder = UtxoTransactionBuilder(notaryKey, notaryName)
-
-    @TransactionBuilderDslMarker
-    fun addAttachment(attachment: Attachment): UtxoTransactionBuilder {
-        return builder.addAttachment(attachment)
-    }
 
     @TransactionBuilderDslMarker
     fun addCommand(command: Command): UtxoTransactionBuilder {
@@ -121,11 +115,6 @@ class TransactionBuilderDsl(private val notaryKey: PublicKey, private val notary
     @TransactionBuilderDslMarker
     fun getNotaryName(): MemberX500Name {
         return builder.notaryName
-    }
-
-    @TransactionBuilderDslMarker
-    fun getAttachments(): List<Attachment> {
-        return builder.attachments
     }
 
     @TransactionBuilderDslMarker

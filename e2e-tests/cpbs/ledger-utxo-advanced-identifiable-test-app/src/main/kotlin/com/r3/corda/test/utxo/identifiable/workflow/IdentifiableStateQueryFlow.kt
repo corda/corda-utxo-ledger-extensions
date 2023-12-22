@@ -95,17 +95,14 @@ class IdentifiableStateQueryFlow : ClientStartableFlow {
     private fun executeQuery(
         query: VaultNamedParameterizedQuery<StateAndRef<TestIdentifiableState>>
     ): List<StateAndRef<TestIdentifiableState>> {
-        var offset = 0
         query.apply {
-            setOffset(offset)
             setCreatedTimestampLimit(Instant.now())
         }
         val results = mutableListOf<StateAndRef<TestIdentifiableState>>()
-        var resultSet = query.execute()
-        while (resultSet.results.isNotEmpty()) {
-            results += resultSet.results
-            offset += 50
-            resultSet = query.setOffset(offset).execute()
+        val resultSet = query.execute()
+        results += resultSet.results
+        while (resultSet.hasNext()) {
+            results += resultSet.next()
         }
         return results
     }

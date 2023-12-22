@@ -14,6 +14,7 @@ def internalPublishVersion = constants.getProperty('internalPublishVersion')
 def artifactoryContextUrl = constants.getProperty('artifactoryContextUrl')
 
 repositories {
+        mavenLocal()
         def cordaUseCache = System.getenv("CORDA_USE_CACHE")
         if (cordaUseCache != null) {
             maven {

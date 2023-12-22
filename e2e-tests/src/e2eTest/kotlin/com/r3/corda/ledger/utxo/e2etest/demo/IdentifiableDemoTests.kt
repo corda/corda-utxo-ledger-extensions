@@ -26,6 +26,7 @@ class IdentifiableDemoTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-identifiable-demo-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-identifiable-demo-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -67,7 +68,7 @@ class IdentifiableDemoTests {
 
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test
@@ -80,7 +81,7 @@ class IdentifiableDemoTests {
                 "description" to "Build super-duper DLT and call it Corda 5",
                 "reporter" to aliceX500,
                 "assignee" to bobX500,
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"

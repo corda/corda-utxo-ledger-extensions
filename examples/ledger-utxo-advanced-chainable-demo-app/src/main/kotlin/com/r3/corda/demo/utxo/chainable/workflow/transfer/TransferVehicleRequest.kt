@@ -11,6 +11,7 @@ import com.r3.corda.demo.utxo.chainable.contract.Vehicle
 import com.r3.corda.demo.utxo.chainable.contract.transferOwnership
 import com.r3.corda.demo.utxo.chainable.workflow.firstLedgerKey
 import com.r3.corda.demo.utxo.chainable.workflow.getMemberInfo
+import java.time.Instant
 import java.util.UUID
 
 data class TransferVehicleRequest(
@@ -22,7 +23,8 @@ data class TransferVehicleRequest(
     @Suspendable
     fun getInputState(utxoLedgerService: UtxoLedgerService): StateAndRef<Vehicle> {
         return utxoLedgerService
-            .findUnconsumedStatesByType(Vehicle::class.java)
+            .findUnconsumedStatesByExactType(Vehicle::class.java, 1, Instant.now())
+            .results
             .single { it.state.contractState.id == id }
     }
 
