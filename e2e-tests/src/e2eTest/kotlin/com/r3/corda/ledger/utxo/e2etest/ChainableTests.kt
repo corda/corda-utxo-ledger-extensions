@@ -2,16 +2,16 @@ package com.r3.corda.ledger.utxo.e2etest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import net.corda.e2etest.utilities.RPC_FLOW_STATUS_FAILED
-import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
+import net.corda.e2etest.utilities.REST_FLOW_STATUS_FAILED
+import net.corda.e2etest.utilities.REST_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
-import net.corda.e2etest.utilities.awaitRpcFlowFinished
+import net.corda.e2etest.utilities.awaitRestFlowFinished
 import net.corda.e2etest.utilities.conditionallyUploadCordaPackage
 import net.corda.e2etest.utilities.getHoldingIdShortHash
 import net.corda.e2etest.utilities.getOrCreateVirtualNodeFor
 import net.corda.e2etest.utilities.registerStaticMember
-import net.corda.e2etest.utilities.startRpcFlow
+import net.corda.e2etest.utilities.startRestFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -79,7 +79,7 @@ class ChainableTests {
 
     @Test
     fun `chainable contract create command valid`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "CREATE",
@@ -87,14 +87,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
     }
 
     @Test
     fun `chainable contract create command CONTRACT_RULE_CREATE_OUTPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "CREATE",
@@ -102,14 +102,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On chainable state(s) creating, at least one chainable state must be created.")
     }
 
     @Test
     fun `chainable contract create command CONTRACT_RULE_CREATE_POINTERS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "CREATE",
@@ -117,14 +117,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On chainable state(s) creating, the previous state pointer of every created chainable state must be null.")
     }
 
     @Test
     fun `chainable contract update command valid`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -132,14 +132,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
     }
 
     @Test
     fun `chainable contract update command CONTRACT_RULE_UPDATE_INPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -147,14 +147,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On chainable state(s) updating, at least one chainable state must be consumed.")
     }
 
     @Test
     fun `chainable contract update command CONTRACT_RULE_UPDATE_OUTPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -162,14 +162,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On chainable state(s) updating, at least one chainable state must be created.")
     }
 
     @Test
     fun `chainable contract update command CONTRACT_RULE_UPDATE_POINTERS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -177,15 +177,15 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains("On chainable state(s) updating, the previous state pointer of every created chainable state must not be null.")
     }
 
     @Test
     fun `chainable contract update command CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -193,8 +193,8 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
                 "On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly " +
@@ -204,7 +204,7 @@ class ChainableTests {
 
     @Test
     fun `chainable contract delete command valid`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -212,14 +212,14 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
     }
 
     @Test
     fun `chainable contract delete command CONTRACT_RULE_DELETE_INPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -227,8 +227,8 @@ class ChainableTests {
             ),
             "com.r3.corda.test.utxo.chainable.workflow.ChainableContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On chainable state(s) deleting, at least one chainable state must be consumed.")
     }
 }

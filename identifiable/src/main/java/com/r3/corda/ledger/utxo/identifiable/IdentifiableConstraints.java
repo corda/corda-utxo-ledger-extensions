@@ -7,10 +7,7 @@ import net.corda.v5.ledger.utxo.TransactionState;
 import net.corda.v5.ledger.utxo.transaction.UtxoLedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,13 +26,14 @@ public final class IdentifiableConstraints {
     final static String CONTRACT_RULE_UPDATE_OUTPUTS =
             "On identifiable state(s) updating, at least one identifiable state must be created.";
 
+    final static String CONTRACT_RULE_UPDATE_IDENTIFIERS =
+            "On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every created identifiable state with a non-null identifier.";
+
     final static String CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY =
-            "On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.";
+            "On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null.";
 
     final static String CONTRACT_RULE_DELETE_INPUTS =
             "On identifiable state(s) deleting, at least one identifiable state must be consumed.";
-
-    private final static int MAX_OUTPUTS_PER_INPUT = 1;
 
     /**
      * Prevents instances of {@link IdentifiableConstraints} from being created.
@@ -86,6 +84,8 @@ public final class IdentifiableConstraints {
      *     <li>On identifiable state(s) updating, at least one identifiable state must be consumed.</li>
      *     <li>On identifiable state(s) updating, at least one identifiable state must be created.</li>
      *     <li>On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable state's state ref or identifier, exclusively.</li>
+     *     <li>On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every created identifiable state with a non-null identifier.</li>
+     *     <li>On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null.</li>
      * </ol>
      *
      * @param transaction The transaction to verify.
@@ -102,9 +102,9 @@ public final class IdentifiableConstraints {
 
         final List<StateRef> inputIds = getInputIdentifiers(inputs);
         final List<StateRef> outputIds = getNonNullOutputIdentifiers(outputs);
-        final Map<StateRef, List<StateRef>> mappedInputsToOutputs = mapInputsToOutputs(inputIds, outputIds);
 
-        Check.all(mappedInputsToOutputs.values(), it -> it.size() <= MAX_OUTPUTS_PER_INPUT, CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY);
+        Check.all(outputIds, inputIds::contains, CONTRACT_RULE_UPDATE_IDENTIFIERS);
+        Check.isDistinct(outputIds, CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY);
     }
 
     /**
@@ -196,32 +196,5 @@ public final class IdentifiableConstraints {
         return Stream
                 .concat(inputRefs, inputIdentifiers)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Gets a map of non-null identifiers, to input states with a matching identifier.
-     * Exactly one state should be mapped for every non-null identifier key.
-     *
-     * @param inputIds  The identifiers from which to construct map keys.
-     * @param outputIds The identifiers for which zero, one, or many may map to each key.
-     * @return Returns a map of input identifiers which are mapped to zero, one or many output identifiers.
-     */
-    @NotNull
-    private static Map<StateRef, List<StateRef>> mapInputsToOutputs(
-            @NotNull final List<StateRef> inputIds,
-            @NotNull final List<StateRef> outputIds) {
-        final Map<StateRef, List<StateRef>> result = new HashMap<>();
-
-        for (final StateRef inputId : inputIds) {
-            result.put(inputId, new ArrayList<>());
-        }
-
-        for (final StateRef outputId : outputIds) {
-            if (result.containsKey(outputId)) {
-                result.get(outputId).add(outputId);
-            }
-        }
-
-        return result;
     }
 }
