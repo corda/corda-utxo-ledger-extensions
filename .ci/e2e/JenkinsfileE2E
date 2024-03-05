@@ -3,7 +3,9 @@
 endToEndPipeline(
     multiCluster: false,
     gradleTestTargetsToExecute: ['e2eTest'],
-    usePackagedCordaHelmChart: false,
+    usePackagedCordaHelmChart: true,
+    helmVersion: '^5.2.0-beta',
+    helmRepoSuffix: 'release/os/5.2',
     dynamicCordaApiVersion: false,
     javaVersion: '17'
 )
