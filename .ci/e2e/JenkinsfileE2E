@@ -1,10 +1,10 @@
-@Library('corda-shared-build-pipeline-steps@5.1') _
+@Library('corda-shared-build-pipeline-steps@5.2') _
 
 endToEndPipeline(
     multiCluster: false,
     gradleTestTargetsToExecute: ['e2eTest'],
     usePackagedCordaHelmChart: true,
     dynamicCordaApiVersion: false,
-    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.1.0.0-beta+',
+    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.2.0.0-beta+',
     javaVersion: '17'
 )
