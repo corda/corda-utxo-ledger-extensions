@@ -14,7 +14,6 @@ import net.corda.e2etest.utilities.registerStaticMember
 import net.corda.e2etest.utilities.startRestFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -222,9 +221,7 @@ class IdentifiableTests {
             )
     }
 
-    // TODO Currently broken fixed in CORE-13473
     @Test
-    @Disabled
     fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID fails`() {
         val request = startRestFlow(
             aliceHoldingId,
@@ -238,8 +235,8 @@ class IdentifiableTests {
         assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
-                "On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable " +
-                        "state's state ref or identifier, exclusively."
+                "On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every " +
+                        "created identifiable state with a non-null identifier."
             )
     }
 

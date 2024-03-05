@@ -49,16 +49,22 @@ class IdentifiableContractUpdateTestFlow(
                         )
                     }
             }
-            // TODO Currently broken fixed in CORE-13473
             "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID" -> {
                 stateAndRefs.map { it.ref } to stateAndRefs
                     .filter { it.state.contractState is MyIdentifiableState }
                     .let { stateAndRefs ->
-                        val missingId = stateAndRefs.drop(1).map { it.state.contractState }
-                        val hasId = stateAndRefs.take(1).map { (it.state.contractState as MyIdentifiableState).copy(id = it.ref) }
-                        missingId + hasId
-                    }
+                        // Create a "fake output" with a non-existent State Ref ID
+                        // This way it will not be present in the `input` list
+                        val fakeOutput = (stateAndRefs.first().state.contractState as MyIdentifiableState)
+                            .copy(id = StateRef(
+                                stateAndRefs.first().ref.transactionId,
+                                // Increase the State Ref index, so it becomes a new ID
+                                stateAndRefs.first().ref.index + 99)
+                            )
 
+                        // Add the new "fake output" to the existing outputs
+                        stateAndRefs.map { it.state.contractState } + listOf(fakeOutput)
+                    }
             }
             "VALID" -> {
                 stateAndRefs.map { it.ref } to stateAndRefs
