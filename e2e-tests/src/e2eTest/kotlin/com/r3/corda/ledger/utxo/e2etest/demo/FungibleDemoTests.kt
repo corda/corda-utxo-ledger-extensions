@@ -78,7 +78,7 @@ class FungibleDemoTests {
     fun `Alice issues a token to Bob, Bob then transfers to Charlie, and then Bob burns some quantity of their token`() {
 
         // Alice issues tokens to Bob
-        val mintTokenFlowRequestId = startRpcFlow(
+        val mintTokenFlowRequestId = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "issuer" to aliceX500,
@@ -89,8 +89,8 @@ class FungibleDemoTests {
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
         )
-        val mintTokenFlowResult = awaitRpcFlowFinished(aliceHoldingId, mintTokenFlowRequestId)
-        assertThat(mintTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val mintTokenFlowResult = awaitRestFlowFinished(aliceHoldingId, mintTokenFlowRequestId)
+        assertThat(mintTokenFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(mintTokenFlowResult.flowError).isNull()
 
         val mintTokenResponse = objectMapper.readValue(mintTokenFlowResult.flowResult, MintTokenResponse::class.java)
@@ -105,7 +105,7 @@ class FungibleDemoTests {
         assertThat(quantity).isEqualTo(123.45.toScaledBigDecimal())
 
         // Bob transfers tokens to Charlie and receives change
-        val moveTokenFlowRequestId = startRpcFlow(
+        val moveTokenFlowRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "issuer" to aliceX500,
@@ -117,8 +117,8 @@ class FungibleDemoTests {
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.move.MoveTokenFlow\$Initiator"
         )
-        val moveTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, moveTokenFlowRequestId)
-        assertThat(moveTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val moveTokenFlowResult = awaitRestFlowFinished(bobHoldingId, moveTokenFlowRequestId)
+        assertThat(moveTokenFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(moveTokenFlowResult.flowError).isNull()
 
         val moveTokenResponse = objectMapper.readValue(moveTokenFlowResult.flowResult, MoveTokenResponse::class.java)
@@ -133,7 +133,7 @@ class FungibleDemoTests {
         )
 
         // Bob redeems tokens
-        val burnTokenFlowRequestId = startRpcFlow(
+        val burnTokenFlowRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "issuer" to aliceX500,
@@ -144,8 +144,8 @@ class FungibleDemoTests {
             "com.r3.corda.demo.utxo.fungible.workflow.burn.BurnTokenFlow\$Initiator"
         )
 
-        val burnTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, burnTokenFlowRequestId)
-        assertThat(burnTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val burnTokenFlowResult = awaitRestFlowFinished(bobHoldingId, burnTokenFlowRequestId)
+        assertThat(burnTokenFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(burnTokenFlowResult.flowError).isNull()
 
         val burnTokenResponse = objectMapper.readValue(burnTokenFlowResult.flowResult, BurnTokenResponse::class.java)

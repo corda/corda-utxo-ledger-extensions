@@ -8,7 +8,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Provides functionality for contract verification checks.
@@ -209,6 +212,24 @@ public final class Check {
      */
     public static void isNotEmpty(@NotNull final Iterable<?> iterable, @NotNull final String message) {
         isTrue(count(iterable) > 0, message);
+    }
+
+    /**
+     * Checks whether the specified iterable contains distinct elements.
+     *
+     * @param iterable The iterable containing elements to test.
+     * @param message  The message which will be thrown in the event that the iterable does not contain distinct elements.
+     * @throws IllegalStateException if the iterable does not contain distinct elements.
+     */
+    public static void isDistinct(@NotNull final Iterable<?> iterable, @NotNull final String message) {
+        final Set<?> distinctItems = StreamSupport
+                .stream(iterable.spliterator(), false)
+                .collect(Collectors.toSet());
+
+        final int originalCount = count(iterable);
+        final int distinctCount = count(distinctItems);
+
+        isTrue(originalCount == distinctCount, message);
     }
 
     /**
