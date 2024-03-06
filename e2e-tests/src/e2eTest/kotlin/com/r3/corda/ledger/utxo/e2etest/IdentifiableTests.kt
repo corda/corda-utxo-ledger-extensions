@@ -204,12 +204,12 @@ class IdentifiableTests {
     }
 
     @Test
-    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY fails`() {
+    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY fails`() {
         val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
-                "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY"
+                "rule" to "CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY"
             ),
             "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
@@ -217,17 +217,17 @@ class IdentifiableTests {
         assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
-                "On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null."
+                "On identifiable state(s) updating, a created identifiable state must exist exactly once as an output when the identifier is not null."
             )
     }
 
     @Test
-    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID fails`() {
+    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIERS MISSING_ID fails`() {
         val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
-                "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID"
+                "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIERS MISSING_ID"
             ),
             "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
@@ -235,8 +235,8 @@ class IdentifiableTests {
         assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
-                "On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every " +
-                        "created identifiable state with a non-null identifier."
+                "On identifiable state(s) updating, a produced identifiable state must exist exactly once as a " +
+                        "consumed identifiable state when the identifier is not null."
             )
     }
 

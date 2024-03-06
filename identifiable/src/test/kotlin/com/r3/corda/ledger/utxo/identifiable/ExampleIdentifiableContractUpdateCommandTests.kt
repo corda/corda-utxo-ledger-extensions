@@ -111,7 +111,7 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY, exception.message)
+        assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY, exception.message)
     }
 
     @Test
@@ -129,6 +129,42 @@ class ExampleIdentifiableContractUpdateCommandTests : ContractTest() {
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
 
         // Assert
-        assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY, exception.message)
+        assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY, exception.message)
+    }
+
+    @Test
+    fun `On identifiable state(s) updating, every consumed identifiable state's identifier must appear only once when the identifier is not null (initial state)`() {
+        // Arrange
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+            val stateRef1 = randomStateRef()
+            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
+            addInputState(state, stateRef1, NOTARY_KEY, NOTARY_NAME, null)
+            addOutputState(state.copy(id = stateRef1))
+            addCommand(ExampleIdentifiableContract.Update())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY, exception.message)
+    }
+
+    @Test
+    fun `On identifiable state(s) updating, every consumed identifiable state's identifier must appear only once when the identifier is not null (evolved state)`() {
+        // Arrange
+        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+            val stateRef1 = randomStateRef()
+            addInputState(state.copy(id = stateRef1))
+            addInputState(state.copy(id = stateRef1))
+            addOutputState(state.copy(id = stateRef1))
+            addCommand(ExampleIdentifiableContract.Update())
+        }
+
+        // Act
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+
+        // Assert
+        assertEquals(IdentifiableConstraints.CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY, exception.message)
     }
 }
