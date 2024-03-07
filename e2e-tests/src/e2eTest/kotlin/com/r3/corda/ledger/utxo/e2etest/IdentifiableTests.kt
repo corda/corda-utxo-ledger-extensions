@@ -217,7 +217,25 @@ class IdentifiableTests {
         assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
-                "On identifiable state(s) updating, a created identifiable state must exist exactly once as an output when the identifier is not null."
+                "On identifiable state(s) updating, duplicate identifiable state identifiers must not be created."
+            )
+    }
+
+    @Test
+    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY fails`() {
+        val request = startRestFlow(
+            aliceHoldingId,
+            mapOf(
+                "command" to "UPDATE",
+                "rule" to "CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY"
+            ),
+            "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
+        )
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
+        assertThat(response.flowError?.message)
+            .contains(
+                "On identifiable state(s) updating, duplicate identifiable state identifiers must not be consumed."
             )
     }
 
