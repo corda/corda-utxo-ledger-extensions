@@ -30,10 +30,10 @@ public final class IdentifiableConstraints {
             "On identifiable state(s) updating, a produced identifiable state must exist exactly once as a consumed identifiable state when the identifier is not null.";
 
     final static String CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY =
-            "On identifiable state(s) updating, a consumed identifiable state must exist exactly once as an input when the identifier is not null.";
+            "On identifiable state(s) updating, duplicate identifiable state identifiers must not be consumed.";
 
     final static String CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY =
-            "On identifiable state(s) updating, a created identifiable state must exist exactly once as an output when the identifier is not null.";
+            "On identifiable state(s) updating, duplicate identifiable state identifiers must not be created.";
 
     final static String CONTRACT_RULE_DELETE_INPUTS =
             "On identifiable state(s) deleting, at least one identifiable state must be consumed.";
