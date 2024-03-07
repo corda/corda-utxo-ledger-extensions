@@ -39,14 +39,6 @@ class IdentifiableContractUpdateTestFlow(
             "CONTRACT_RULE_UPDATE_OUTPUTS" -> {
                 stateAndRefs.map { it.ref } to emptyList()
             }
-            "CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY" -> {
-                val stateRef = stateAndRefs.first().ref
-                stateAndRefs.map {
-                    stateRef
-                } to stateAndRefs
-                    .filter { it.state.contractState is MyIdentifiableState }
-                    .map { it.state.contractState as MyIdentifiableState }
-            }
             "CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY" -> {
                 val stateRef = stateAndRefs.first().ref
                 stateAndRefs.map { it.ref } to stateAndRefs
