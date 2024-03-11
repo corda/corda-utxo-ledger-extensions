@@ -14,7 +14,6 @@ import net.corda.e2etest.utilities.registerStaticMember
 import net.corda.e2etest.utilities.startRestFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -205,12 +204,12 @@ class IdentifiableTests {
     }
 
     @Test
-    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY fails`() {
+    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY fails`() {
         val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
-                "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY"
+                "rule" to "CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY"
             ),
             "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
@@ -218,19 +217,17 @@ class IdentifiableTests {
         assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
-                "On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null."
+                "On identifiable state(s) updating, duplicate identifiable state identifiers must not be created."
             )
     }
 
-    // TODO Currently broken fixed in CORE-13473
     @Test
-    @Disabled
-    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID fails`() {
+    fun `Identifiable contract update command CONTRACT_RULE_UPDATE_IDENTIFIERS MISSING_ID fails`() {
         val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
-                "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY MISSING_ID"
+                "rule" to "CONTRACT_RULE_UPDATE_IDENTIFIERS MISSING_ID"
             ),
             "com.r3.corda.test.utxo.identifiable.workflow.IdentifiableContractTestFlow"
         )
@@ -238,8 +235,8 @@ class IdentifiableTests {
         assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
-                "On identifiable state(s) updating, each created identifiable state's identifier must match one consumed identifiable " +
-                        "state's state ref or identifier, exclusively."
+                "On identifiable state(s) updating, a produced identifiable state must exist exactly once as a " +
+                        "consumed identifiable state when the identifier is not null."
             )
     }
 

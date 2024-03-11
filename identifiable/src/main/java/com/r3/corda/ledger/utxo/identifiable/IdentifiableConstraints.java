@@ -27,10 +27,13 @@ public final class IdentifiableConstraints {
             "On identifiable state(s) updating, at least one identifiable state must be created.";
 
     final static String CONTRACT_RULE_UPDATE_IDENTIFIERS =
-            "On identifiable state(s) updating, only one identifiable state with a matching identifier must be consumed for every created identifiable state with a non-null identifier.";
+            "On identifiable state(s) updating, a produced identifiable state must exist exactly once as a consumed identifiable state when the identifier is not null.";
 
-    final static String CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY =
-            "On identifiable state(s) updating, every created identifiable state's identifier must appear only once when the identifier is not null.";
+    final static String CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY =
+            "On identifiable state(s) updating, duplicate identifiable state identifiers must not be consumed.";
+
+    final static String CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY =
+            "On identifiable state(s) updating, duplicate identifiable state identifiers must not be created.";
 
     final static String CONTRACT_RULE_DELETE_INPUTS =
             "On identifiable state(s) deleting, at least one identifiable state must be consumed.";
@@ -103,8 +106,10 @@ public final class IdentifiableConstraints {
         final List<StateRef> inputIds = getInputIdentifiers(inputs);
         final List<StateRef> outputIds = getNonNullOutputIdentifiers(outputs);
 
+        Check.isDistinct(outputIds, CONTRACT_RULE_UPDATE_OUTPUT_IDENTIFIER_EXCLUSIVITY);
+        Check.isDistinct(inputIds, CONTRACT_RULE_UPDATE_INPUT_IDENTIFIER_EXCLUSIVITY);
+
         Check.all(outputIds, inputIds::contains, CONTRACT_RULE_UPDATE_IDENTIFIERS);
-        Check.isDistinct(outputIds, CONTRACT_RULE_UPDATE_IDENTIFIER_EXCLUSIVITY);
     }
 
     /**
