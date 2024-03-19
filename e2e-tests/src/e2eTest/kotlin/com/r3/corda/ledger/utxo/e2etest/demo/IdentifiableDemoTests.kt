@@ -3,15 +3,15 @@ package com.r3.corda.ledger.utxo.e2etest.demo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.r3.corda.ledger.utxo.e2etest.uploadTrustedCertificate
-import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
+import net.corda.e2etest.utilities.REST_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
-import net.corda.e2etest.utilities.awaitRpcFlowFinished
+import net.corda.e2etest.utilities.awaitRestFlowFinished
 import net.corda.e2etest.utilities.conditionallyUploadCordaPackage
 import net.corda.e2etest.utilities.getHoldingIdShortHash
 import net.corda.e2etest.utilities.getOrCreateVirtualNodeFor
 import net.corda.e2etest.utilities.registerStaticMember
-import net.corda.e2etest.utilities.startRpcFlow
+import net.corda.e2etest.utilities.startRestFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -26,6 +26,7 @@ class IdentifiableDemoTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-identifiable-demo-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-identifiable-demo-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -67,32 +68,32 @@ class IdentifiableDemoTests {
 
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test
     fun `Alice issues a support ticket to Bob, Bob opens and completes the ticket, Alice closes the ticket`() {
 
-        val issueSupportTicketRequestId = startRpcFlow(
+        val issueSupportTicketRequestId = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "title" to "Build Corda 5",
                 "description" to "Build super-duper DLT and call it Corda 5",
                 "reporter" to aliceX500,
                 "assignee" to bobX500,
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.identifiable.workflow.create.CreateSupportTicketFlow\$Initiator"
         )
-        val createFlowResponse = awaitRpcFlowFinished(aliceHoldingId, issueSupportTicketRequestId)
-        assertThat(createFlowResponse.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val createFlowResponse = awaitRestFlowFinished(aliceHoldingId, issueSupportTicketRequestId)
+        assertThat(createFlowResponse.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(createFlowResponse.flowError).isNull()
 
         val createSupportTicketResponse = objectMapper
             .readValue(createFlowResponse.flowResult, CreateSupportTicketResponse::class.java)
 
-        val openSupportTicketRequestId = startRpcFlow(
+        val openSupportTicketRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "id" to createSupportTicketResponse.id,
@@ -102,8 +103,8 @@ class IdentifiableDemoTests {
             ),
             "com.r3.corda.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
         )
-        val openFlowResult = awaitRpcFlowFinished(bobHoldingId, openSupportTicketRequestId)
-        assertThat(openFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val openFlowResult = awaitRestFlowFinished(bobHoldingId, openSupportTicketRequestId)
+        assertThat(openFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(openFlowResult.flowError).isNull()
 
         val openSupportTicketResponse = objectMapper
@@ -112,7 +113,7 @@ class IdentifiableDemoTests {
         assertThat(openSupportTicketResponse.id).isEqualTo(createSupportTicketResponse.id)
         assertThat(openSupportTicketResponse.title).isEqualTo(createSupportTicketResponse.title)
 
-        val doneSupportTicketRequestId = startRpcFlow(
+        val doneSupportTicketRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "id" to openSupportTicketResponse.id,
@@ -122,8 +123,8 @@ class IdentifiableDemoTests {
             ),
             "com.r3.corda.demo.utxo.identifiable.workflow.update.UpdateSupportTicketFlow\$Initiator"
         )
-        val doneFlowResult = awaitRpcFlowFinished(bobHoldingId, doneSupportTicketRequestId)
-        assertThat(doneFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val doneFlowResult = awaitRestFlowFinished(bobHoldingId, doneSupportTicketRequestId)
+        assertThat(doneFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(doneFlowResult.flowError).isNull()
 
         val doneSupportTicketResponse = objectMapper
@@ -132,7 +133,7 @@ class IdentifiableDemoTests {
         assertThat(doneSupportTicketResponse.id).isEqualTo(openSupportTicketResponse.id)
         assertThat(doneSupportTicketResponse.title).isEqualTo(openSupportTicketResponse.title)
 
-        val deleteSupportTicketRequestId = startRpcFlow(
+        val deleteSupportTicketRequestId = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "id" to doneSupportTicketResponse.id,
@@ -142,8 +143,8 @@ class IdentifiableDemoTests {
             "com.r3.corda.demo.utxo.identifiable.workflow.delete.DeleteSupportTicketFlow\$Initiator"
         )
 
-        val deleteSupportTicketResult = awaitRpcFlowFinished(aliceHoldingId, deleteSupportTicketRequestId)
-        assertThat(deleteSupportTicketResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val deleteSupportTicketResult = awaitRestFlowFinished(aliceHoldingId, deleteSupportTicketRequestId)
+        assertThat(deleteSupportTicketResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(deleteSupportTicketResult.flowError).isNull()
 
         val deleteSupportTicketResponse = objectMapper

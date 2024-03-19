@@ -21,7 +21,4 @@ dependencies {
     cordapp project(":fungible")
 
     cordapp project(':examples:ledger-utxo-advanced-fungible-demo-contract')
-
-    // Common and API packages pulled in as transitive dependencies through client
-    cordapp "com.r3.corda.notary.plugin.nonvalidating:notary-plugin-non-validating-client:$cordaNotaryPluginsVersion"
 }

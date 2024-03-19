@@ -1,4 +1,4 @@
-@Library('corda-shared-build-pipeline-steps@5.0.1') _
+@Library('corda-shared-build-pipeline-steps@5.1') _
 
 cordaPipelineKubernetesAgent(
     publishRepoPrefix: 'corda-os-maven',
@@ -9,5 +9,6 @@ cordaPipelineKubernetesAgent(
     e2eTestName: 'corda-utxo-ledger-extensions-e2e-tests',
     runE2eTests: true,
     publishToMavenS3Repository: true,
-    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.0.0.0-beta+'
+    gradleAdditionalArgs: '-PcordaNotaryPluginsVersion=5.1.0.0-beta+',
+    javaVersion: '17'
     )

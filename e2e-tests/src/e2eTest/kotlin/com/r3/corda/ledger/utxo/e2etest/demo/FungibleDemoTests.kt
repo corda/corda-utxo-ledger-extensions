@@ -19,6 +19,7 @@ class FungibleDemoTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-fungible-demo-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-fungible-demo-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -70,26 +71,26 @@ class FungibleDemoTests {
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
         registerStaticMember(charlieHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test
     fun `Alice issues a token to Bob, Bob then transfers to Charlie, and then Bob burns some quantity of their token`() {
 
         // Alice issues tokens to Bob
-        val mintTokenFlowRequestId = startRpcFlow(
+        val mintTokenFlowRequestId = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "issuer" to aliceX500,
                 "owner" to bobX500,
                 "quantity" to 123.45.toScaledBigDecimal(),
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.mint.MintTokenFlow\$Initiator"
         )
-        val mintTokenFlowResult = awaitRpcFlowFinished(aliceHoldingId, mintTokenFlowRequestId)
-        assertThat(mintTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val mintTokenFlowResult = awaitRestFlowFinished(aliceHoldingId, mintTokenFlowRequestId)
+        assertThat(mintTokenFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(mintTokenFlowResult.flowError).isNull()
 
         val mintTokenResponse = objectMapper.readValue(mintTokenFlowResult.flowResult, MintTokenResponse::class.java)
@@ -104,7 +105,7 @@ class FungibleDemoTests {
         assertThat(quantity).isEqualTo(123.45.toScaledBigDecimal())
 
         // Bob transfers tokens to Charlie and receives change
-        val moveTokenFlowRequestId = startRpcFlow(
+        val moveTokenFlowRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "issuer" to aliceX500,
@@ -116,8 +117,8 @@ class FungibleDemoTests {
             ),
             "com.r3.corda.demo.utxo.fungible.workflow.move.MoveTokenFlow\$Initiator"
         )
-        val moveTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, moveTokenFlowRequestId)
-        assertThat(moveTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val moveTokenFlowResult = awaitRestFlowFinished(bobHoldingId, moveTokenFlowRequestId)
+        assertThat(moveTokenFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(moveTokenFlowResult.flowError).isNull()
 
         val moveTokenResponse = objectMapper.readValue(moveTokenFlowResult.flowResult, MoveTokenResponse::class.java)
@@ -132,7 +133,7 @@ class FungibleDemoTests {
         )
 
         // Bob redeems tokens
-        val burnTokenFlowRequestId = startRpcFlow(
+        val burnTokenFlowRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "issuer" to aliceX500,
@@ -143,8 +144,8 @@ class FungibleDemoTests {
             "com.r3.corda.demo.utxo.fungible.workflow.burn.BurnTokenFlow\$Initiator"
         )
 
-        val burnTokenFlowResult = awaitRpcFlowFinished(bobHoldingId, burnTokenFlowRequestId)
-        assertThat(burnTokenFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val burnTokenFlowResult = awaitRestFlowFinished(bobHoldingId, burnTokenFlowRequestId)
+        assertThat(burnTokenFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(burnTokenFlowResult.flowError).isNull()
 
         val burnTokenResponse = objectMapper.readValue(burnTokenFlowResult.flowResult, BurnTokenResponse::class.java)

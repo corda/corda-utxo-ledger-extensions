@@ -3,15 +3,15 @@ package com.r3.corda.ledger.utxo.e2etest.demo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.r3.corda.ledger.utxo.e2etest.uploadTrustedCertificate
-import net.corda.e2etest.utilities.RPC_FLOW_STATUS_SUCCESS
+import net.corda.e2etest.utilities.REST_FLOW_STATUS_SUCCESS
 import net.corda.e2etest.utilities.TEST_NOTARY_CPB_LOCATION
 import net.corda.e2etest.utilities.TEST_NOTARY_CPI_NAME
-import net.corda.e2etest.utilities.awaitRpcFlowFinished
+import net.corda.e2etest.utilities.awaitRestFlowFinished
 import net.corda.e2etest.utilities.conditionallyUploadCordaPackage
 import net.corda.e2etest.utilities.getHoldingIdShortHash
 import net.corda.e2etest.utilities.getOrCreateVirtualNodeFor
 import net.corda.e2etest.utilities.registerStaticMember
-import net.corda.e2etest.utilities.startRpcFlow
+import net.corda.e2etest.utilities.startRestFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -26,6 +26,7 @@ class ChainableDemoTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-chainable-demo-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-chainable-demo-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -73,7 +74,7 @@ class ChainableDemoTests {
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
         registerStaticMember(charlieHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test
@@ -82,7 +83,7 @@ class ChainableDemoTests {
         // Alice issues vehicle to Bob
         val vehicleId = UUID.randomUUID()
 
-        val issueVehicleFlowRequestId = startRpcFlow(
+        val issueVehicleFlowRequestId = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "make" to "reliant",
@@ -90,13 +91,13 @@ class ChainableDemoTests {
                 "id" to vehicleId,
                 "manufacturer" to aliceX500,
                 "owner" to bobX500,
-                "notary" to "O=MyNotaryService-$notaryHoldingId, L=London, C=GB",
+                "notary" to NOTARY_SERVICE_X500,
                 "observers" to emptyList<String>()
             ),
             "com.r3.corda.demo.utxo.chainable.workflow.issue.IssueVehicleFlow\$Initiator"
         )
-        val issueVehicleFlowResult = awaitRpcFlowFinished(aliceHoldingId, issueVehicleFlowRequestId)
-        assertThat(issueVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val issueVehicleFlowResult = awaitRestFlowFinished(aliceHoldingId, issueVehicleFlowRequestId)
+        assertThat(issueVehicleFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(issueVehicleFlowResult.flowError).isNull()
 
         val issuedVehicleResponse = objectMapper
@@ -109,7 +110,7 @@ class ChainableDemoTests {
         assertThat(issuedVehicleResponse.owner).isEqualTo(bobX500)
 
         // Bob transfers vehicle to Charlie
-        val transferVehicleRequestId = startRpcFlow(
+        val transferVehicleRequestId = startRestFlow(
             bobHoldingId,
             mapOf(
                 "id" to vehicleId,
@@ -118,8 +119,8 @@ class ChainableDemoTests {
             ),
             "com.r3.corda.demo.utxo.chainable.workflow.transfer.TransferVehicleFlow\$Initiator"
         )
-        val transferVehicleFlowResult = awaitRpcFlowFinished(bobHoldingId, transferVehicleRequestId)
-        assertThat(transferVehicleFlowResult.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val transferVehicleFlowResult = awaitRestFlowFinished(bobHoldingId, transferVehicleRequestId)
+        assertThat(transferVehicleFlowResult.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(transferVehicleFlowResult.flowError).isNull()
 
         val transferVehicleResponse = objectMapper

@@ -18,6 +18,7 @@ class FungibleTests {
     private companion object {
         const val TEST_CPI_NAME = "corda-ledger-extensions-ledger-utxo-advanced-fungible-test-app"
         const val TEST_CPB_LOCATION = "/META-INF/corda-ledger-extensions-ledger-utxo-advanced-fungible-test-app.cpb"
+        const val NOTARY_SERVICE_X500 = "O=MyNotaryService, L=London, C=GB"
 
         val objectMapper = ObjectMapper().apply {
             registerModule(KotlinModule.Builder().build())
@@ -69,12 +70,12 @@ class FungibleTests {
         registerStaticMember(aliceHoldingId)
         registerStaticMember(bobHoldingId)
         registerStaticMember(charlieHoldingId)
-        registerStaticMember(notaryHoldingId, true)
+        registerStaticMember(notaryHoldingId, NOTARY_SERVICE_X500)
     }
 
     @Test
     fun `fungible contract create command valid`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "CREATE",
@@ -82,14 +83,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
     }
 
     @Test
     fun `fungible contract create command CONTRACT_RULE_CREATE_OUTPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "CREATE",
@@ -97,14 +98,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On fungible state(s) creating, at least one fungible state must be created.")
     }
 
     @Test
     fun `fungible contract create command CONTRACT_RULE_CREATE_POSITIVE_QUANTITIES fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "CREATE",
@@ -112,8 +113,8 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains(
             "On fungible state(s) creating, the quantity of every created fungible state must be greater than zero."
         )
@@ -121,7 +122,7 @@ class FungibleTests {
 
     @Test
     fun `fungible contract update command valid`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -129,14 +130,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
     }
 
     @Test
     fun `fungible contract update command CONTRACT_RULE_UPDATE_INPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -144,14 +145,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On fungible state(s) updating, at least one fungible state must be consumed.")
     }
 
     @Test
     fun `fungible contract update command CONTRACT_RULE_UPDATE_OUTPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -159,14 +160,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On fungible state(s) updating, at least one fungible state must be created.")
     }
 
     @Test
     fun `fungible contract update command CONTRACT_RULE_UPDATE_POSITIVE_QUANTITIES fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -174,15 +175,15 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains("On fungible state(s) updating, the quantity of every created fungible state must be greater than zero.")
     }
 
     @Test
     fun `fungible contract update command CONTRACT_RULE_UPDATE_SUM fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -190,8 +191,8 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
                 "On fungible state(s) updating, the sum of the unscaled values of the consumed states must be equal to the sum of the " +
@@ -201,7 +202,7 @@ class FungibleTests {
 
     @Test
     fun `fungible contract update command CONTRACT_RULE_UPDATE_GROUP_SUM fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "UPDATE",
@@ -209,8 +210,8 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
                 "On fungible state(s) updating, the sum of the consumed states that are fungible with each other must be equal to the " +
@@ -220,7 +221,7 @@ class FungibleTests {
 
     @Test
     fun `fungible contract delete command valid`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -228,14 +229,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_SUCCESS)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_SUCCESS)
         assertThat(response.flowError).isNull()
     }
 
     @Test
     fun `fungible contract delete command CONTRACT_RULE_DELETE_INPUTS fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -243,14 +244,14 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains("On fungible state(s) deleting, at least one fungible state input must be consumed.")
     }
 
     @Test
     fun `fungible contract delete command CONTRACT_RULE_DELETE_POSITIVE_QUANTITIES fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -258,8 +259,8 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message).contains(
             "On fungible state(s) deleting, the quantity of every created fungible state must be greater than zero."
         )
@@ -267,7 +268,7 @@ class FungibleTests {
 
     @Test
     fun `fungible contract delete command CONTRACT_RULE_DELETE_SUM fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -275,8 +276,8 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
                 "On fungible state(s) deleting, the sum of the unscaled values of the consumed states must be greater than the sum of " +
@@ -286,7 +287,7 @@ class FungibleTests {
 
     @Test
     fun `fungible contract delete command CONTRACT_RULE_DELETE_GROUP_SUM fails`() {
-        val request = startRpcFlow(
+        val request = startRestFlow(
             aliceHoldingId,
             mapOf(
                 "command" to "DELETE",
@@ -294,8 +295,8 @@ class FungibleTests {
             ),
             "com.r3.corda.test.utxo.fungible.workflow.FungibleContractTestFlow"
         )
-        val response = awaitRpcFlowFinished(aliceHoldingId, request)
-        assertThat(response.flowStatus).isEqualTo(RPC_FLOW_STATUS_FAILED)
+        val response = awaitRestFlowFinished(aliceHoldingId, request)
+        assertThat(response.flowStatus).isEqualTo(REST_FLOW_STATUS_FAILED)
         assertThat(response.flowError?.message)
             .contains(
                 "On fungible state(s) deleting, the sum of consumed states that are fungible with each other must be greater than the " +

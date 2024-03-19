@@ -21,7 +21,6 @@ internal fun UtxoLedgerService.getAvailableTokens(
     return query(OwnableStateQueries.GET_BY_OWNER, StateAndRef::class.java)
         .setCreatedTimestampLimit(Instant.now())
         .setLimit(50)
-        .setOffset(0)
         .setParameter("owner", digestService.hash(ownerKeys.single().encoded, DigestAlgorithmName.SHA2_256).toString())
         .setParameter("stateType", Token::class.java.name)
         .execute()
