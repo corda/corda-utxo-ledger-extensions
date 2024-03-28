@@ -1,6 +1,6 @@
 * @corda/ledger
-*.gradle           @corda/blt
+*.gradle           @corda/infrastructure-release
 gradle.properties  @corda/corda5-team-leads
-Jenkinsfile        @corda/blt
-.ci/*              @corda/blt
-gradle/*           @corda/blt
+Jenkinsfile        @corda/infrastructure-release
+.ci/*              @corda/infrastructure-release
+gradle/*           @corda/infrastructure-release
