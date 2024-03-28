@@ -92,9 +92,6 @@ subprojects {
     repositories {
         mavenLocal()
         maven {
-            url = "https://download.corda.net/maven/corda-dependencies"
-        }
-        maven {
             url = "$artifactoryContextUrl/corda-os-maven"
             authentication {
                 basic(BasicAuthentication)
