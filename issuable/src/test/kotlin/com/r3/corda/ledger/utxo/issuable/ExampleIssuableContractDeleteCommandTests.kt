@@ -3,44 +3,43 @@ package com.r3.corda.ledger.utxo.issuable
 import com.r3.corda.ledger.utxo.testing.ContractTest
 import com.r3.corda.ledger.utxo.testing.buildTransaction
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
 
 class ExampleIssuableContractDeleteCommandTests : ContractTest() {
 
-    private val state = ExampleIssuableState(ALICE_KEY)
-    private val contract = ExampleIssuableContract()
+    private val state = ExampleIssuableState(aliceKey)
 
     @Test
     fun `On issuable state(s) deleting, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
-            addSignatory(ALICE_KEY)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+            addCommand(ExampleIssuableContract.Delete)
+        }
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
+            addSignatories(aliceKey)
             addCommand(ExampleIssuableContract.Delete)
         }
 
-        // Act
-        contract.verify(transaction)
+        // Act & assert
+        assertVerifies(transaction2)
     }
 
     @Test
     fun `On issuable state(s) deleting, the transaction should include the Delete command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addOutputState(state)
-            addSignatory(ALICE_KEY)
+            addSignatories(aliceKey)
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
-        // Assert
-        assertEquals(
+        // Act & assert
+        assertFailsWith(
+            transaction,
             "On 'com.r3.corda.ledger.utxo.issuable.ExampleIssuableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.issuable.ExampleIssuableContract\$ExampleIssuableContractCommand' must be included in the transaction.\n" +
-                    "The permitted commands include [Create, Delete].", exception.message
+                    "The permitted commands include [Create, Delete]."
         )
     }
 
@@ -48,15 +47,16 @@ class ExampleIssuableContractDeleteCommandTests : ContractTest() {
     fun `On issuable state(s) deleting, the issuer of every consumed issuable state must sign the transaction`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+            addCommand(ExampleIssuableContract.Delete)
+        }
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
             addCommand(ExampleIssuableContract.Delete)
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
-        // Assert
-        assertEquals(IssuableConstraints.CONTRACT_RULE_DELETE_SIGNATORIES, exception.message)
+        // Act & assert
+        assertFailsWith(transaction2, IssuableConstraints.CONTRACT_RULE_DELETE_SIGNATORIES)
     }
 }

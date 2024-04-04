@@ -8,36 +8,44 @@ import kotlin.test.assertEquals
 
 class ExampleOwnableContractTransferCommandTests : ContractTest() {
 
-    private val state = ExampleOwnableState(BOB_KEY)
+    private val state = ExampleOwnableState(bobKey)
     private val contract = ExampleOwnableContract()
 
     @Test
     fun `On ownable state(s) updating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
             addOutputState(state)
-            addSignatory(BOB_KEY)
-            addCommand(ExampleOwnableContract.Update)
         }
+        val transaction2 = buildTransaction {
+            val tx1StateRef = transaction1.outputStateAndRefs.single()
+            addInputState(tx1StateRef.ref)
+            addOutputState(tx1StateRef.state.contractState)
+            addSignatories(bobKey)
+            addCommand(ExampleOwnableContract.Update)
+        }.toLedgerTransaction()
 
         // Act
-        contract.verify(transaction)
+        contract.verify(transaction2)
     }
 
     @Test
     fun `On ownable state(s) updating, the transaction should include the Update command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
             addOutputState(state)
-            addSignatory(BOB_KEY)
         }
+        val transaction2 = buildTransaction {
+            val tx1StateRef = transaction1.outputStateAndRefs.single()
+            addInputState(tx1StateRef.ref)
+            addOutputState(tx1StateRef.state.contractState)
+            addSignatories(bobKey)
+        }.toLedgerTransaction()
 
         // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction2) }
 
         // Assert
         assertEquals(
@@ -50,14 +58,18 @@ class ExampleOwnableContractTransferCommandTests : ContractTest() {
     fun `On ownable state(s) updating, the owner of every consumed ownable state must sign the transaction`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
             addOutputState(state)
-            addCommand(ExampleOwnableContract.Update)
         }
+        val transaction2 = buildTransaction {
+            val tx1StateRef = transaction1.outputStateAndRefs.single()
+            addInputState(tx1StateRef.ref)
+            addOutputState(tx1StateRef.state.contractState)
+            addCommand(ExampleOwnableContract.Update)
+        }.toLedgerTransaction()
 
         // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val exception = assertThrows<IllegalStateException> { contract.verify(transaction2) }
 
         // Assert
         assertEquals(OwnableConstraints.CONTRACT_RULE_UPDATE_SIGNATORIES, exception.message)

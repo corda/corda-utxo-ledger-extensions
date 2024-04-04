@@ -92,7 +92,6 @@ include 'fungible'
 include 'identifiable'
 include 'issuable'
 include 'ownable'
-include 'testing'
 
 gradleEnterprise {
     server = gradleEnterpriseUrl

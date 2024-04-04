@@ -91,7 +91,6 @@ subprojects {
 
     repositories {
         mavenLocal()
-
         maven {
             url = "$artifactoryContextUrl/corda-os-maven"
             authentication {

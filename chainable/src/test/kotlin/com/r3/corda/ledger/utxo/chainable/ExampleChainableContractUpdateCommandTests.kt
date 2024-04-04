@@ -1,174 +1,174 @@
 package com.r3.corda.ledger.utxo.chainable
 
 import com.r3.corda.ledger.utxo.testing.ContractTest
-import com.r3.corda.ledger.utxo.testing.ContractTestUtils
 import com.r3.corda.ledger.utxo.testing.buildTransaction
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
 
 class ExampleChainableContractUpdateCommandTests : ContractTest() {
 
-    private val state = ExampleChainableState(ALICE_KEY, BOB_KEY, null)
-    private val contract = ExampleChainableContract()
+    private val state = ExampleChainableState(aliceKey, bobKey, null)
+    private val anotherState = ExampleChainableState(aliceKey, bobKey, null)
 
     @Test
     fun `On chainable state(s) updating, the transaction should verify successfully`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val inputStateRef = ContractTestUtils.createRandomStateRef()
-            addInputState(state, inputStateRef, NOTARY_KEY, NOTARY_NAME, null)
-            addOutputState(state.next(inputStateRef))
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+        }
+
+        val transaction2 = buildTransaction {
+            val outputRef = transaction1.outputStateAndRefs.single().ref
+            addInputState(outputRef)
+            addOutputState(state.next(outputRef))
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        contract.verify(transaction)
+        // Assert
+        assertVerifies(transaction2)
     }
 
     @Test
     fun `On chainable state(s) updating, the transaction should include the Update command`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val inputStateRef = ContractTestUtils.createRandomStateRef()
-            addInputState(state, inputStateRef, NOTARY_KEY, NOTARY_NAME, null)
-            addOutputState(state.next(inputStateRef))
+        val transaction1 = buildTransaction {
+            addOutputState(state)
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
+        val transaction2 = buildTransaction {
+            val outputRef = transaction1.outputStateAndRefs.single().ref
+            addInputState(outputRef)
+            addOutputState(state.next(outputRef))
+        }
 
         // Assert
-        assertEquals(
-            "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand<? extends com.r3.corda.ledger.utxo.chainable.ChainableState<?>>' must be included in the transaction.\n" +
-                    "The permitted commands include [Create, Update, Delete].", exception.message
-        )
+        assertFailsWith(transaction2, "On 'com.r3.corda.ledger.utxo.chainable.ExampleChainableContract' contract executing, at least one command of type 'com.r3.corda.ledger.utxo.chainable.ChainableContractCommand<? extends com.r3.corda.ledger.utxo.chainable.ChainableState<?>>' must be included in the transaction.\n" +
+                "The permitted commands include [Create, Update, Delete].")
     }
 
     @Test
     fun `On chainable state(s) updating, at least one chainable state must be consumed`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addOutputState(state)
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_INPUTS, exception.message)
+        assertFailsWith(transaction, ChainableConstraints.CONTRACT_RULE_UPDATE_INPUTS)
     }
 
     @Test
     fun `On chainable state(s) updating, at least one chainable state must be created`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+        }
+
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_OUTPUTS, exception.message)
+        assertFailsWith(transaction2, ChainableConstraints.CONTRACT_RULE_UPDATE_OUTPUTS)
     }
 
     @Test
     fun `On chainable state(s) updating, the previous state pointer of every created chainable state must not be null`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
+        val transaction1 = buildTransaction {
             addOutputState(state)
+        }
+
+        val transaction2 = buildTransaction {
+            val outputStateAndRef = transaction1.outputStateAndRefs.single()
+            addInputState(outputStateAndRef.ref)
+            addOutputState(outputStateAndRef.state.contractState)
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_POINTERS, exception.message)
+        assertFailsWith(transaction2, ChainableConstraints.CONTRACT_RULE_UPDATE_POINTERS)
     }
 
     @Test
     fun `On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively (unconsumed pointer)`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val inputStateRef = ContractTestUtils.createRandomStateRef()
-            addInputState(state)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+        }
+        val transaction2 =  buildTransaction {
+            addOutputState(anotherState)
+        }
+        val transaction3 = buildTransaction {
+            val inputStateRef = transaction2.outputStateAndRefs.single().ref
+            addInputState(transaction1.outputStateAndRefs.single().ref)
             addOutputState(state.next(inputStateRef))
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
+        assertFailsWith(transaction3, ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS)
     }
 
     @Test
     fun `On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively (mismatched pointer)`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val inputStateRef = ContractTestUtils.createRandomStateRef()
-            val invalidPointerStateRef = ContractTestUtils.createRandomStateRef()
-            addInputState(state, inputStateRef, NOTARY_KEY, NOTARY_NAME, null)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+        }
+        val transaction2 = buildTransaction {
+            addOutputState(anotherState)
+        }
+
+        val transaction3 = buildTransaction {
+            val invalidPointerStateRef = transaction2.outputStateAndRefs.single().ref
+            addInputState(transaction1.outputStateAndRefs.single().ref)
             addOutputState(state.next(invalidPointerStateRef))
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
+        assertFailsWith(transaction3, ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS)
     }
 
     @Test
     fun `On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively (merging pointers)`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val inputStateRef1 = ContractTestUtils.createRandomStateRef()
-            val inputStateRef2 = ContractTestUtils.createRandomStateRef()
-            addInputState(state, inputStateRef1, NOTARY_KEY, NOTARY_NAME, null)
-            addInputState(state, inputStateRef2, NOTARY_KEY, NOTARY_NAME, null)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+        }
+        val transaction2 = buildTransaction {
+            addOutputState(anotherState)
+        }
+        val transaction3 = buildTransaction {
+            val inputStateRef1 = transaction1.outputStateAndRefs.single().ref
+            val inputStateRef2 = transaction2.outputStateAndRefs.single().ref
+            addInputState(inputStateRef1)
+            addInputState(inputStateRef2)
             addOutputState(state.next(inputStateRef1))
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
+        assertFailsWith(transaction3, ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS)
     }
 
     @Test
     fun `On chainable state(s) updating, the previous state pointer of every created chainable state must be pointing to exactly one consumed chainable state, exclusively (splitting pointers)`() {
-
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            val inputStateRef = ContractTestUtils.createRandomStateRef()
-            addInputState(state, inputStateRef, NOTARY_KEY, NOTARY_NAME, null)
+        val transaction1 = buildTransaction {
+            addOutputState(state)
+        }
+        val transaction2 = buildTransaction {
+            val inputStateRef = transaction1.outputStateAndRefs.single().ref
+            addInputState(inputStateRef)
             addOutputState(state.next(inputStateRef))
             addOutputState(state.next(inputStateRef))
             addCommand(ExampleChainableContract.Update())
         }
 
-        // Act
-        val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
-
         // Assert
-        assertEquals(ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS, exception.message)
+        assertFailsWith(transaction2, ChainableConstraints.CONTRACT_RULE_UPDATE_EXCLUSIVE_POINTERS)
     }
 }

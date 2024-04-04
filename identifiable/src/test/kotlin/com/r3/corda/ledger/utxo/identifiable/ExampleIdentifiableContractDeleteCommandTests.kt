@@ -8,29 +8,32 @@ import kotlin.test.assertEquals
 
 class ExampleIdentifiableContractDeleteCommandTests : ContractTest() {
 
-    private val state = ExampleIdentifiableState(ALICE_KEY, BOB_KEY, null)
+    private val state = ExampleIdentifiableState(aliceKey, bobKey, null)
     private val contract = ExampleIdentifiableContract()
 
     @Test
     fun `On identifiable state(s) deleting, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
-            addInputState(state)
-            addCommand(ExampleIdentifiableContract.Delete())
+        val transaction1 = buildTransaction {
+            addOutputState(state)
         }
+        val transaction2 = buildTransaction {
+            addInputState(transaction1.outputStateAndRefs.single().ref)
+            addCommand(ExampleIdentifiableContract.Delete())
+        }.toLedgerTransaction()
 
         // Act
-        contract.verify(transaction)
+        contract.verify(transaction2)
     }
 
     @Test
     fun `On identifiable state(s) deleting, the transaction should include the Delete command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addOutputState(state)
-        }
+        }.toLedgerTransaction()
 
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
@@ -45,9 +48,9 @@ class ExampleIdentifiableContractDeleteCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) deleting, at least one identifiable state must be consumed`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addCommand(ExampleIdentifiableContract.Delete())
-        }
+        }.toLedgerTransaction()
 
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }

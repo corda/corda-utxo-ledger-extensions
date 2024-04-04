@@ -8,17 +8,17 @@ import kotlin.test.assertEquals
 
 class ExampleIdentifiableContractCreateCommandTests : ContractTest() {
 
-    private val state = ExampleIdentifiableState(ALICE_KEY, BOB_KEY, null)
+    private val state = ExampleIdentifiableState(aliceKey, bobKey, null)
     private val contract = ExampleIdentifiableContract()
 
     @Test
     fun `On identifiable state(s) creating, the transaction should verify successfully`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addOutputState(state)
             addCommand(ExampleIdentifiableContract.Create())
-        }
+        }.toLedgerTransaction()
 
         // Act
         contract.verify(transaction)
@@ -28,9 +28,9 @@ class ExampleIdentifiableContractCreateCommandTests : ContractTest() {
     fun `On identifiable state(s) creating, the transaction should include the Create command`() {
 
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addOutputState(state)
-        }
+        }.toLedgerTransaction()
 
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
@@ -45,9 +45,9 @@ class ExampleIdentifiableContractCreateCommandTests : ContractTest() {
     @Test
     fun `On identifiable state(s) creating, at least one identifiable state must be created`() {
         // Arrange
-        val transaction = buildTransaction(NOTARY_KEY, NOTARY_NAME) {
+        val transaction = buildTransaction {
             addCommand(ExampleIdentifiableContract.Create())
-        }
+        }.toLedgerTransaction()
 
         // Act
         val exception = assertThrows<IllegalStateException> { contract.verify(transaction) }
