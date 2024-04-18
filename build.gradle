@@ -49,6 +49,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     pluginManager.withPlugin('java') {
+        apply plugin: 'org.sonarqube'
         java {
             toolchain {
                 languageVersion = of(javaVersion)
