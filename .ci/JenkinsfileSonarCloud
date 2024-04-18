@@ -59,7 +59,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    sh './gradlew sonar -Si'
+                    sh './gradlew sonar -Dsonar.java.binaries=${WORKSPACE}/. -Si'
                 }
             }
         }
